@@ -1,0 +1,1323 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Склад v11</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+:root{
+  --bg:#F0F2F8;--card:#fff;--br:#E5E5EA;--t:#0D0D1A;--t2:#8E8E9A;
+  --ac:#5856D6;--red:#FF3B30;--grn:#34C759;--nav:68px;--hdr:#0D0D1A;
+}
+html,body{height:100%;background:var(--bg);font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display',sans-serif;overflow:hidden;}
+input,select,textarea,button{font-family:inherit;font-size:16px;}
+.page{position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;transform:translateX(100%);transition:transform .25s ease;z-index:1;}
+.page.show{transform:none;z-index:2;}
+.navbar{position:fixed;bottom:0;left:0;right:0;height:var(--nav);background:rgba(255,255,255,.97);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-top:1px solid rgba(0,0,0,.08);display:flex;z-index:999;padding-bottom:env(safe-area-inset-bottom,0);}
+.ntab{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;border:none;background:none;cursor:pointer;padding-bottom:4px;}
+.ntab span{font-size:10px;font-weight:700;color:var(--t2);letter-spacing:.2px;}
+.ntab svg{width:26px;height:26px;stroke:var(--t2);fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;}
+.ntab.on svg{stroke:var(--ac);}
+.ntab.on span{color:var(--ac);}
+.hdr-dark{background:var(--hdr);padding:20px 20px 0;flex-shrink:0;}
+.hdr-dark-month{font-size:11px;font-weight:700;color:rgba(255,255,255,.4);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px;}
+.hdr-dark-title{font-size:34px;font-weight:800;color:#fff;letter-spacing:-1px;line-height:1;}
+.hdr-dark-sub{font-size:13px;color:rgba(255,255,255,.4);margin-top:4px;padding-bottom:20px;}
+.cats-section{padding:0 16px 8px;}
+.cats-section-hdr{display:flex;align-items:center;justify-content:space-between;padding:20px 0 12px;}
+.cats-section-label{font-size:11px;font-weight:700;color:var(--t2);letter-spacing:1.2px;text-transform:uppercase;}
+.cats-section-add{font-size:14px;font-weight:600;color:var(--ac);background:none;border:none;cursor:pointer;padding:0;}
+.cats-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.catcard{border-radius:22px;padding:18px 16px 16px;cursor:pointer;position:relative;overflow:hidden;min-height:140px;display:flex;flex-direction:column;transition:transform .15s;-webkit-tap-highlight-color:transparent;}
+.catcard:active{transform:scale(.96);}
+.catcard-glow{position:absolute;right:-24px;bottom:-24px;width:100px;height:100px;border-radius:50%;background:rgba(255,255,255,.1);}
+.catcard-icon{width:42px;height:42px;border-radius:13px;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;}
+.catcard-icon svg{width:22px;height:22px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+.catcard-menu{position:absolute;top:12px;right:12px;background:rgba(0,0,0,.15);border:none;border-radius:8px;width:28px;height:28px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#fff;font-size:18px;line-height:1;padding:0;}
+.catcard-bottom{margin-top:auto;padding-top:12px;}
+.catcard-name{font-size:14px;font-weight:600;color:rgba(255,255,255,.8);margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.catcard-count{font-size:30px;font-weight:800;color:#fff;letter-spacing:-0.5px;line-height:1.1;}
+.catcard-label{font-size:12px;color:rgba(255,255,255,.55);margin-top:1px;}
+.cc0{background:linear-gradient(140deg,#FF9F0A,#FF6B00);}
+.cc1{background:linear-gradient(140deg,#5856D6,#3634C7);}
+.cc2{background:linear-gradient(140deg,#30D158,#248A3D);}
+.cc3{background:linear-gradient(140deg,#FF453A,#C0392B);}
+.cc4{background:linear-gradient(140deg,#0A84FF,#0056CC);}
+.cc5{background:linear-gradient(140deg,#BF5AF2,#8944AB);}
+.cc6{background:linear-gradient(140deg,#FF375F,#C0174D);}
+.cc7{background:linear-gradient(140deg,#5AC8FA,#0071A4);}
+.topbar{height:54px;background:var(--card);border-bottom:1px solid var(--br);display:flex;align-items:center;padding:0 8px;flex-shrink:0;}
+.topbar h1{flex:1;text-align:center;font-size:17px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.tbtn{min-width:60px;background:none;border:none;color:var(--ac);font-size:15px;font-weight:600;cursor:pointer;padding:8px 4px;white-space:nowrap;}
+.scroll{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:12px 16px;padding-bottom:calc(var(--nav)+20px);}
+.sbar{display:flex;align-items:center;gap:8px;background:var(--card);border-radius:12px;padding:10px 14px;margin-bottom:10px;box-shadow:0 1px 4px rgba(0,0,0,.06);}
+.sbar svg{width:16px;height:16px;stroke:var(--t2);fill:none;stroke-width:2;flex-shrink:0;}
+.sbar input{flex:1;border:none;background:transparent;outline:none;font-size:16px;color:var(--t);}
+.chips{display:flex;gap:6px;overflow-x:auto;margin-bottom:12px;scrollbar-width:none;}
+.chips::-webkit-scrollbar{display:none;}
+.chip{flex-shrink:0;padding:6px 16px;border-radius:20px;font-size:13px;font-weight:600;border:none;background:var(--card);color:var(--t2);cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,.08);}
+.chip.on{background:var(--ac);color:#fff;}
+.grp{background:var(--card);border-radius:16px;overflow:hidden;margin-bottom:10px;box-shadow:0 1px 4px rgba(0,0,0,.06);}
+.gtitle{font-size:11px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.6px;padding:0 2px 8px;}
+.row{display:flex;align-items:center;gap:12px;padding:13px 16px;border-bottom:1px solid var(--br);cursor:pointer;}
+.row:last-child{border-bottom:none;}
+.row:active{background:var(--bg);}
+.rico{width:38px;height:38px;border-radius:10px;flex-shrink:0;display:flex;align-items:center;justify-content:center;}
+.rico svg{width:20px;height:20px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+.rmid{flex:1;min-width:0;}
+.rt{font-size:15px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.rs{font-size:13px;color:var(--t2);margin-top:2px;}
+.rright{display:flex;align-items:center;gap:6px;flex-shrink:0;}
+.badge{background:var(--ac);color:#fff;font-size:12px;font-weight:700;border-radius:10px;padding:2px 8px;}
+.chev{color:#C7C7CC;font-size:18px;}
+.irow{display:flex;align-items:center;gap:12px;padding:12px 16px;border-bottom:1px solid var(--br);cursor:pointer;}
+.irow:last-child{border-bottom:none;}
+.irow:active{background:var(--bg);}
+.ithumb{width:48px;height:48px;border-radius:12px;background:var(--bg);flex-shrink:0;overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:24px;}
+.ithumb img{width:100%;height:100%;object-fit:cover;}
+.imid{flex:1;min-width:0;}
+.iname{font-size:15px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.isub{font-size:13px;color:var(--t2);margin-top:2px;}
+.iqty{text-align:right;flex-shrink:0;}
+.qn{font-size:20px;font-weight:800;}
+.qn.low{color:var(--red);}
+.qu{font-size:12px;color:var(--t2);}
+.dphoto{height:220px;background:var(--card);display:flex;align-items:center;justify-content:center;margin-bottom:12px;border-radius:16px;overflow:hidden;cursor:pointer;box-shadow:0 1px 4px rgba(0,0,0,.06);}
+.dphoto img{width:100%;height:100%;object-fit:contain;}
+.dphoto svg{width:60px;height:60px;stroke:var(--t2);fill:none;stroke-width:1.2;}
+.qtyblock{background:var(--card);border-radius:16px;padding:20px 16px;margin-bottom:10px;text-align:center;box-shadow:0 1px 4px rgba(0,0,0,.06);}
+.qtyval{font-size:64px;font-weight:800;letter-spacing:-2px;line-height:1;}
+.qtyrow{display:flex;align-items:center;justify-content:center;gap:16px;margin-top:16px;}
+.qbtn{width:52px;height:52px;border-radius:26px;border:2.5px solid var(--ac);background:#fff;color:var(--ac);font-size:28px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.qbtn:active{background:var(--ac);color:#fff;}
+.qstep{width:72px;padding:10px 0;border:1.5px solid var(--br);border-radius:10px;font-size:18px;font-weight:600;text-align:center;background:var(--bg);color:var(--t);outline:none;}
+.hrow{display:flex;align-items:center;justify-content:space-between;padding:11px 16px;border-bottom:1px solid var(--br);}
+.hrow:last-child{border-bottom:none;}
+.hnote{font-size:15px;font-weight:600;}
+.hdate{font-size:12px;color:var(--t2);margin-top:2px;}
+.hdelta{font-size:19px;font-weight:800;}
+.htotal{font-size:12px;color:var(--t2);text-align:right;}
+.plus{color:var(--grn);}
+.minus{color:var(--red);}
+.detrow{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid var(--br);}
+.detrow:last-child{border-bottom:none;}
+.detlabel{font-size:14px;color:var(--t2);}
+.detval{font-size:15px;font-weight:600;text-align:right;max-width:60%;}
+.fgrp{background:var(--card);border-radius:16px;overflow:hidden;margin-bottom:10px;box-shadow:0 1px 4px rgba(0,0,0,.06);}
+.fhead{font-size:11px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.6px;padding:14px 16px 4px;}
+.field{display:flex;flex-direction:column;padding:8px 16px 12px;border-top:1px solid var(--br);}
+.field label{font-size:12px;color:var(--t2);margin-bottom:4px;font-weight:500;}
+.field input,.field select,.field textarea{border:none;background:transparent;outline:none;font-size:16px;color:var(--t);width:100%;}
+.field textarea{resize:none;min-height:56px;line-height:1.4;}
+.field select{-webkit-appearance:none;}
+.photorow{display:flex;align-items:center;gap:12px;padding:12px 16px;border-top:1px solid var(--br);cursor:pointer;}
+.photorow:active{background:var(--bg);}
+.photobox{width:52px;height:52px;border-radius:12px;background:var(--bg);display:flex;align-items:center;justify-content:center;overflow:hidden;flex-shrink:0;}
+.photobox img{width:100%;height:100%;object-fit:cover;}
+.photobox svg{width:22px;height:22px;stroke:var(--t2);fill:none;stroke-width:1.6;}
+.botbar{background:rgba(255,255,255,.95);backdrop-filter:blur(20px);border-top:1px solid var(--br);padding:12px 16px calc(var(--nav) - 10px);flex-shrink:0;}
+.btn{width:100%;padding:15px;border-radius:14px;font-size:16px;font-weight:700;border:none;cursor:pointer;text-align:center;display:block;}
+.btn.pri{background:var(--ac);color:#fff;}
+.btn.red{background:var(--red);color:#fff;}
+.fab{position:fixed;bottom:calc(var(--nav)+14px);right:16px;width:54px;height:54px;border-radius:27px;background:var(--ac);color:#fff;border:none;font-size:30px;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 20px rgba(88,86,214,.5);z-index:200;}
+.fab:active{transform:scale(.93);}
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:1000;display:none;}
+.overlay.on{display:block;}
+.sheet{position:fixed;bottom:0;left:0;right:0;background:var(--card);border-radius:24px 24px 0 0;z-index:1001;max-height:92vh;overflow-y:auto;transform:translateY(100%);transition:transform .28s ease;}
+.sheet.on{transform:none;}
+.shandle{width:40px;height:4px;background:var(--br);border-radius:2px;margin:14px auto 0;}
+.sbody{padding:16px 16px 36px;}
+.stitle{font-size:20px;font-weight:800;margin-bottom:16px;}
+.lrow{display:flex;gap:8px;margin-bottom:12px;}
+.lf{flex:1;display:flex;flex-direction:column;gap:4px;}
+.lf label{font-size:12px;color:var(--t2);font-weight:500;}
+.lf input,.lf select{padding:10px 12px;border:1.5px solid var(--br);border-radius:10px;font-size:15px;background:var(--bg);color:var(--t);outline:none;width:100%;-webkit-appearance:none;}
+.fchecks{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px;}
+.fcheck{display:flex;align-items:center;gap:5px;padding:7px 13px;background:var(--bg);border-radius:10px;font-size:14px;font-weight:500;cursor:pointer;}
+.fcheck input{width:15px;height:15px;accent-color:var(--ac);}
+.posrow{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:14px;}
+.posrow label{font-size:15px;font-weight:500;display:flex;align-items:center;gap:6px;cursor:pointer;}
+.qrwrap{display:flex;justify-content:center;padding:12px 0;}
+.qrinfo{text-align:center;font-size:12px;color:var(--t2);margin-bottom:12px;}
+.empty{text-align:center;padding:60px 20px;}
+.empty svg{width:52px;height:52px;stroke:var(--t2);fill:none;stroke-width:1.2;margin:0 auto 12px;display:block;}
+.empty p{font-size:15px;color:var(--t2);}
+.catitem{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid var(--br);font-size:16px;font-weight:500;}
+.catitem:last-child{border-bottom:none;}
+.catdel{background:none;border:none;color:var(--red);font-size:22px;line-height:1;cursor:pointer;padding:0 4px;}
+.fullphoto{position:fixed;inset:0;background:#000;z-index:800;display:none;flex-direction:column;}
+.fullphoto.on{display:flex;}
+.fullphoto-bar{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;padding-top:calc(12px + env(safe-area-inset-top));}
+.fullphoto-bar button{background:none;border:none;font-size:15px;font-weight:500;cursor:pointer;padding:8px;}
+.fullphoto-img{flex:1;display:flex;align-items:center;justify-content:center;overflow:hidden;}
+.fullphoto-img img{max-width:100%;max-height:100%;object-fit:contain;}
+
+/* ── Unified dark header ── */
+.hdr-dark{background:linear-gradient(135deg,#1a1a3e 0%,#2d2b6b 60%,#3d2070 100%);flex-shrink:0;position:relative;overflow:hidden;}
+.hdr-dark::before{content:'';position:absolute;width:220px;height:220px;border-radius:50%;background:rgba(88,86,214,.25);top:-60px;right:-40px;pointer-events:none;}
+.hdr-dark::after{content:'';position:absolute;width:140px;height:140px;border-radius:50%;background:rgba(191,90,242,.18);bottom:-50px;left:20px;pointer-events:none;}
+.hdr-dark.hdr-sm{padding-bottom:0;}
+.hdr-top-row{display:flex;align-items:center;justify-content:space-between;padding:16px 16px 0;}
+.hdr-dark-month{font-size:11px;font-weight:700;color:rgba(255,255,255,.35);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:4px;}
+.hdr-dark-title{font-size:34px;font-weight:800;color:#fff;letter-spacing:-1px;line-height:1.1;}
+.hdr-dark-sub{font-size:13px;color:rgba(255,255,255,.38);margin-top:4px;padding:0 16px 18px;}
+.hdr-sm-title{font-size:18px;font-weight:700;color:#fff;text-align:center;flex:1;}
+.hdr-back,.hdr-icon-btn{background:rgba(255,255,255,.1);border:none;border-radius:10px;width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;}
+.hdr-search-row{padding:10px 16px 0;}
+.hdr-search{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.1);border-radius:12px;padding:10px 14px;}
+.hdr-search input::placeholder{color:rgba(255,255,255,.4);}
+.hdr-chips{padding:10px 16px 12px;margin-bottom:0;}
+.hdr-chips .chip{background:rgba(255,255,255,.12);color:rgba(255,255,255,.7);border:none;}
+.hdr-chips .chip.on{background:#fff;color:var(--ac);}
+
+/* ── Page scroll area ── */
+.page-scroll{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:16px 16px calc(var(--nav)+16px);}
+
+/* ── Section headers ── */
+.section-hdr{display:flex;align-items:center;justify-content:space-between;padding:16px 4px 10px;}
+.section-label{font-size:11px;font-weight:700;color:var(--t2);letter-spacing:1.2px;text-transform:uppercase;}
+.section-action{font-size:14px;font-weight:700;color:var(--ac);background:none;border:none;cursor:pointer;padding:0;}
+</style>
+</head>
+<body>
+
+<!-- CATALOGS -->
+<div class="page show" id="pg-cats">
+  <div class="hdr-dark">
+    <div style="padding:24px 20px 20px;position:relative;z-index:1;">
+      <div class="hdr-dark-month" id="hdr-month">ИЮНЬ 2026</div>
+      <div class="hdr-dark-title" id="hdr-total">СКЛАД</div>
+      <div class="hdr-dark-sub" style="padding:4px 0 0;font-size:13px;color:rgba(255,255,255,.45)" id="hdr-sub">Нет каталогов</div>
+    </div>
+  </div>
+  <div class="page-scroll">
+    <div class="section-hdr" style="padding-left:16px;padding-right:16px;">
+      <span class="section-label">Каталоги</span>
+      <button class="section-action" id="btn-newcat">+ Добавить</button>
+    </div>
+    <div class="cats-grid" id="cats-body" style="padding:0 16px;"></div>
+  </div>
+</div>
+
+<!-- CAT FORM -->
+<div class="page" id="pg-catform">
+  <div class="topbar">
+    <button class="tbtn" id="btn-catback">‹ Назад</button>
+    <h1 id="catform-title">Новый каталог</h1>
+    <button class="tbtn" id="btn-catsave">Готово</button>
+  </div>
+  <div class="scroll">
+    <div class="fgrp">
+      <div class="fhead">Основное</div>
+      <div class="field"><label>Название *</label><input id="cf-name" type="text" placeholder="Например: Склад №1"></div>
+      <div class="field"><label>Описание</label><input id="cf-desc" type="text" placeholder="Необязательно"></div>
+    </div>
+    <div class="fgrp">
+      <div class="fhead">Категории</div>
+      <div id="cf-catlist"></div>
+      <div style="display:flex;gap:8px;padding:10px 16px;border-top:1px solid var(--br)">
+        <input id="cf-newcat" type="text" placeholder="Новая категория" style="flex:1;padding:10px 12px;border:1.5px solid var(--br);border-radius:10px;background:var(--bg);color:var(--t);outline:none;font-size:15px;">
+        <button id="btn-addcat" style="padding:10px 18px;background:var(--ac);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer">+</button>
+      </div>
+    </div>
+    <div id="cf-delbtn" style="display:none;padding-bottom:16px;">
+      <button class="btn red" id="btn-delcat">Удалить каталог</button>
+    </div>
+  </div>
+</div>
+
+<!-- ITEMS LIST -->
+<div class="page" id="pg-items">
+  <div class="hdr-dark hdr-sm">
+    <div class="hdr-top-row" style="padding:20px 20px 0;position:relative;z-index:1;">
+      <div class="hdr-sm-title" style="text-align:left;font-size:26px;font-weight:800;letter-spacing:-.5px;" id="items-title">Товары</div>
+    </div>
+    <button class="hdr-back" id="btn-itemsback" style="display:none"></button>
+    <button class="hdr-icon-btn" id="btn-editcat" style="display:none"></button>
+    <div class="hdr-search-row">
+      <div class="hdr-search">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <input id="items-q" type="text" placeholder="Поиск…" style="flex:1;border:none;background:transparent;outline:none;font-size:15px;color:#fff;" placeholder-color="rgba(255,255,255,0.4)">
+      </div>
+    </div>
+    <div class="chips hdr-chips" id="items-chips"></div>
+  </div>
+  <div class="page-scroll">
+    <div class="grp" id="items-list"></div>
+    <div class="empty" id="items-empty" style="display:none">
+      <svg viewBox="0 0 24 24" fill="none" stroke="var(--t2)" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="15" rx="3"/><circle cx="12" cy="13" r="4"/><path d="M8 6l1.5-2.5h5L16 6"/><circle cx="18.5" cy="9.5" r=".9" fill="var(--t2)" stroke="none"/></svg>
+      <p id="items-empty-msg">Нажмите + чтобы добавить товар</p>
+    </div>
+  </div>
+  <button class="fab" id="btn-additem">
+    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+  </button>
+</div>
+
+<!-- ITEM FORM -->
+<div class="page" id="pg-itemform">
+  <div class="topbar">
+    <button class="tbtn" id="btn-itemformback">‹ Назад</button>
+    <h1 id="itemform-title">Новый товар</h1>
+    <button class="tbtn" id="btn-saveitem">Готово</button>
+  </div>
+  <div class="scroll">
+    <div class="fgrp">
+      <div class="fhead">Основное</div>
+      <div class="field"><label>Название *</label><input id="if-name" type="text" placeholder="Название товара"></div>
+      <div class="field"><label>Артикул / SKU</label><input id="if-sku" type="text" placeholder="A-001"></div>
+      <div class="field"><label>Категория</label><select id="if-cat"></select></div>
+    </div>
+    <div class="fgrp">
+      <div class="fhead">Цена и количество</div>
+      <div class="field"><label>Цена</label><input id="if-price" type="number" placeholder="0.00" inputmode="decimal" min="0" step="0.01"></div>
+      <div class="field"><label>Количество</label><input id="if-qty" type="number" placeholder="0" inputmode="numeric" min="0"></div>
+      <div class="field"><label>Единица</label>
+        <select id="if-unit"><option>шт</option><option>кг</option><option>г</option><option>т</option><option>м</option><option>см</option><option>мм</option><option>м²</option><option>м³</option><option>л</option><option>мл</option><option>уп</option><option>пара</option><option>рулон</option><option>бухта</option><option>компл</option></select>
+      </div>
+      <div class="field"><label>Мин. остаток</label><input id="if-min" type="number" placeholder="0" inputmode="numeric" min="0"></div>
+    </div>
+    <div class="fgrp">
+      <div class="fhead">Дополнительно</div>
+      <div class="field"><label>Местонахождение</label><input id="if-loc" type="text" placeholder="Полка A-3"></div>
+      <div class="field"><label>Пояснение</label><textarea id="if-note" placeholder="Описание..."></textarea></div>
+    </div>
+    <div class="fgrp">
+      <div class="fhead">Фото</div>
+      <div class="photorow" id="photorow-add" onclick="pickPhoto()">
+        <div class="photobox" id="photobox"><svg viewBox="0 0 24 24" fill="none" stroke="var(--t2)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="15" rx="3"/><circle cx="12" cy="13" r="3.5"/><path d="M8 6l1.5-2.5h5L16 6"/><circle cx="18.5" cy="9.5" r=".8" fill="var(--t2)" stroke="none"/></svg></div>
+        <span style="color:var(--ac);font-weight:600;font-size:15px">Добавить фото</span>
+      </div>
+    </div>
+    <div id="if-delbtn" style="display:none;padding-bottom:16px"><button class="btn red" id="btn-delitem">Удалить товар</button></div>
+    <div style="height:20px"></div>
+  </div>
+</div>
+
+<!-- ITEM DETAIL -->
+<div class="page" id="pg-detail">
+  <div class="topbar" style="background:var(--card);border-bottom:1px solid var(--br);">
+    <button class="tbtn" id="btn-detback">‹ Назад</button>
+    <h1 id="det-title">Товар</h1>
+    <button class="tbtn" id="btn-edititem">Изменить</button>
+  </div>
+  <div class="scroll">
+    <div class="dphoto" id="det-photo" style="border-radius:20px;box-shadow:0 2px 12px rgba(0,0,0,.08);">
+      <svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>
+    </div>
+    <div class="qtyblock">
+      <div class="qtyval" id="det-qty">0</div>
+      <div class="qtyrow">
+        <button class="qbtn" id="btn-minus">−</button>
+        <input class="qstep" id="qty-step" type="number" value="1" min="1">
+        <button class="qbtn" id="btn-plus">+</button>
+      </div>
+    </div>
+    <div class="grp" id="det-info"></div>
+    <div style="font-size:11px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.6px;padding:8px 4px 6px;margin-top:4px;">История движения</div>
+    <div class="grp" id="det-hist-grp">
+      <div id="det-hist"></div>
+    </div>
+  </div>
+  <div class="botbar">
+    <button class="btn pri" id="btn-qr">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="vertical-align:middle;margin-right:6px"><rect x="2" y="6" width="20" height="12" rx="2"/><line x1="6" y1="10" x2="6" y2="14"/><line x1="9" y1="9" x2="9" y2="15"/><line x1="12" y1="10" x2="12" y2="14"/><line x1="15" y1="9" x2="15" y2="15"/><line x1="18" y1="10" x2="18" y2="14"/></svg>
+      Этикетка / Штрихкод
+    </button>
+  </div>
+</div>
+
+<!-- SETTINGS -->
+<div class="page" id="pg-settings">
+  <div class="hdr-dark hdr-sm" style="padding-bottom:20px;">
+    <div class="hdr-top-row">
+      <div style="min-width:40px"></div>
+      <div class="hdr-sm-title">Настройки</div>
+      <div style="min-width:40px"></div>
+    </div>
+  </div>
+  <div class="page-scroll">
+    <div class="section-hdr"><span class="section-label">База данных</span></div>
+    <div class="grp">
+      <div class="row">
+        <div class="rico" style="background:#5856D6"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></div>
+        <div class="rmid"><div class="rt">Экспорт данных</div><div class="rs">Скачать db.json</div></div>
+        <span class="chev">›</span>
+      </div>
+      <label class="row" style="cursor:pointer">
+        <div class="rico" style="background:#34C759"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg></div>
+        <div class="rmid"><div class="rt">Импорт данных</div><div class="rs">Загрузить db.json</div></div>
+        <span class="chev">›</span>
+        <input type="file" accept="application/json" id="inp-import" style="display:none">
+      </label>
+    </div>
+    <div class="section-hdr"><span class="section-label">Статистика</span></div>
+    <div class="grp" id="stats-grp"></div>
+  </div>
+</div>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <button class="ntab on" id="nt-cats">
+    <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+    <span>Каталоги</span>
+  </button>
+  <button class="ntab" id="nt-scan">
+    <svg viewBox="0 0 24 24"><path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/><line x1="3" y1="12" x2="21" y2="12"/></svg>
+    <span>Сканер</span>
+  </button>
+  <button class="ntab" id="nt-set">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+    <span>Настройки</span>
+  </button>
+</nav>
+
+<!-- SCANNER PAGE -->
+<div class="page" id="pg-scan">
+  <div class="hdr-dark hdr-sm" style="padding-bottom:20px;">
+    <div class="hdr-top-row">
+      <div style="min-width:40px"></div>
+      <div class="hdr-sm-title">Сканер</div>
+      <div style="min-width:40px"></div>
+    </div>
+  </div>
+  <div class="page-scroll" style="align-items:center;">
+    <div id="scan-viewfinder" style="width:100%;aspect-ratio:4/3;background:#1a1a2e;border-radius:22px;overflow:hidden;position:relative;flex-shrink:0;">
+      <video id="scan-video" style="width:100%;height:100%;object-fit:cover;display:none;" playsinline muted></video>
+      <img id="scan-preview-img" style="width:100%;height:100%;object-fit:contain;display:none;">
+      <div id="scan-idle-overlay" style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;">
+        <svg width="80" height="80" viewBox="0 0 80 80" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="2.5" stroke-linecap="round">
+          <path d="M12 28V16a4 4 0 0 1 4-4h12"/><path d="M52 12h12a4 4 0 0 1 4 4v12"/>
+          <path d="M68 52v12a4 4 0 0 1-4 4H52"/><path d="M28 68H16a4 4 0 0 1-4-4V52"/>
+          <line x1="12" y1="40" x2="68" y2="40" stroke="rgba(255,255,255,0.12)" stroke-dasharray="4 4"/>
+        </svg>
+        <span style="font-size:14px;color:rgba(255,255,255,0.35);text-align:center;">Нажмите кнопку<br>для сканирования</span>
+      </div>
+      <div id="scan-active-overlay" style="display:none;position:absolute;inset:0;">
+        <div id="scan-line" style="position:absolute;left:6%;right:6%;height:2px;background:var(--ac);box-shadow:0 0 12px var(--ac);animation:scanline 1.6s ease-in-out infinite;border-radius:1px;"></div>
+        <svg style="position:absolute;inset:0;width:100%;height:100%;" viewBox="0 0 300 225" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" preserveAspectRatio="none">
+          <path d="M48 90 L48 48 L90 48"/><path d="M210 48 L252 48 L252 90"/>
+          <path d="M48 135 L48 177 L90 177"/><path d="M210 177 L252 177 L252 135"/>
+        </svg>
+      </div>
+      <style>@keyframes scanline{0%,100%{top:12%}50%{top:82%}}</style>
+    </div>
+    <div id="scan-status" style="margin-top:14px;font-size:14px;color:var(--t2);text-align:center;min-height:40px;line-height:1.5;">
+      Сфотографируйте штрихкод или выберите фото
+    </div>
+    <div id="scan-result" style="display:none;width:100%;background:var(--card);border-radius:16px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,.08);margin-bottom:4px;"></div>
+    <button id="scan-start-btn" style="width:100%;margin-top:8px;padding:16px;border-radius:14px;font-size:16px;font-weight:700;background:var(--ac);color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;border:none;" onclick="scanWithCamera()">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+      Снять камерой
+    </button>
+    <input type="file" id="scan-camera-input" accept="image/*" capture="environment" style="position:fixed;left:-9999px;opacity:0;width:1px;height:1px;">
+    <input type="file" id="scan-file-input" accept="image/*" style="position:fixed;left:-9999px;opacity:0;width:1px;height:1px;">
+    <button id="scan-camera-btn" style="display:none;width:100%;margin-top:10px;padding:14px;border-radius:14px;font-size:15px;font-weight:600;background:rgba(88,86,214,.12);color:var(--ac);border:none;cursor:pointer;display:none;align-items:center;justify-content:center;gap:10px;" onclick="scanFromFile()">
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><polyline points="3 9 9 9"/><circle cx="15" cy="12" r="3"/></svg>
+  Выбрать фото из галереи
+</button>
+    <button id="scan-stop-btn" style="display:none!important"  style="display:none;width:100%;margin-top:10px;padding:14px;border-radius:14px;font-size:15px;font-weight:600;background:var(--card);color:var(--t2);border:none;cursor:pointer;">Остановить</button>
+  </div>
+</div>
+
+<!-- BARCODE SHEET -->
+<div class="overlay" id="qr-overlay"></div>
+<div class="sheet" id="qr-sheet">
+  <div class="shandle"></div>
+  <div class="sbody">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+      <div class="stitle" style="margin-bottom:0">Этикетка</div>
+      <button onclick="closeQr()" style="background:rgba(88,86,214,.1);border:none;font-size:14px;font-weight:700;color:var(--ac);cursor:pointer;padding:6px 14px;border-radius:20px;">Закрыть</button>
+    </div>
+    <div class="lrow">
+      <div class="lf"><label>Ширина мм</label><input id="lbl-w" type="number" value="50" min="10" inputmode="numeric"></div>
+      <div class="lf"><label>Высота мм</label><input id="lbl-h" type="number" value="30" min="10" inputmode="numeric"></div>
+      <div class="lf"><label>DPI</label>
+        <select id="lbl-dpi"><option value="96">96</option><option value="150">150</option><option value="203" selected>203</option><option value="300">300</option></select>
+      </div>
+    </div>
+    <div style="font-size:11px;font-weight:700;color:var(--t2);letter-spacing:.8px;text-transform:uppercase;margin-bottom:8px">Данные на этикетке</div>
+    <div class="fchecks" id="qr-checks"></div>
+    <div style="font-size:11px;font-weight:700;color:var(--t2);letter-spacing:.8px;text-transform:uppercase;margin-bottom:10px">Позиция штрихкода</div>
+    <div class="qrwrap"><canvas id="qr-canvas"></canvas></div>
+    <div class="qrinfo" id="qr-info"></div>
+    <button class="btn pri" id="btn-dl">⬇ Скачать PNG</button>
+  </div>
+</div>
+
+<!-- FULLSCREEN PHOTO -->
+<div class="fullphoto" id="fullphoto">
+  <div class="fullphoto-bar">
+    <button id="btn-closephoto" style="color:#fff">✕ Закрыть</button>
+    <button onclick="pickReplacePhoto()" style="color:var(--ac);font-size:15px;font-weight:500;cursor:pointer;padding:8px;background:none;border:none;">Заменить</button>
+    <button id="btn-delphoto" style="color:var(--red)">Удалить</button>
+  </div>
+  <div class="fullphoto-img"><img id="fullphoto-img" src="" alt=""></div>
+</div>
+
+<input type="file" accept="image/*" id="inp-photo" style="position:fixed;left:-9999px;top:-9999px;opacity:0;width:1px;height:1px;">
+<input type="file" accept="image/*" id="inp-replacephoto-hidden" style="position:fixed;left:-9999px;top:-9999px;opacity:0;width:1px;height:1px;">
+<script>
+(function() {
+
+// Load JsBarcode library (much simpler and reliable)
+var barcodeReady = false;
+var pendingBuildQr = false;
+var bcScript = document.createElement('script');
+bcScript.src = 'https://cdnjs.cloudflare.com/ajax/libs/jsbarcode/3.11.5/JsBarcode.all.min.js';
+bcScript.onload = function() { barcodeReady = true; if (pendingBuildQr) { pendingBuildQr = false; buildQr(); } };
+document.head.appendChild(bcScript);
+// Fallback poll in case onload missed (cached script)
+(function waitBC() {
+  if (typeof JsBarcode !== 'undefined') { barcodeReady = true; if (pendingBuildQr) { pendingBuildQr = false; buildQr(); } }
+  else setTimeout(waitBC, 100);
+})();
+
+// ===== DB =====
+var db = { catalogs: [] };
+var KEY = 'wh3';
+var curCat = null, curItem = null, editCatId = null;
+var tempCats = [], curPhoto = '';
+var stack = [];
+
+function uid() { return Math.random().toString(36).slice(2,6).toUpperCase(); }
+
+function loadDB() {
+  try { db = JSON.parse(localStorage.getItem(KEY)) || { catalogs: [] }; } catch(e) { db = { catalogs: [] }; }
+  db.catalogs.forEach(function(c) {
+    if (!c.id) c.id = uid();
+    if (!c.categories) c.categories = [];
+    if (!c.items) c.items = [];
+    c.items.forEach(function(i) { if (!i.id) i.id = uid(); if (!i.history) i.history = []; });
+  });
+}
+function saveDB() { localStorage.setItem(KEY, JSON.stringify(db)); }
+function getCat(id) { return db.catalogs.find(function(c) { return c.id === id; }); }
+function getItem(id) {
+  var c = getCat(curCat);
+  return c ? c.items.find(function(i) { return i.id === id; }) : null;
+}
+
+// ===== NAVIGATION =====
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(function(p) { p.classList.remove('show'); });
+  document.getElementById(id).classList.add('show');
+}
+function go(id) {
+  var cur = document.querySelector('.page.show');
+  if (cur) stack.push(cur.id);
+  showPage(id);
+}
+function back() {
+  var prev = stack.pop();
+  showPage(prev || 'pg-cats');
+}
+function navGo(pgId, tabId) {
+  stack = [];
+  showPage(pgId);
+  document.querySelectorAll('.ntab').forEach(function(t) { t.classList.remove('on'); });
+  document.getElementById(tabId).classList.add('on');
+}
+
+// ===== CATALOGS =====
+var CAT_COLORS = ['cc0','cc1','cc2','cc3','cc4','cc5','cc6','cc7'];
+var CAT_ICONS = [
+  '<svg viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>',
+  '<svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>',
+  '<svg viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>',
+  '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>',
+  '<svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>',
+  '<svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>',
+  '<svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>',
+  '<svg viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>'
+];
+
+function renderCats() {
+  var el = document.getElementById('cats-body');
+  // Update dark header stats
+  var totalItems = 0, totalQty = 0;
+  db.catalogs.forEach(function(c) {
+    totalItems += c.items.length;
+    c.items.forEach(function(i) { totalQty += (i.qty || 0); });
+  });
+  var now = new Date();
+  var months = ['ЯНВАРЬ','ФЕВРАЛЬ','МАРТ','АПРЕЛЬ','МАЙ','ИЮНЬ','ИЮЛЬ','АВГУСТ','СЕНТЯБРЬ','ОКТЯБРЬ','НОЯБРЬ','ДЕКАБРЬ'];
+  document.getElementById('hdr-month').textContent = months[now.getMonth()] + ' ' + now.getFullYear();
+  document.getElementById('hdr-total').textContent = 'СКЛАД';
+  document.getElementById('hdr-sub').textContent = db.catalogs.length + ' кат. · ' + totalItems + ' позиций';
+
+  if (!db.catalogs.length) {
+    el.innerHTML = '<div class="empty" style="grid-column:1/-1"><svg viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg><p>Нажмите + Добавить</p></div>';
+    return;
+  }
+  var h = '';
+  db.catalogs.forEach(function(c, i) {
+    var col = CAT_COLORS[i % CAT_COLORS.length];
+    var ico = CAT_ICONS[i % CAT_ICONS.length];
+    var qty = 0; c.items.forEach(function(it) { qty += (it.qty || 0); });
+    h += '<div class="catcard ' + col + '" onclick="openCat(\'' + c.id + '\')">'
+      + '<div class="catcard-glow"></div>'
+      + '<button class="catcard-menu" onclick="event.stopPropagation();openCatForm(\'' + c.id + '\')">⋯</button>'
+      + '<div class="catcard-bottom">'
+      + '<div style="font-size:19px;font-weight:800;color:#fff;line-height:1.2;margin-bottom:10px;word-break:break-word;">' + esc(c.name) + '</div>'
+      + '<div class="catcard-count">' + c.items.length + '</div>'
+      + '<div class="catcard-label">позиций</div>'
+      + '</div>'
+      + '</div>';
+  });
+  el.innerHTML = h;
+}
+
+function openCat(id) {
+  curCat = id;
+  var c = getCat(id);
+  document.getElementById('items-title').textContent = c.name;
+  renderChips();
+  renderItems();
+  go('pg-items');
+}
+
+// ===== CAT FORM =====
+function openCatForm(id) {
+  editCatId = id;
+  if (id) {
+    var c = getCat(id);
+    tempCats = c.categories.slice();
+    document.getElementById('catform-title').textContent = 'Редактировать';
+    document.getElementById('cf-name').value = c.name;
+    document.getElementById('cf-desc').value = c.desc || '';
+    document.getElementById('cf-delbtn').style.display = '';
+  } else {
+    tempCats = [];
+    document.getElementById('catform-title').textContent = 'Новый каталог';
+    document.getElementById('cf-name').value = '';
+    document.getElementById('cf-desc').value = '';
+    document.getElementById('cf-delbtn').style.display = 'none';
+  }
+  renderTempCats();
+  go('pg-catform');
+  if (!id) { setTimeout(function() { document.getElementById('cf-name').focus(); }, 300); }
+}
+function renderTempCats() {
+  var el = document.getElementById('cf-catlist');
+  if (!tempCats.length) { el.innerHTML = '<div style="padding:10px 16px;font-size:14px;color:var(--t2)">Нет категорий</div>'; return; }
+  var h = '';
+  tempCats.forEach(function(c, i) {
+    h += '<div class="catitem"><span>' + esc(c) + '</span><button class="catdel" onclick="rmTempCat(' + i + ')">×</button></div>';
+  });
+  el.innerHTML = h;
+}
+function addTempCat() {
+  var v = document.getElementById('cf-newcat').value.trim();
+  if (!v || tempCats.indexOf(v) >= 0) return;
+  tempCats.push(v);
+  document.getElementById('cf-newcat').value = '';
+  renderTempCats();
+}
+function rmTempCat(i) { tempCats.splice(i, 1); renderTempCats(); }
+function saveCat() {
+  var name = document.getElementById('cf-name').value.trim();
+  if (!name) { alert('Введите название'); return; }
+  var desc = document.getElementById('cf-desc').value.trim();
+  if (editCatId) {
+    var c = getCat(editCatId);
+    c.name = name; c.desc = desc; c.categories = tempCats.slice();
+    if (editCatId === curCat) { document.getElementById('items-title').textContent = name; renderChips(); }
+  } else {
+    db.catalogs.push({ id: uid(), name: name, desc: desc, categories: tempCats.slice(), items: [] });
+  }
+  saveDB(); renderCats(); back();
+}
+function delCat() {
+  if (!confirm('Удалить каталог и все товары?')) return;
+  db.catalogs = db.catalogs.filter(function(c) { return c.id !== editCatId; });
+  if (curCat === editCatId) curCat = null;
+  saveDB(); renderCats(); stack = []; navGo('pg-cats', 'nt-cats');
+}
+
+// ===== ITEMS =====
+var activeChip = '';
+var chipCategories = [];
+function renderChips() {
+  var c = getCat(curCat);
+  activeChip = '';
+  chipCategories = (c.categories || []).slice();
+  var el = document.getElementById('items-chips');
+  var h = '<div class="chip on" onclick="setChip(-1,this)">Все</div>';
+  chipCategories.forEach(function(cat, i) {
+    h += '<div class="chip" onclick="setChip(' + i + ',this)">' + esc(cat) + '</div>';
+  });
+  el.innerHTML = h;
+}
+function setChip(idx, el) {
+  activeChip = idx < 0 ? '' : chipCategories[idx];
+  document.querySelectorAll('#items-chips .chip').forEach(function(c) { c.classList.remove('on'); });
+  el.classList.add('on');
+  renderItems();
+}
+function renderItems() {
+  var c = getCat(curCat);
+  var lst = document.getElementById('items-list');
+  var emp = document.getElementById('items-empty');
+  if (!c) { lst.innerHTML = ''; emp.style.display = ''; return; }
+  var q = (document.getElementById('items-q').value || '').toLowerCase();
+  var items = c.items.filter(function(i) {
+    return (!q || i.name.toLowerCase().indexOf(q) >= 0 || (i.sku || '').toLowerCase().indexOf(q) >= 0)
+        && (!activeChip || i.category === activeChip);
+  });
+  if (!items.length) {
+    lst.innerHTML = ''; lst.style.display = 'none'; emp.style.display = '';
+    document.getElementById('items-empty-msg').textContent = (q || activeChip) ? 'Ничего не найдено' : 'Нажмите + чтобы добавить товар';
+    return;
+  }
+  emp.style.display = 'none'; lst.style.display = '';
+  var h = '';
+  items.forEach(function(i) {
+    var low = i.minQty && i.qty <= i.minQty;
+    var thumb = i.photo
+      ? '<img src="' + i.photo + '" loading="lazy">'
+      : '<svg viewBox="0 0 24 24" fill="none" stroke="#b0b0c0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="26" height="26"><rect x="2" y="6" width="20" height="15" rx="3"/><circle cx="12" cy="13" r="3.5"/><path d="M8 6l1.5-2.5h5L16 6"/><circle cx="18.5" cy="9.5" r=".8" fill="#b0b0c0" stroke="none"/></svg>';
+    var sub = [i.sku ? 'Арт: ' + esc(i.sku) : '', i.category ? esc(i.category) : ''].filter(Boolean).join(' · ');
+    h += '<div class="irow" onclick="openDetail(\'' + i.id + '\')">'
+      + '<div class="ithumb">' + thumb + '</div>'
+      + '<div class="imid"><div class="iname">' + esc(i.name) + '</div><div class="isub">' + (sub || '&nbsp;') + '</div></div>'
+      + '<div class="iqty"><div class="qn' + (low ? ' low' : '') + '">' + i.qty + '</div><div class="qu">' + esc(i.unit || 'шт') + (i.price ? ' · ' + fmt(i.price) : '') + '</div></div>'
+      + '</div>';
+  });
+  lst.innerHTML = h;
+}
+
+// ===== ITEM FORM =====
+function openItemForm(iid) {
+  curItem = iid;
+  var c = getCat(curCat);
+  var sel = document.getElementById('if-cat');
+  sel.innerHTML = '<option value="">— без категории —</option>';
+  (c.categories || []).forEach(function(cat) {
+    sel.innerHTML += '<option value="' + esc(cat) + '">' + esc(cat) + '</option>';
+  });
+  if (iid) {
+    var i = getItem(iid);
+    document.getElementById('itemform-title').textContent = 'Редактировать';
+    document.getElementById('if-name').value = i.name || '';
+    document.getElementById('if-sku').value = i.sku || '';
+    sel.value = i.category || '';
+    document.getElementById('if-price').value = i.price || '';
+    document.getElementById('if-qty').value = i.qty || 0;
+    document.getElementById('if-unit').value = i.unit || 'шт';
+    document.getElementById('if-min').value = i.minQty || '';
+    document.getElementById('if-loc').value = i.location || '';
+    document.getElementById('if-note').value = i.notes || '';
+    curPhoto = i.photo || '';
+    document.getElementById('if-delbtn').style.display = '';
+  } else {
+    document.getElementById('itemform-title').textContent = 'Новый товар';
+    ['if-name','if-sku','if-price','if-qty','if-min','if-loc','if-note'].forEach(function(x) { document.getElementById(x).value = ''; });
+    document.getElementById('if-unit').value = 'шт';
+    sel.value = ''; curPhoto = '';
+    document.getElementById('if-delbtn').style.display = 'none';
+  }
+  setPhotoBox(curPhoto);
+  go('pg-itemform');
+  setTimeout(function() { document.getElementById('if-name').focus(); }, 300);
+}
+function setPhotoBox(src) {
+  var b = document.getElementById('photobox');
+  b.innerHTML = src ? '<img src="' + src + '">'
+    : '<svg viewBox="0 0 24 24" fill="none" stroke="var(--t2)" stroke-width="1.6"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>';
+}
+function processPhoto(file, cb) {
+  var r = new FileReader();
+  r.onload = function(ev) {
+    var img = new Image();
+    img.onload = function() {
+      var cv = document.createElement('canvas');
+      var M = 800, w = img.width, h = img.height;
+      if (w > h && w > M) { h = h * M / w; w = M; } else if (h > w && h > M) { w = w * M / h; h = M; }
+      cv.width = w; cv.height = h;
+      cv.getContext('2d').drawImage(img, 0, 0, w, h);
+      cb(cv.toDataURL('image/jpeg', .75));
+    };
+    img.src = ev.target.result;
+  };
+  r.readAsDataURL(file);
+}
+function saveItem() {
+  var name = document.getElementById('if-name').value.trim();
+  if (!name) { alert('Введите название'); return; }
+  var c = getCat(curCat);
+  var qty = parseInt(document.getElementById('if-qty').value) || 0;
+  var data = {
+    name: name,
+    sku: document.getElementById('if-sku').value.trim(),
+    category: document.getElementById('if-cat').value,
+    price: parseFloat(document.getElementById('if-price').value) || 0,
+    qty: qty,
+    unit: document.getElementById('if-unit').value,
+    minQty: parseInt(document.getElementById('if-min').value) || 0,
+    location: document.getElementById('if-loc').value.trim(),
+    notes: document.getElementById('if-note').value.trim(),
+    photo: curPhoto,
+    updatedAt: new Date().toISOString()
+  };
+  if (curItem) {
+    var i = getItem(curItem);
+    var old = i.qty;
+    Object.assign(i, data);
+    if (qty !== old) i.history.unshift({ delta: qty - old, total: qty, date: new Date().toISOString(), note: 'Редактирование' });
+  } else {
+    c.items.push(Object.assign({ id: uid(), history: [{ delta: qty, total: qty, date: new Date().toISOString(), note: 'Создан' }], createdAt: new Date().toISOString() }, data));
+  }
+  saveDB(); renderItems(); back();
+}
+function delItem() {
+  if (!confirm('Удалить товар?')) return;
+  var c = getCat(curCat);
+  c.items = c.items.filter(function(i) { return i.id !== curItem; });
+  saveDB(); renderItems();
+  stack = stack.filter(function(s) { return s !== 'pg-detail'; });
+  back(); back();
+}
+
+// ===== DETAIL =====
+function openDetail(iid) {
+  curItem = iid;
+  var i = getItem(iid);
+  document.getElementById('det-title').textContent = i.name;
+  refreshDetPhoto(i);
+  document.getElementById('det-qty').textContent = i.qty;
+  document.getElementById('qty-step').value = 1;
+  renderDetInfo(i);
+  renderDetHist(i);
+  go('pg-detail');
+}
+function refreshDetPhoto(i) {
+  var ph = document.getElementById('det-photo');
+  if (i.photo) {
+    ph.innerHTML = '<img src="' + i.photo + '" style="width:100%;height:100%;object-fit:contain">';
+    ph.onclick = function() { openFullPhoto(i.photo); };
+  } else {
+    ph.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="var(--t2)" stroke-width="1.2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>';
+    ph.onclick = null;
+  }
+}
+function renderDetInfo(i) {
+  var rows = [
+    ['Артикул', i.sku], ['Цена', i.price ? fmt(i.price) : null],
+    ['Категория', i.category], ['Место', i.location],
+    ['Единица', i.unit], ['Мин. остаток', i.minQty || null], ['Пояснение', i.notes]
+  ].filter(function(r) { return r[1]; });
+  var h = '';
+  rows.forEach(function(r) {
+    h += '<div class="detrow"><span class="detlabel">' + r[0] + '</span><span class="detval">' + esc(String(r[1])) + '</span></div>';
+  });
+  document.getElementById('det-info').innerHTML = h || '<div style="padding:12px 16px;font-size:14px;color:var(--t2)">Нет данных</div>';
+}
+function renderDetHist(i) {
+  document.getElementById('det-hist-grp').style.display = '';
+  var el = document.getElementById('det-hist');
+  if (!i.history || !i.history.length) { el.innerHTML = '<div style="padding:16px;text-align:center;font-size:14px;color:var(--t2)">Нет записей</div>'; return; }
+  var h = '';
+  i.history.slice(0, 40).forEach(function(rec) {
+    var d = new Date(rec.date).toLocaleString('ru-RU', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' });
+    var sign = rec.delta > 0;
+    h += '<div class="hrow">'
+      + '<div style="display:flex;align-items:center;gap:10px;">'
+      + '<div style="width:34px;height:34px;border-radius:10px;background:' + (sign ? 'rgba(52,199,89,.12)' : 'rgba(255,59,48,.1)') + ';display:flex;align-items:center;justify-content:center;flex-shrink:0;">'
+      + '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="' + (sign ? '#34C759' : '#FF3B30') + '" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/>' + (sign ? '<line x1="5" y1="12" x2="19" y2="12"/>' : '') + '</svg>'
+      + '</div>'
+      + '<div><div class="hnote">' + esc(rec.note || '') + '</div><div class="hdate">' + d + '</div></div>'
+      + '</div>'
+      + '<div style="text-align:right"><div class="hdelta ' + (sign ? 'plus' : 'minus') + '">' + (sign ? '+' : '') + rec.delta + '</div><div class="htotal">→ ' + rec.total + '</div></div>'
+      + '</div>';
+  });
+  el.innerHTML = h;
+}
+function adjQty(dir) {
+  var step = parseInt(document.getElementById('qty-step').value) || 1;
+  var i = getItem(curItem); if (!i) return;
+  var nq = Math.max(0, i.qty + dir * step);
+  i.history.unshift({ delta: nq - i.qty, total: nq, date: new Date().toISOString(), note: dir > 0 ? 'Приход' : 'Расход' });
+  i.qty = nq; saveDB();
+  document.getElementById('det-qty').textContent = nq;
+  renderDetHist(i); renderItems();
+}
+
+// ===== FULLSCREEN PHOTO =====
+function openFullPhoto(src) {
+  document.getElementById('fullphoto-img').src = src;
+  document.getElementById('fullphoto').classList.add('on');
+}
+function closeFullPhoto() {
+  document.getElementById('fullphoto').classList.remove('on');
+}
+function deletePhoto() {
+  if (!confirm('Удалить фото?')) return;
+  var i = getItem(curItem); if (!i) return;
+  i.photo = ''; saveDB();
+  refreshDetPhoto(i);
+  closeFullPhoto();
+}
+
+// ===== QR =====
+var qrItem = null;
+function openQrSheet() {
+  qrItem = getItem(curItem); if (!qrItem) return;
+  var fields = [
+    { k: 'name', l: 'Название', on: true }, { k: 'sku', l: 'Артикул', on: true },
+    { k: 'price', l: 'Цена', on: false }, { k: 'qty', l: 'Кол-во', on: false },
+    { k: 'category', l: 'Категория', on: false }, { k: 'location', l: 'Место', on: false }, { k: 'id', l: 'ID', on: false }
+  ];
+  var h = '';
+  fields.forEach(function(f) {
+    h += '<label class="fcheck"><input type="checkbox" value="' + f.k + '"' + (f.on ? ' checked' : '') + '> ' + f.l + '</label>';
+  });
+  document.getElementById('qr-checks').innerHTML = h;
+  document.getElementById('qr-overlay').classList.add('on');
+  document.getElementById('qr-sheet').classList.add('on');
+  // attach change handlers
+  document.querySelectorAll('#qr-checks input, input[name="qrpos"], #lbl-w, #lbl-h, #lbl-dpi').forEach(function(el) {
+    el.onchange = buildQr;
+    el.oninput = buildQr;
+  });
+  setTimeout(function() { if (barcodeReady) buildQr(); else pendingBuildQr = true; }, 300);
+}
+function closeQr() {
+  document.getElementById('qr-overlay').classList.remove('on');
+  document.getElementById('qr-sheet').classList.remove('on');
+}
+function buildQr() {
+  if (!qrItem) return;
+  if (typeof JsBarcode === 'undefined') { pendingBuildQr = true; return; }
+
+  var wMm = parseFloat(document.getElementById('lbl-w').value) || 50;
+  var hMm = parseFloat(document.getElementById('lbl-h').value) || 30;
+  var dpi  = parseInt(document.getElementById('lbl-dpi').value) || 203;
+  var k    = dpi / 25.4;
+  var wPx  = Math.round(wMm * k);
+  var hPx  = Math.round(hMm * k);
+
+  var cv  = document.getElementById('qr-canvas');
+  cv.width = wPx; cv.height = hPx;
+  var maxW = Math.min((window.innerWidth || 360) - 48, 340);
+  var sc   = maxW / wPx;
+  cv.style.width  = Math.round(wPx * sc) + 'px';
+  cv.style.height = Math.round(hPx * sc) + 'px';
+  var ctx = cv.getContext('2d');
+  ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, wPx, hPx);
+
+  var pos = 'top'; // text top, barcode bottom — fixed layout
+  var pad   = Math.max(4, Math.round(Math.min(wPx, hPx) * 0.06));
+
+  // Collect text lines
+  var checked = [];
+  document.querySelectorAll('#qr-checks input:checked').forEach(function(e) { checked.push(e.value); });
+  var lines = [];
+  if (checked.indexOf('name')     >= 0 && qrItem.name)     lines.push({ t: qrItem.name, b: true });
+  if (checked.indexOf('sku')      >= 0 && qrItem.sku)      lines.push({ t: 'Арт: ' + qrItem.sku });
+  if (checked.indexOf('price')    >= 0 && qrItem.price)    lines.push({ t: fmt(qrItem.price) });
+  if (checked.indexOf('qty')      >= 0)                    lines.push({ t: qrItem.qty + ' ' + (qrItem.unit || 'шт') });
+  if (checked.indexOf('category') >= 0 && qrItem.category) lines.push({ t: qrItem.category });
+  if (checked.indexOf('location') >= 0 && qrItem.location) lines.push({ t: qrItem.location });
+  if (checked.indexOf('id')       >= 0)                    lines.push({ t: qrItem.id, sm: true });
+
+  // Layout: text TOP centered, barcode BOTTOM full width
+  var textH = lines.length ? Math.round(hPx * 0.45) : 0;
+  var bcH   = hPx - textH - pad * 2;
+  var bcW   = wPx - pad * 2;
+  var bcX   = pad;
+  var bcY   = textH + pad;
+
+  // Draw text — centered, top area
+  if (lines.length && textH > 0) {
+    var tW   = wPx - pad * 2;
+    var base = Math.max(8, Math.round(textH / Math.max(lines.length, 1) * 0.52));
+    ctx.textBaseline = 'top';
+    ctx.textAlign    = 'center';
+    var totalH = 0;
+    lines.forEach(function(l) {
+      var fs = l.b ? Math.min(base + 3, Math.round(tW * 0.22)) : base;
+      totalH += fs + 3;
+    });
+    var ty = pad + Math.max(0, Math.round((textH - pad - totalH) / 2));
+    lines.forEach(function(l) {
+      var fs = l.b ? Math.min(base + 3, Math.round(tW * 0.22)) : base;
+      ctx.font      = (l.b ? '700 ' : '500 ') + fs + 'px sans-serif';
+      ctx.fillStyle = '#111';
+      ctx.fillText(l.t, wPx / 2, ty);
+      ty += fs + 3;
+    });
+    ctx.textAlign = 'left';
+  }
+
+  // Draw barcode — full width at bottom, NO text under bars
+  var barcodeVal = (qrItem.sku || '').replace(/[^ -~]/g, '').slice(0, 20);
+  if (!barcodeVal) barcodeVal = qrItem.id.slice(0, 8).toUpperCase();
+
+  var SCALE  = 3;
+  var bc3W   = bcW * SCALE;
+  var bc3H   = bcH * SCALE;
+  var modules = 11 * barcodeVal.length + 35 + 20;
+  var barWidth = Math.max(3, Math.round(bc3W / modules));
+
+  var bcCanvas = document.createElement('canvas');
+  try {
+    JsBarcode(bcCanvas, barcodeVal, {
+      format:       'CODE128',
+      width:        barWidth,
+      height:       Math.round(bc3H * 0.9),
+      displayValue: false,
+      margin:       0,
+      marginTop:    Math.round(bc3H * 0.05),
+      marginBottom: Math.round(bc3H * 0.05),
+      background:   '#ffffff',
+      lineColor:    '#000000'
+    });
+    // Scale down to fit zone
+    ctx.drawImage(bcCanvas, bcX, bcY, bcW, bcH);
+  } catch(e) {
+    ctx.fillStyle = '#999';
+    ctx.font = '12px sans-serif';
+    ctx.textBaseline = 'middle';
+    ctx.textAlign = 'center';
+    ctx.fillText('нет кода', wPx / 2, bcY + bcH / 2);
+    ctx.textAlign = 'left';
+  }
+
+  document.getElementById('qr-info').textContent =
+    wPx + 'x' + hPx + 'px  ' + wMm + 'x' + hMm + ' мм  ' + dpi + ' dpi';
+}
+function dlLabel() {
+  var a = document.createElement('a');
+  a.download = (qrItem ? qrItem.name.replace(/[^a-zа-яё0-9]/gi, '_') : 'label') + '_label.png';
+  a.href = document.getElementById('qr-canvas').toDataURL('image/png');
+  a.click();
+}
+
+// ===== SCANNER =====
+var scanStream = null;
+var scanInterval = null;
+var scanPaused = false;
+
+function openScanPage() {
+  navGo('pg-scan', 'nt-scan');
+  document.getElementById('scan-result').style.display = 'none';
+  document.getElementById('scan-result').innerHTML = '';
+  document.getElementById('scan-status').textContent = 'Снимите штрихкод камерой или выберите фото из галереи';
+  document.getElementById('scan-preview-img').style.display = 'none';
+  document.getElementById('scan-idle-overlay').style.display = 'flex';
+  document.getElementById('scan-active-overlay').style.display = 'none';
+  document.getElementById('scan-camera-btn').style.display = '';
+  scanPaused = false;
+}
+
+// --- FILE / PHOTO capture (works on local files, no HTTPS needed) ---
+
+function scanFromFile() {
+  var inp = document.getElementById('scan-file-input');
+  inp.value = '';
+  inp.click();
+}
+function scanWithCamera() {
+  var inp = document.getElementById('scan-camera-input');
+  inp.value = '';
+  inp.click();
+}
+window.scanFromFile = scanFromFile;
+window.scanWithCamera = scanWithCamera;
+function initScanFileInput() {
+  function handleScanFile(e) {
+    var file = e.target.files && e.target.files[0];
+    if (!file) return;
+    var url = URL.createObjectURL(file);
+    var img = document.getElementById('scan-preview-img');
+    img.src = url;
+    img.style.display = 'block';
+    document.getElementById('scan-idle-overlay').style.display = 'none';
+    document.getElementById('scan-active-overlay').style.display = 'none';
+    document.getElementById('scan-status').textContent = 'Распознаю штрихкод…';
+    document.getElementById('scan-result').style.display = 'none';
+    setTimeout(function(){ e.target.value = ''; }, 500);
+    decodeImageUrl(url);
+  }
+  document.getElementById('scan-file-input').onchange = handleScanFile;
+  document.getElementById('scan-camera-input').onchange = handleScanFile;
+}
+
+function decodeImageUrl(url) {
+  // Try native BarcodeDetector first
+  if (typeof BarcodeDetector !== 'undefined') {
+    var img = new Image();
+    img.onload = function() {
+      var bd = new BarcodeDetector({ formats: ['code_128','ean_13','ean_8','code_39','upc_a','upc_e','itf','codabar'] });
+      bd.detect(img).then(function(codes) {
+        if (codes.length > 0) { onBarcodeFound(codes[0].rawValue); }
+        else { decodeViaZXing(url); }
+      }).catch(function() { decodeViaZXing(url); });
+    };
+    img.src = url;
+  } else {
+    decodeViaZXing(url);
+  }
+}
+
+function decodeViaZXing(url) {
+  function runZXing() {
+    try {
+      var reader = new ZXing.BrowserMultiFormatReader();
+      reader.decodeFromImageUrl(url).then(function(result) {
+        onBarcodeFound(result.getText());
+      }).catch(function() {
+        document.getElementById('scan-status').textContent = '❌ Штрихкод не распознан. Попробуйте ещё раз';
+      });
+    } catch(e) {
+      document.getElementById('scan-status').textContent = '❌ Ошибка декодера';
+    }
+  }
+  if (typeof ZXing !== 'undefined') { runZXing(); return; }
+  var s = document.createElement('script');
+  s.src = 'https://cdnjs.cloudflare.com/ajax/libs/zxing-js/0.19.1/umd/index.min.js';
+  s.onload = runZXing;
+  s.onerror = function() {
+    document.getElementById('scan-status').textContent = '❌ Нет интернета для загрузки декодера';
+  };
+  document.head.appendChild(s);
+}
+
+// --- LIVE CAMERA (HTTPS only) ---
+function startScan() {
+  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+    document.getElementById('scan-status').textContent = 'Камера недоступна (нужен HTTPS)';
+    return;
+  }
+  navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' }, audio: false })
+    .then(function(stream) {
+      scanStream = stream;
+      var video = document.getElementById('scan-video');
+      video.srcObject = stream;
+      video.style.display = 'block';
+      video.play();
+      document.getElementById('scan-preview-img').style.display = 'none';
+      document.getElementById('scan-idle-overlay').style.display = 'none';
+      document.getElementById('scan-active-overlay').style.display = 'block';
+      document.getElementById('scan-camera-btn').style.display = 'none';
+      document.getElementById('scan-stop-btn').style.display = '';
+      document.getElementById('scan-status').textContent = 'Наведите камеру на штрихкод…';
+      scanPaused = false;
+      startLiveDecoding(video);
+    })
+    .catch(function(err) {
+      document.getElementById('scan-status').textContent = 'Нет доступа к камере: ' + err.message;
+    });
+}
+
+function stopScan() {
+  if (scanStream) { scanStream.getTracks().forEach(function(t) { t.stop(); }); scanStream = null; }
+  if (scanInterval) { clearInterval(scanInterval); scanInterval = null; }
+  var video = document.getElementById('scan-video');
+  video.srcObject = null; video.style.display = 'none';
+  document.getElementById('scan-active-overlay').style.display = 'none';
+  document.getElementById('scan-idle-overlay').style.display = 'flex';
+  document.getElementById('scan-camera-btn').style.display = '';
+  document.getElementById('scan-stop-btn').style.display = 'none';
+  document.getElementById('scan-status').textContent = 'Снимите штрихкод камерой или выберите фото из галереи';
+}
+
+function startLiveDecoding(video) {
+  if (typeof BarcodeDetector !== 'undefined') {
+    var detector = new BarcodeDetector({ formats: ['code_128','ean_13','ean_8','code_39','upc_a','upc_e'] });
+    scanInterval = setInterval(function() {
+      if (scanPaused || video.readyState < 2) return;
+      detector.detect(video).then(function(codes) {
+        if (codes.length > 0) onBarcodeFound(codes[0].rawValue);
+      }).catch(function() {});
+    }, 400);
+  }
+}
+
+function onBarcodeFound(code) {
+  if (scanPaused) return;
+  scanPaused = true;
+  var found = null, foundCat = null;
+  db.catalogs.forEach(function(c) {
+    c.items.forEach(function(i) {
+      if (i.id === code) { found = i; foundCat = c; }
+    });
+  });
+  var res = document.getElementById('scan-result');
+  if (found) {
+    document.getElementById('scan-status').textContent = '✅ Товар найден!';
+    var low = found.minQty && found.qty <= found.minQty;
+    res.innerHTML =
+      '<div style="display:flex;align-items:center;gap:12px;padding:14px 16px;cursor:pointer;" onclick="scanGoToItem(\'' + foundCat.id + '\',\'' + found.id + '\')">'
+      + (found.photo ? '<div style="width:52px;height:52px;border-radius:10px;overflow:hidden;flex-shrink:0"><img src="' + found.photo + '" style="width:100%;height:100%;object-fit:cover"></div>'
+                     : '<div style="width:52px;height:52px;border-radius:10px;background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0">📦</div>')
+      + '<div style="flex:1;min-width:0">'
+      + '<div style="font-size:16px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + esc(found.name) + '</div>'
+      + '<div style="font-size:13px;color:var(--t2);margin-top:2px">' + esc(foundCat.name) + (found.category ? ' · ' + esc(found.category) : '') + '</div>'
+      + (found.sku ? '<div style="font-size:13px;color:var(--t2)">Арт: ' + esc(found.sku) + '</div>' : '')
+      + '</div>'
+      + '<div style="text-align:right;flex-shrink:0;margin-right:4px">'
+      + '<div style="font-size:24px;font-weight:800;' + (low ? 'color:var(--red)' : '') + '">' + found.qty + '</div>'
+      + '<div style="font-size:12px;color:var(--t2)">' + esc(found.unit || 'шт') + '</div>'
+      + '</div>'
+      + '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#C7C7CC" stroke-width="2" stroke-linecap="round"><path d="M9 18l6-6-6-6"/></svg>'
+      + '</div>';
+    res.style.display = 'block';
+    if (navigator.vibrate) navigator.vibrate(80);
+    setTimeout(function() { scanPaused = false; }, 3000);
+  } else {
+    document.getElementById('scan-status').textContent = '❌ Товар не найден';
+    res.style.display = 'none';
+    setTimeout(function() { scanPaused = false; document.getElementById('scan-status').textContent = 'Снимите штрихкод камерой или выберите фото из галереи'; }, 2500);
+  }
+}
+
+function scanGoToItem(catId, itemId) {
+  stopScan();
+  curCat = catId;
+  var c = getCat(catId);
+  document.getElementById('items-title').textContent = c.name;
+  renderChips(); renderItems();
+  stack = ['pg-scan'];
+  openDetail(itemId);
+}
+
+// ===== SETTINGS =====
+function renderStats() {
+  var total = 0, sum = 0;
+  db.catalogs.forEach(function(c) {
+    total += c.items.length;
+    c.items.forEach(function(i) { sum += (i.price || 0) * (i.qty || 0); });
+  });
+  document.getElementById('stats-grp').innerHTML =
+    '<div class="row" style="cursor:default"><div class="rico" style="background:var(--ac)"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg></div><div class="rmid"><div class="rt">Каталогов</div></div><div style="font-size:17px;font-weight:700">' + db.catalogs.length + '</div></div>'
+    + '<div class="row" style="cursor:default"><div class="rico" style="background:#007AFF"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg></div><div class="rmid"><div class="rt">Позиций</div></div><div style="font-size:17px;font-weight:700">' + total + '</div></div>'
+    + '<div class="row" style="cursor:default"><div class="rico" style="background:var(--grn)"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div><div class="rmid"><div class="rt">Сумма склада</div></div><div style="font-size:17px;font-weight:700">' + fmt(sum) + '</div></div>';
+}
+function exportDB() {
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([JSON.stringify(db, null, 2)], { type: 'application/json' }));
+  a.download = 'catalog_' + new Date().toISOString().slice(0, 10) + '.json';
+  a.click();
+}
+
+// ===== UTILS =====
+function fmt(p) {
+  var n = parseFloat(p) || 0;
+  return n % 1 === 0 ? n.toLocaleString('ru-RU') : n.toLocaleString('ru-RU', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+function esc(s) {
+  return (s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
+// ===== WIRE UP BUTTONS =====
+
+function pickPhoto() {
+  var inp = document.getElementById('inp-photo');
+  inp.value = '';
+  inp.click();
+}
+function pickReplacePhoto() {
+  var inp = document.getElementById('inp-replacephoto-hidden');
+  inp.value = '';
+  inp.click();
+}
+window.pickPhoto = pickPhoto;
+window.pickReplacePhoto = pickReplacePhoto;
+
+function init() {
+  loadDB();
+  renderCats();
+
+  document.getElementById('btn-newcat').onclick = function() { openCatForm(null); };
+  document.getElementById('btn-catback').onclick = back;
+  document.getElementById('btn-catsave').onclick = saveCat;
+  document.getElementById('btn-addcat').onclick = addTempCat;
+  document.getElementById('btn-delcat').onclick = delCat;
+  document.getElementById('cf-newcat').onkeydown = function(e) { if (e.key === 'Enter') { e.preventDefault(); addTempCat(); } };
+
+  document.getElementById('btn-itemsback').onclick = back;
+  document.getElementById('btn-editcat').onclick = function() { openCatForm(curCat); };
+  document.getElementById('btn-additem').onclick = function() { openItemForm(null); };
+  document.getElementById('items-q').oninput = renderItems;
+
+  document.getElementById('btn-itemformback').onclick = back;
+  document.getElementById('btn-saveitem').onclick = saveItem;
+  document.getElementById('btn-delitem').onclick = delItem;
+  // photo input wired in init below
+  document.getElementById('inp-photo').onchange = function(e) {
+    var f = e.target.files && e.target.files[0]; if (!f) return;
+    var saved = f;
+    setTimeout(function(){ document.getElementById('inp-photo').value=''; }, 500);
+    processPhoto(saved, function(src) { curPhoto = src; setPhotoBox(src); });
+  };
+
+  document.getElementById('btn-detback').onclick = back;
+  document.getElementById('btn-edititem').onclick = function() { openItemForm(curItem); };
+  document.getElementById('btn-minus').onclick = function() { adjQty(-1); };
+  document.getElementById('btn-plus').onclick = function() { adjQty(1); };
+  document.getElementById('btn-qr').onclick = openQrSheet;
+
+  document.getElementById('qr-overlay').onclick = closeQr;
+  document.getElementById('btn-dl').onclick = dlLabel;
+
+  document.getElementById('btn-closephoto').onclick = closeFullPhoto;
+  document.getElementById('btn-delphoto').onclick = deletePhoto;
+  document.getElementById('inp-replacephoto-hidden').onchange = function(e) {
+    var f = e.target.files && e.target.files[0]; if (!f) return;
+    var saved = f;
+    setTimeout(function(){ document.getElementById('inp-replacephoto-hidden').value=''; }, 500);
+    processPhoto(saved, function(src) {
+      var i = getItem(curItem); if (!i) return;
+      i.photo = src; saveDB();
+      refreshDetPhoto(i);
+      document.getElementById('fullphoto-img').src = src;
+    });
+    e.target.value = '';
+  };
+
+  document.getElementById('nt-cats').onclick = function() { navGo('pg-cats', 'nt-cats'); };
+  document.getElementById('nt-scan').onclick = openScanPage;
+  document.getElementById('nt-set').onclick = function() { navGo('pg-settings', 'nt-set'); renderStats(); };
+  // scan-camera-btn is now a label, no onclick needed
+  document.getElementById('scan-stop-btn').onclick = stopScan;
+  initScanFileInput();
+  document.querySelector('#pg-settings .row').onclick = exportDB;
+  document.getElementById('inp-import').onchange = function(e) {
+    var f = e.target.files[0]; if (!f) return;
+    var r = new FileReader();
+    r.onload = function(ev) {
+      try {
+        var d = JSON.parse(ev.target.result);
+        if (!d.catalogs) { alert('Неверный формат'); return; }
+        if (confirm('Заменить все данные?')) { db = d; saveDB(); renderCats(); navGo('pg-cats', 'nt-cats'); }
+      } catch(err) { alert('Ошибка файла'); }
+    };
+    r.readAsText(f); e.target.value = '';
+  };
+}
+
+init();
+
+// Expose functions used in inline onclick handlers
+window.openCat = openCat;
+window.openCatForm = openCatForm;
+window.rmTempCat = rmTempCat;
+window.setChip = setChip;
+window.openDetail = openDetail;
+window.openItemForm = openItemForm;
+window.closeQr = closeQr;
+window.scanGoToItem = scanGoToItem;
+window.startScan = startScan;
+  window.scanWithCamera = scanWithCamera;
+window.stopScan = stopScan;
+window.scanFromFile = scanFromFile;
+window.pickPhoto = pickPhoto;
+window.pickReplacePhoto = pickReplacePhoto;
+
+})();
+</script>
+</body>
+</html>
