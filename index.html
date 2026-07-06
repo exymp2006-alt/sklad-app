@@ -350,6 +350,9 @@ body.logged-in .navbar{display:flex;}
       <button class="btn" id="btn-saveitem" style="background:var(--ac);color:#fff;font-weight:800;font-size:16px;">✓ Сохранить</button>
     </div>
     <div style="height:max(calc(var(--nav) + 16px), 320px)"></div>
+  </div>
+</div>
+
 <div class="page" id="pg-detail" style="display:flex;flex-direction:column;">
 
   <!-- Цветная шапка -->
@@ -773,13 +776,15 @@ body.logged-in .navbar{display:flex;}
 </div>
 
 <script>
-// Удаляем старый Service Worker и его кеш
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.getRegistrations().then(function(regs) {
-    regs.forEach(function(reg) { reg.unregister(); });
-  });
-  caches.keys().then(function(keys) {
-    keys.forEach(function(key) { caches.delete(key); });
+// Регистрация service worker — выполняется первой, независимо от остального
+// кода приложения, чтобы офлайн-режим и установка PWA точно работали.
+if ('serviceWorker' in navigator && window.isSecureContext) {
+  window.addEventListener('load', function() {
+    navigator.serviceWorker.register('sw.js').then(function(reg) {
+      console.log('SW зарегистрирован:', reg.scope);
+    }).catch(function(err) {
+      console.warn('SW не зарегистрирован:', err);
+    });
   });
 }
 
@@ -1443,7 +1448,6 @@ function renderDetBatches(i) {
 }
 
 function openDetail(iid) {
-  try {
   curItem = iid;
   var i = getItem(iid);
   var c = getCat(curCat);
@@ -1461,7 +1465,6 @@ function openDetail(iid) {
   var hasBatches = (i.history||[]).some(function(r){ return r.delta > 0 && (r.batchQty === undefined ? r.delta : r.batchQty) > 0; });
   switchDetTab(hasBatches ? 'batches' : 'info');
   go('pg-detail');
-  } catch(e) { alert('Ошибка: ' + e.message + '\n' + e.stack); }
 }
 function refreshDetPhoto(i) {
   var ph = document.getElementById('det-photo');
