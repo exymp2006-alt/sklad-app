@@ -773,15 +773,13 @@ body.logged-in .navbar{display:flex;}
 </div>
 
 <script>
-// Регистрация service worker — выполняется первой, независимо от остального
-// кода приложения, чтобы офлайн-режим и установка PWA точно работали.
-if ('serviceWorker' in navigator && window.isSecureContext) {
-  window.addEventListener('load', function() {
-    navigator.serviceWorker.register('sw.js').then(function(reg) {
-      console.log('SW зарегистрирован:', reg.scope);
-    }).catch(function(err) {
-      console.warn('SW не зарегистрирован:', err);
-    });
+// Удаляем старый Service Worker и его кеш
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.getRegistrations().then(function(regs) {
+    regs.forEach(function(reg) { reg.unregister(); });
+  });
+  caches.keys().then(function(keys) {
+    keys.forEach(function(key) { caches.delete(key); });
   });
 }
 
