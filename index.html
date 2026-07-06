@@ -1184,6 +1184,7 @@ function renderChips() {
   chipCategories = (c.categories || []).slice();
   var el = document.getElementById('items-chips');
   var h = '<div class="chip' + (hideZero ? ' on' : '') + '" id="chip-zero" onclick="toggleHideZero(this)">В наличии</div>';
+  h += '<div class="chip on" id="chip-all" onclick="setChip(-1,this)">Все</div>';
   chipCategories.forEach(function(cat, i) {
     h += '<div class="chip" onclick="setChip(' + i + ',this)">' + esc(cat) + '</div>';
   });
