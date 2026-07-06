@@ -1,7 +1,7 @@
 // Service Worker для СКЛАД — обеспечивает офлайн-работу приложения.
 // При обновлении приложения меняйте CACHE_VERSION, чтобы пользователи
 // получили новую версию вместо закешированной старой.
-var CACHE_VERSION = 'sklad-v1';
+var CACHE_VERSION = 'sklad-v2';
 var APP_SHELL = [
   './',
   './index.html',
