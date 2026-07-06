@@ -1445,6 +1445,7 @@ function renderDetBatches(i) {
 }
 
 function openDetail(iid) {
+  try {
   curItem = iid;
   var i = getItem(iid);
   var c = getCat(curCat);
@@ -1462,6 +1463,7 @@ function openDetail(iid) {
   var hasBatches = (i.history||[]).some(function(r){ return r.delta > 0 && (r.batchQty === undefined ? r.delta : r.batchQty) > 0; });
   switchDetTab(hasBatches ? 'batches' : 'info');
   go('pg-detail');
+  } catch(e) { alert('Ошибка: ' + e.message + '\n' + e.stack); }
 }
 function refreshDetPhoto(i) {
   var ph = document.getElementById('det-photo');
