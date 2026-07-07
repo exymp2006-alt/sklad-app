@@ -1194,6 +1194,12 @@ function setChip(idx, el) {
   activeChip = idx < 0 ? '' : chipCategories[idx];
   document.querySelectorAll('#items-chips .chip:not(#chip-zero)').forEach(function(c) { c.classList.remove('on'); });
   el.classList.add('on');
+  // Кнопка "Все" сбрасывает фильтр "В наличии"
+  if (idx < 0) {
+    hideZero = false;
+    var czero = document.getElementById('chip-zero');
+    if (czero) czero.classList.remove('on');
+  }
   renderItems();
 }
 
@@ -1342,11 +1348,11 @@ function processPhoto(file, cb) {
     var img = new Image();
     img.onload = function() {
       var cv = document.createElement('canvas');
-      var M = 800, w = img.width, h = img.height;
-      if (w > h && w > M) { h = h * M / w; w = M; } else if (h > w && h > M) { w = w * M / h; h = M; }
-      cv.width = w; cv.height = h;
-      cv.getContext('2d').drawImage(img, 0, 0, w, h);
-      cb(cv.toDataURL('image/jpeg', .75));
+      var M = 600, w = img.width, h = img.height;
+      if (w > h && w > M) { h = h * M / w; w = M; } else if (h >= w && h > M) { w = w * M / h; h = M; } else if (w > M) { h = h * M / w; w = M; }
+      cv.width = Math.round(w); cv.height = Math.round(h);
+      cv.getContext('2d').drawImage(img, 0, 0, cv.width, cv.height);
+      cb(cv.toDataURL('image/jpeg', .60));
     };
     img.src = ev.target.result;
   };
