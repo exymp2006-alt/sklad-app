@@ -465,6 +465,14 @@ body.logged-in .navbar{display:flex;}
         <input type="file" accept="application/json" id="inp-import" style="display:none">
       </label>
     </div>
+    <div class="section-hdr"><span class="section-label">Фото</span></div>
+    <div class="grp">
+      <div class="row" id="row-compress-photos" onclick="compressAllPhotos()">
+        <div class="rico" style="background:#5856D6"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><rect x="2" y="6" width="20" height="15" rx="3"/><circle cx="12" cy="13" r="3.5"/><path d="M8 6l1.5-2.5h5L16 6"/></svg></div>
+        <div class="rmid"><div class="rt">Пересжать все фото</div><div class="rs" id="compress-status">Уменьшит размер базы данных</div></div>
+        <span class="chev">›</span>
+      </div>
+    </div>
     <div class="section-hdr"><span class="section-label">Статистика</span></div>
     <div class="grp" id="stats-grp"></div>
   </div>
@@ -1208,7 +1216,48 @@ function toggleHideZero(el) {
   el.classList.toggle('on', hideZero);
   renderItems();
 }
-window.toggleHideZero = toggleHideZero;
+function compressAllPhotos() {
+  var total = 0, done = 0;
+  db.catalogs.forEach(function(c) {
+    c.items.forEach(function(i) { if (i.photo) total++; });
+  });
+  if (total === 0) {
+    document.getElementById('compress-status').textContent = 'Фото не найдены';
+    return;
+  }
+  document.getElementById('compress-status').textContent = 'Сжимаем... 0/' + total;
+  function compressOne(src, cb) {
+    var img = new Image();
+    img.onload = function() {
+      var cv = document.createElement('canvas');
+      var M = 600, w = img.width, h = img.height;
+      if (w > h && w > M) { h = h * M / w; w = M; } else if (h >= w && h > M) { w = w * M / h; h = M; } else if (w > M) { h = h * M / w; w = M; }
+      cv.width = Math.round(w); cv.height = Math.round(h);
+      cv.getContext('2d').drawImage(img, 0, 0, cv.width, cv.height);
+      cb(cv.toDataURL('image/jpeg', .60));
+    };
+    img.src = src;
+  }
+  var items = [];
+  db.catalogs.forEach(function(c) {
+    c.items.forEach(function(i) { if (i.photo) items.push(i); });
+  });
+  function next(idx) {
+    if (idx >= items.length) {
+      saveDB();
+      document.getElementById('compress-status').textContent = 'Готово! Сжато ' + total + ' фото';
+      return;
+    }
+    compressOne(items[idx].photo, function(src) {
+      items[idx].photo = src;
+      done++;
+      document.getElementById('compress-status').textContent = 'Сжимаем... ' + done + '/' + total;
+      setTimeout(function() { next(idx + 1); }, 50);
+    });
+  }
+  next(0);
+}
+window.compressAllPhotos = compressAllPhotos;
 // ===== EXPIRY HELPERS =====
 var EXPIRY_WARN_DAYS = 7;
 
