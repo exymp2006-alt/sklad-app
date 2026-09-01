@@ -333,6 +333,12 @@ body.logged-in .navbar{display:flex;}
     <div class="fgrp">
       <div class="fhead">Дополнительно</div>
       <div class="field"><label>Местонахождение</label><input id="if-loc" type="text" placeholder="Полка A-3"></div>
+      <div style="padding:10px 16px 4px;">
+        <button type="button" id="btn-websearch-form" onclick="openWebSearchSheet(document.getElementById('if-name').value)" style="width:100%;border-radius:12px;padding:11px 8px;font-size:14px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:8px;background:rgba(88,86,214,.1);color:var(--ac);border:1.5px solid rgba(88,86,214,.2);cursor:pointer;">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+          Поиск в сети
+        </button>
+      </div>
       <div class="field"><label>Пояснение</label><textarea id="if-note" placeholder="Описание..."></textarea></div>
       <div style="padding:4px 16px 12px;display:flex;justify-content:flex-end;">
         <button type="button" onclick="cleanNoteField()" style="font-size:12px;color:var(--ac);background:none;border:none;cursor:pointer;padding:4px 0;font-weight:600;">✕ Убрать ссылки</button>
@@ -1073,6 +1079,7 @@ function navGo(pgId, tabId) {
 }
 
 // ===== CATALOGS =====
+var wsItemName = '';
 var CAT_ICONS = [
   // Коробка/товар
   '<svg viewBox="0 0 24 24"><path d="M3 8l9-5 9 5-9 5-9-5z"/><path d="M3 8v8l9 5 9-5V8"/><path d="M12 13v8"/></svg>',
@@ -3050,10 +3057,17 @@ window.closeWriteOffModal = closeWriteOffModal;
 window.confirmWriteOff = confirmWriteOff;
 
 // ── Web Search Sheet ──────────────────────────────────
-function openWebSearchSheet() {
-  var item = getItem(curItem);
-  if (!item) return;
-  document.getElementById('websearch-itemname').textContent = item.name;
+function openWebSearchSheet(nameOverride) {
+  var name = (nameOverride !== undefined) ? nameOverride : null;
+  if (name === null) {
+    var item = getItem(curItem);
+    if (!item) return;
+    name = item.name;
+  }
+  name = (name || '').trim();
+  if (!name) { alert('Сначала введите название товара'); return; }
+  wsItemName = name;
+  document.getElementById('websearch-itemname').textContent = name;
   document.getElementById('ws-overlay').classList.add('on');
   document.getElementById('ws-sheet').classList.add('on');
 }
@@ -3065,16 +3079,36 @@ function closeWebSearchSheet() {
 }
 window.closeWebSearchSheet = closeWebSearchSheet;
 
+// Промты для 'desc' и 'instr' сформулированы по тому же принципу, что и
+// поиск рецепта в приложении "Рецепты": режим ИИ Google (udm=50) + жёсткое
+// требование к формату ответа (конкретное разбиение на абзацы/шаги, без
+// вступлений и вопросов в конце), чтобы ответ можно было сразу скопировать
+// в поле "Пояснение" почти без ручной правки.
 function doWebSearch(type) {
-  var item = getItem(curItem);
-  if (!item) return;
-  var name = item.name;
-  var query = '';
-  if (type === 'desc') query = name + ' описание характеристики';
-  else if (type === 'instr') query = name + ' инструкция по применению';
-  else if (type === 'buy') query = name + ' купить';
-  else query = name;
-  var url = 'https://www.google.com/search?q=' + encodeURIComponent(query);
+  var name = wsItemName || (getItem(curItem) || {}).name;
+  if (!name) return;
+  var url;
+  if (type === 'desc') {
+    var q = 'Опиши товар "' + name + '". Дай только фактическое описание: что это и для чего используется, '
+      + 'ключевые технические характеристики (тип, мощность или объём, материал, размеры, вес — что применимо), '
+      + 'производитель и комплектация, если это известно. '
+      + 'Без вступлений, комментариев от себя и вопросов в конце. '
+      + 'Оформи строго тремя абзацами без заголовков и без маркдаун-разметки: '
+      + '1-й абзац — что это и для чего; 2-й абзац — технические характеристики; 3-й абзац — производитель и комплектация.';
+    url = 'https://www.google.com/search?q=' + encodeURIComponent(q) + '&udm=50';
+  } else if (type === 'instr') {
+    var q2 = 'Инструкция по применению/эксплуатации товара "' + name + '". Дай только порядок действий: '
+      + 'подготовка к работе, порядок использования по шагам, основные меры безопасности, '
+      + 'обслуживание и хранение после использования. '
+      + 'Без вступлений, комментариев от себя и вопросов в конце. '
+      + 'Оформи в виде нумерованного списка шагов 1. 2. 3. (сначала подготовка, затем использование, затем завершение работы и хранение), '
+      + 'без подпунктов и без пояснений в скобках.';
+    url = 'https://www.google.com/search?q=' + encodeURIComponent(q2) + '&udm=50';
+  } else if (type === 'buy') {
+    url = 'https://www.google.com/search?q=' + encodeURIComponent(name + ' купить');
+  } else {
+    url = 'https://www.google.com/search?q=' + encodeURIComponent(name);
+  }
   window.open(url, '_blank');
   closeWebSearchSheet();
 }
