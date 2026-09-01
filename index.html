@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, interactive-widget=resizes-content">
-<title>Склад v16</title>
+<title>Склад v17</title>
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#0D0D1A">
 <link rel="apple-touch-icon" href="icon-180.png">
@@ -40,24 +40,20 @@ input,select,textarea,button{font-family:inherit;font-size:16px;}
 .cats-section-label{font-size:11px;font-weight:700;color:var(--t2);letter-spacing:1.2px;text-transform:uppercase;}
 .cats-section-add{font-size:14px;font-weight:600;color:var(--ac);background:none;border:none;cursor:pointer;padding:0;}
 .cats-grid{display:flex;flex-direction:column;gap:10px;}
-.catcard{width:100%;border-radius:22px;padding:18px 16px 16px;cursor:pointer;position:relative;overflow:hidden;min-height:140px;display:flex;flex-direction:column;transition:transform .15s;-webkit-tap-highlight-color:transparent;}
-.catcard:active{transform:scale(.96);}
-.catcard-glow{position:absolute;right:-24px;bottom:-24px;width:100px;height:100px;border-radius:50%;background:rgba(255,255,255,.1);}
-.catcard-icon{width:42px;height:42px;border-radius:13px;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;}
+.catcard{width:100%;border-radius:18px;padding:16px;cursor:pointer;position:relative;overflow:hidden;min-height:128px;display:flex;flex-direction:column;transition:transform .15s;-webkit-tap-highlight-color:transparent;background:var(--card);box-shadow:0 1px 4px rgba(0,0,0,.06);}
+.catcard:active{transform:scale(.97);}
+.catcard-icon{width:42px;height:42px;border-radius:13px;display:flex;align-items:center;justify-content:center;margin-bottom:12px;flex-shrink:0;}
 .catcard-icon svg{width:22px;height:22px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
-.catcard-menu{position:absolute;top:12px;right:12px;background:rgba(0,0,0,.15);border:none;border-radius:8px;width:28px;height:28px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#fff;font-size:18px;line-height:1;padding:0;}
-.catcard-bottom{margin-top:auto;padding-top:12px;}
-.catcard-name{font-size:14px;font-weight:600;color:rgba(255,255,255,.8);margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.catcard-count{font-size:30px;font-weight:800;color:#fff;letter-spacing:-0.5px;line-height:1.1;}
-.catcard-label{font-size:12px;color:rgba(255,255,255,.55);margin-top:1px;}
-.cc0{background:linear-gradient(140deg,#FF9F0A,#FF6B00);}
-.cc1{background:linear-gradient(140deg,#5856D6,#3634C7);}
-.cc2{background:linear-gradient(140deg,#30D158,#248A3D);}
-.cc3{background:linear-gradient(140deg,#FF453A,#C0392B);}
-.cc4{background:linear-gradient(140deg,#0A84FF,#0056CC);}
-.cc5{background:linear-gradient(140deg,#BF5AF2,#8944AB);}
-.cc6{background:linear-gradient(140deg,#FF375F,#C0174D);}
-.cc7{background:linear-gradient(140deg,#5AC8FA,#0071A4);}
+.catcard-menu{position:absolute;top:12px;right:12px;background:var(--bg);border:none;border-radius:8px;width:28px;height:28px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--t2);font-size:18px;line-height:1;padding:0;}
+.catcard-bottom{margin-top:auto;}
+.catcard-name{font-size:15px;font-weight:700;color:var(--t);margin-bottom:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.catcard-count{font-size:28px;font-weight:800;color:var(--t);letter-spacing:-0.5px;line-height:1.1;}
+.catcard-label{font-size:12px;color:var(--t2);margin-top:1px;}
+.icon-pick-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;padding:12px 16px 16px;}
+.icon-pick{width:100%;aspect-ratio:1;border-radius:13px;border:2px solid transparent;background:var(--bg);display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0;}
+.icon-pick svg{width:22px;height:22px;stroke:var(--t2);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+.icon-pick.on{background:var(--ac);border-color:var(--ac);}
+.icon-pick.on svg{stroke:#fff;}
 .navbar{display:none;}
 body.logged-in .navbar{display:flex;}
 .login-page{position:fixed;inset:0;background:linear-gradient(160deg,#0D0D1A 0%,#1C1C3A 55%,#3634C7 130%);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:5000;padding:32px 28px;text-align:center;}
@@ -206,7 +202,7 @@ body.logged-in .navbar{display:flex;}
 .hdr-chips .chip.on{background:#fff;color:var(--ac);}
 
 /* ── Page scroll area ── */
-.page-scroll{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:16px 16px calc(var(--nav)+16px);}
+.page-scroll{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:16px 16px calc(var(--nav)+28px);}
 
 /* ── Section headers ── */
 .section-hdr{display:flex;align-items:center;justify-content:space-between;padding:16px 4px 10px;}
@@ -272,6 +268,10 @@ body.logged-in .navbar{display:flex;}
         <input id="cf-newcat" type="text" placeholder="Новая категория" style="flex:1;padding:10px 12px;border:1.5px solid var(--br);border-radius:10px;background:var(--bg);color:var(--t);outline:none;font-size:15px;">
         <button id="btn-addcat" style="padding:10px 18px;background:var(--ac);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer">+</button>
       </div>
+    </div>
+    <div class="fgrp">
+      <div class="fhead">Иконка</div>
+      <div class="icon-pick-grid" id="cf-iconlist"></div>
     </div>
     <div id="cf-delbtn" style="display:none;padding-bottom:8px;">
       <button class="btn red" id="btn-delcat">Удалить каталог</button>
@@ -1075,7 +1075,7 @@ function navGo(pgId, tabId) {
 }
 
 // ===== CATALOGS =====
-var CAT_COLORS = ['cc0','cc1','cc2','cc3','cc4','cc5','cc6','cc7'];
+var ICON_BG = ['#FF9F0A','#5856D6','#30D158','#FF453A','#0A84FF','#BF5AF2','#FF375F','#5AC8FA'];
 var CAT_ICONS = [
   '<svg viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>',
   '<svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>',
@@ -1084,7 +1084,11 @@ var CAT_ICONS = [
   '<svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>',
   '<svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>',
   '<svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>',
-  '<svg viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>'
+  '<svg viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>',
+  '<svg viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94z"/></svg>',
+  '<svg viewBox="0 0 24 24"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg>',
+  '<svg viewBox="0 0 24 24"><path d="M20.38 3.46 16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.47a1 1 0 0 0 .99.84H6v10a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.47a2 2 0 0 0-1.34-2.23Z"/></svg>',
+  '<svg viewBox="0 0 24 24"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>'
 ];
 
 function renderCats() {
@@ -1107,14 +1111,14 @@ function renderCats() {
   }
   var h = '';
   db.catalogs.forEach(function(c, i) {
-    var col = CAT_COLORS[i % CAT_COLORS.length];
-    var ico = CAT_ICONS[i % CAT_ICONS.length];
-    var qty = 0; c.items.forEach(function(it) { qty += (it.qty || 0); });
-    h += '<div class="catcard ' + col + '">'
-      + '<div class="catcard-glow"></div>'
+    var bg = ICON_BG[i % ICON_BG.length];
+    var iconIdx = (c.icon !== undefined && c.icon !== null && CAT_ICONS[c.icon]) ? c.icon : (i % CAT_ICONS.length);
+    var ico = CAT_ICONS[iconIdx];
+    h += '<div class="catcard">'
       + '<button class="catcard-menu" onclick="openCatForm(\'' + c.id + '\')">⋯</button>'
-      + '<div class="catcard-bottom" onclick="openCat(\'' + c.id + '\')" style="cursor:pointer;flex:1;">'
-      + '<div style="font-size:19px;font-weight:800;color:#fff;line-height:1.2;margin-bottom:10px;word-break:break-word;">' + esc(c.name) + '</div>'
+      + '<div class="catcard-bottom" onclick="openCat(\'' + c.id + '\')" style="cursor:pointer;">'
+      + '<div class="catcard-icon" style="background:' + bg + '">' + ico + '</div>'
+      + '<div class="catcard-name">' + esc(c.name) + '</div>'
       + '<div class="catcard-count">' + c.items.length + '</div>'
       + '<div class="catcard-label">позиций</div>'
       + '</div>'
@@ -1133,25 +1137,41 @@ function openCat(id) {
 }
 
 // ===== CAT FORM =====
+var tempIcon = null;
 function openCatForm(id) {
   editCatId = id;
   if (id) {
     var c = getCat(id);
     tempCats = c.categories.slice();
+    tempIcon = (c.icon !== undefined && c.icon !== null) ? c.icon : null;
     document.getElementById('catform-title').textContent = 'Редактировать';
     document.getElementById('cf-name').value = c.name;
     document.getElementById('cf-desc').value = c.desc || '';
     document.getElementById('cf-delbtn').style.display = '';
   } else {
     tempCats = [];
+    tempIcon = null;
     document.getElementById('catform-title').textContent = 'Новый каталог';
     document.getElementById('cf-name').value = '';
     document.getElementById('cf-desc').value = '';
     document.getElementById('cf-delbtn').style.display = 'none';
   }
   renderTempCats();
+  renderIconPicker();
   go('pg-catform');
   if (!id) { setTimeout(function() { document.getElementById('cf-name').focus(); }, 300); }
+}
+function renderIconPicker() {
+  var el = document.getElementById('cf-iconlist');
+  var h = '';
+  CAT_ICONS.forEach(function(svg, i) {
+    h += '<button type="button" class="icon-pick' + (tempIcon === i ? ' on' : '') + '" onclick="pickTempIcon(' + i + ')">' + svg + '</button>';
+  });
+  el.innerHTML = h;
+}
+function pickTempIcon(i) {
+  tempIcon = (tempIcon === i) ? null : i; // повторный тап по той же иконке снимает выбор — вернётся автоназначение
+  renderIconPicker();
 }
 function renderTempCats() {
   var el = document.getElementById('cf-catlist');
@@ -1176,10 +1196,10 @@ function saveCat() {
   var desc = document.getElementById('cf-desc').value.trim();
   if (editCatId) {
     var c = getCat(editCatId);
-    c.name = name; c.desc = desc; c.categories = tempCats.slice();
+    c.name = name; c.desc = desc; c.categories = tempCats.slice(); c.icon = tempIcon;
     if (editCatId === curCat) { document.getElementById('items-title').textContent = name; renderChips(); }
   } else {
-    db.catalogs.push({ id: uid(), name: name, desc: desc, categories: tempCats.slice(), items: [] });
+    db.catalogs.push({ id: uid(), name: name, desc: desc, categories: tempCats.slice(), items: [], icon: tempIcon });
   }
   saveDB(); renderCats(); back();
 }
