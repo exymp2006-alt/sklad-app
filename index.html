@@ -351,11 +351,9 @@ body.logged-in .navbar{display:flex;}
         <span style="color:var(--ac);font-weight:600;font-size:15px">Добавить фото</span>
       </div>
     </div>
-    <div id="if-delbtn" style="display:none;padding-bottom:8px;">
-      <button class="btn red" id="btn-delitem">Удалить товар</button>
-    </div>
-    <div style="padding-bottom:16px;">
-      <button class="btn" id="btn-saveitem" style="background:var(--ac);color:#fff;font-weight:800;font-size:16px;">✓ Сохранить</button>
+    <div style="display:flex;gap:10px;padding-bottom:16px;">
+      <button class="btn red" id="btn-delitem" style="display:none;flex:1;width:auto;">Удалить</button>
+      <button class="btn" id="btn-saveitem" style="flex:1;width:auto;background:var(--ac);color:#fff;font-weight:800;font-size:16px;">✓ Сохранить</button>
     </div>
     <div style="height:max(calc(var(--nav) + 16px), 320px)"></div>
   </div>
@@ -1421,14 +1419,14 @@ function openItemForm(iid) {
     document.getElementById('if-note').value = i.notes || '';
     autoResizeTextarea(document.getElementById('if-note'));
     curPhoto = i.photo || '';
-    document.getElementById('if-delbtn').style.display = '';
+    document.getElementById('btn-delitem').style.display = '';
   } else {
     document.getElementById('itemform-title').textContent = 'Новый товар';
     ['if-name','if-sku','if-min','if-loc','if-note'].forEach(function(x) { document.getElementById(x).value = ''; });
     autoResizeTextarea(document.getElementById('if-note'));
     document.getElementById('if-unit').value = 'шт';
     sel.value = ''; curPhoto = '';
-    document.getElementById('if-delbtn').style.display = 'none';
+    document.getElementById('btn-delitem').style.display = 'none';
   }
   setPhotoBox(curPhoto);
   go('pg-itemform');
