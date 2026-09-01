@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, interactive-widget=resizes-content">
-<title>Склад v17</title>
+<title>Склад v18</title>
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#0D0D1A">
 <link rel="apple-touch-icon" href="icon-180.png">
@@ -40,15 +40,15 @@ input,select,textarea,button{font-family:inherit;font-size:16px;}
 .cats-section-label{font-size:11px;font-weight:700;color:var(--t2);letter-spacing:1.2px;text-transform:uppercase;}
 .cats-section-add{font-size:14px;font-weight:600;color:var(--ac);background:none;border:none;cursor:pointer;padding:0;}
 .cats-grid{display:flex;flex-direction:column;gap:10px;}
-.catcard{width:100%;border-radius:18px;padding:16px;cursor:pointer;position:relative;overflow:hidden;min-height:128px;display:flex;flex-direction:column;transition:transform .15s;-webkit-tap-highlight-color:transparent;background:var(--card);box-shadow:0 1px 4px rgba(0,0,0,.06);}
-.catcard:active{transform:scale(.97);}
-.catcard-icon{width:42px;height:42px;border-radius:13px;display:flex;align-items:center;justify-content:center;margin-bottom:12px;flex-shrink:0;}
-.catcard-icon svg{width:22px;height:22px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
-.catcard-menu{position:absolute;top:12px;right:12px;background:var(--bg);border:none;border-radius:8px;width:28px;height:28px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--t2);font-size:18px;line-height:1;padding:0;}
-.catcard-bottom{margin-top:auto;}
-.catcard-name{font-size:15px;font-weight:700;color:var(--t);margin-bottom:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.catcard-count{font-size:28px;font-weight:800;color:var(--t);letter-spacing:-0.5px;line-height:1.1;}
-.catcard-label{font-size:12px;color:var(--t2);margin-top:1px;}
+.cats-grid{display:flex;flex-direction:column;gap:8px;}
+.catcard{display:flex;align-items:center;gap:12px;padding:12px 12px;border-radius:14px;cursor:pointer;background:#E4E6ED;box-shadow:0 2px 8px rgba(0,0,0,.12);-webkit-tap-highlight-color:transparent;transition:transform .1s;}
+.catcard:active{transform:scale(.98);}
+.catcard-icon{width:22px;height:22px;flex-shrink:0;display:flex;align-items:center;justify-content:center;}
+.catcard-icon svg{width:22px;height:22px;stroke:var(--t2);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;}
+.catcard-menu{background:none;border:none;color:var(--t2);font-size:20px;line-height:1;cursor:pointer;padding:6px;flex-shrink:0;}
+.catcard-mid{flex:1;min-width:0;}
+.catcard-name{font-size:15px;font-weight:700;color:var(--t);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.catcard-label{font-size:13px;color:var(--t2);margin-top:1px;}
 .icon-pick-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;padding:12px 16px 16px;}
 .icon-pick{width:100%;aspect-ratio:1;border-radius:13px;border:2px solid transparent;background:var(--bg);display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0;}
 .icon-pick svg{width:22px;height:22px;stroke:var(--t2);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
@@ -1075,7 +1075,6 @@ function navGo(pgId, tabId) {
 }
 
 // ===== CATALOGS =====
-var ICON_BG = ['#FF9F0A','#5856D6','#30D158','#FF453A','#0A84FF','#BF5AF2','#FF375F','#5AC8FA'];
 var CAT_ICONS = [
   '<svg viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>',
   '<svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>',
@@ -1111,17 +1110,12 @@ function renderCats() {
   }
   var h = '';
   db.catalogs.forEach(function(c, i) {
-    var bg = ICON_BG[i % ICON_BG.length];
     var iconIdx = (c.icon !== undefined && c.icon !== null && CAT_ICONS[c.icon]) ? c.icon : (i % CAT_ICONS.length);
     var ico = CAT_ICONS[iconIdx];
-    h += '<div class="catcard">'
-      + '<button class="catcard-menu" onclick="openCatForm(\'' + c.id + '\')">⋯</button>'
-      + '<div class="catcard-bottom" onclick="openCat(\'' + c.id + '\')" style="cursor:pointer;">'
-      + '<div class="catcard-icon" style="background:' + bg + '">' + ico + '</div>'
-      + '<div class="catcard-name">' + esc(c.name) + '</div>'
-      + '<div class="catcard-count">' + c.items.length + '</div>'
-      + '<div class="catcard-label">позиций</div>'
-      + '</div>'
+    h += '<div class="catcard" onclick="openCat(\'' + c.id + '\')">'
+      + '<div class="catcard-icon">' + ico + '</div>'
+      + '<div class="catcard-mid"><div class="catcard-name">' + esc(c.name) + '</div><div class="catcard-label">' + c.items.length + ' позиций</div></div>'
+      + '<button class="catcard-menu" onclick="event.stopPropagation();openCatForm(\'' + c.id + '\')">⋯</button>'
       + '</div>';
   });
   el.innerHTML = h;
