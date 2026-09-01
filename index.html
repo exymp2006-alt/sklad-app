@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, interactive-widget=resizes-content">
-<title>Склад v19</title>
+<title>Склад v18</title>
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#0D0D1A">
 <link rel="apple-touch-icon" href="icon-180.png">
@@ -40,15 +40,15 @@ input,select,textarea,button{font-family:inherit;font-size:16px;}
 .cats-section-label{font-size:11px;font-weight:700;color:var(--t2);letter-spacing:1.2px;text-transform:uppercase;}
 .cats-section-add{font-size:14px;font-weight:600;color:var(--ac);background:none;border:none;cursor:pointer;padding:0;}
 .cats-grid{display:flex;flex-direction:column;gap:10px;}
-.cats-grid{display:flex;flex-direction:column;gap:14px;}
-.catcard{display:flex;align-items:center;gap:12px;padding:14px 12px;border-radius:14px;cursor:pointer;background:#E4E6ED;box-shadow:0 3px 10px rgba(0,0,0,.14);-webkit-tap-highlight-color:transparent;transition:transform .1s;}
+.cats-grid{display:flex;flex-direction:column;gap:8px;}
+.catcard{display:flex;align-items:center;gap:12px;padding:12px 12px;border-radius:14px;cursor:pointer;background:#E4E6ED;box-shadow:0 2px 8px rgba(0,0,0,.12);-webkit-tap-highlight-color:transparent;transition:transform .1s;}
 .catcard:active{transform:scale(.98);}
-.catcard-icon{width:24px;height:24px;flex-shrink:0;display:flex;align-items:center;justify-content:center;}
-.catcard-icon svg{width:24px;height:24px;stroke:var(--t2);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;}
+.catcard-icon{width:22px;height:22px;flex-shrink:0;display:flex;align-items:center;justify-content:center;}
+.catcard-icon svg{width:22px;height:22px;stroke:var(--t2);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;}
 .catcard-menu{background:none;border:none;color:var(--t2);font-size:20px;line-height:1;cursor:pointer;padding:6px;flex-shrink:0;}
 .catcard-mid{flex:1;min-width:0;}
-.catcard-name{font-size:17px;font-weight:800;color:var(--t);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.catcard-label{font-size:14px;font-weight:600;color:#5B5C68;margin-top:2px;}
+.catcard-name{font-size:15px;font-weight:700;color:var(--t);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.catcard-label{font-size:13px;color:var(--t2);margin-top:1px;}
 .icon-pick-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;padding:12px 16px 16px;}
 .icon-pick{width:100%;aspect-ratio:1;border-radius:13px;border:2px solid transparent;background:var(--bg);display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0;}
 .icon-pick svg{width:22px;height:22px;stroke:var(--t2);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
@@ -273,11 +273,9 @@ body.logged-in .navbar{display:flex;}
       <div class="fhead">Иконка</div>
       <div class="icon-pick-grid" id="cf-iconlist"></div>
     </div>
-    <div id="cf-delbtn" style="display:none;padding-bottom:8px;">
-      <button class="btn red" id="btn-delcat">Удалить каталог</button>
-    </div>
-    <div style="padding-bottom:16px;">
-      <button class="btn" id="btn-catsave" style="background:var(--ac);color:#fff;font-weight:800;font-size:16px;">✓ Сохранить</button>
+    <div style="display:flex;gap:10px;padding-bottom:16px;">
+      <button class="btn red" id="btn-delcat" style="display:none;flex:1;width:auto;">Удалить</button>
+      <button class="btn" id="btn-catsave" style="flex:1;width:auto;background:var(--ac);color:#fff;font-weight:800;font-size:16px;">✓ Сохранить</button>
     </div>
     <div style="height:calc(var(--nav) + 16px)"></div>
   </div>
@@ -1076,18 +1074,30 @@ function navGo(pgId, tabId) {
 
 // ===== CATALOGS =====
 var CAT_ICONS = [
-  '<svg viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>',
-  '<svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>',
-  '<svg viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>',
-  '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>',
-  '<svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>',
-  '<svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>',
-  '<svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>',
-  '<svg viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>',
+  // Коробка/товар
+  '<svg viewBox="0 0 24 24"><path d="M3 8l9-5 9 5-9 5-9-5z"/><path d="M3 8v8l9 5 9-5V8"/><path d="M12 13v8"/></svg>',
+  // Склад (здание)
+  '<svg viewBox="0 0 24 24"><path d="M2 10 12 4l10 6"/><path d="M4 10v10h16V10"/><path d="M9 20v-6h6v6"/></svg>',
+  // Стеллаж / полки
+  '<svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="4"/><rect x="3" y="10" width="18" height="4"/><rect x="3" y="16" width="18" height="4"/></svg>',
+  // Ящик / контейнер
+  '<svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="1"/><line x1="3" y1="3" x2="21" y2="21"/><line x1="21" y1="3" x2="3" y2="21"/></svg>',
+  // Грузовик / доставка
+  '<svg viewBox="0 0 24 24"><rect x="1" y="7" width="13" height="9" rx="1"/><path d="M14 10h4l3 3v3h-7z"/><circle cx="6" cy="18" r="2"/><circle cx="17" cy="18" r="2"/></svg>',
+  // Инвентаризация / список
+  '<svg viewBox="0 0 24 24"><rect x="5" y="4" width="14" height="17" rx="2"/><rect x="9" y="2" width="6" height="4" rx="1"/><line x1="8" y1="10" x2="16" y2="10"/><line x1="8" y1="14" x2="16" y2="14"/><line x1="8" y1="18" x2="13" y2="18"/></svg>',
+  // Штрихкод
+  '<svg viewBox="0 0 24 24"><line x1="4" y1="4" x2="4" y2="20"/><line x1="8" y1="4" x2="8" y2="20"/><line x1="11" y1="4" x2="11" y2="20"/><line x1="15" y1="4" x2="15" y2="20"/><line x1="18" y1="4" x2="18" y2="20"/><line x1="21" y1="4" x2="21" y2="20"/></svg>',
+  // Электро
+  '<svg viewBox="0 0 24 24"><polygon points="13 2 3 14 11 14 9 22 21 10 13 10 13 2"/></svg>',
+  // Бензин / топливо
+  '<svg viewBox="0 0 24 24"><path d="M3 22V6a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v16"/><path d="M3 12h8"/><path d="M14 8h2a2 2 0 0 1 2 2v1a2 2 0 0 0 2 2 2 2 0 0 0 2-2V7l-3-3"/><path d="M3 22h12"/></svg>',
+  // Аккумулятор
+  '<svg viewBox="0 0 24 24"><rect x="1" y="7" width="18" height="10" rx="2"/><line x1="22" y1="10" x2="22" y2="14"/><line x1="5" y1="10" x2="5" y2="14"/><line x1="9" y1="10" x2="9" y2="14"/></svg>',
+  // Инструмент / обслуживание
   '<svg viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94z"/></svg>',
-  '<svg viewBox="0 0 24 24"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg>',
-  '<svg viewBox="0 0 24 24"><path d="M20.38 3.46 16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.47a1 1 0 0 0 .99.84H6v10a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.47a2 2 0 0 0-1.34-2.23Z"/></svg>',
-  '<svg viewBox="0 0 24 24"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>'
+  // Весы
+  '<svg viewBox="0 0 24 24"><line x1="12" y1="3" x2="12" y2="21"/><line x1="5" y1="7" x2="19" y2="7"/><path d="M5 7l-3 7a3 3 0 0 0 6 0z"/><path d="M19 7l-3 7a3 3 0 0 0 6 0z"/></svg>'
 ];
 
 function renderCats() {
@@ -1141,14 +1151,14 @@ function openCatForm(id) {
     document.getElementById('catform-title').textContent = 'Редактировать';
     document.getElementById('cf-name').value = c.name;
     document.getElementById('cf-desc').value = c.desc || '';
-    document.getElementById('cf-delbtn').style.display = '';
+    document.getElementById('btn-delcat').style.display = '';
   } else {
     tempCats = [];
     tempIcon = null;
     document.getElementById('catform-title').textContent = 'Новый каталог';
     document.getElementById('cf-name').value = '';
     document.getElementById('cf-desc').value = '';
-    document.getElementById('cf-delbtn').style.display = 'none';
+    document.getElementById('btn-delcat').style.display = 'none';
   }
   renderTempCats();
   renderIconPicker();
@@ -1167,6 +1177,7 @@ function pickTempIcon(i) {
   tempIcon = (tempIcon === i) ? null : i; // повторный тап по той же иконке снимает выбор — вернётся автоназначение
   renderIconPicker();
 }
+window.pickTempIcon = pickTempIcon;
 function renderTempCats() {
   var el = document.getElementById('cf-catlist');
   if (!tempCats.length) { el.innerHTML = '<div style="padding:10px 16px;font-size:14px;color:var(--t2)">Нет категорий</div>'; return; }
@@ -1453,6 +1464,14 @@ function saveItem() {
     back();
   } else {
     c.items.push(Object.assign({ id: uid(), qty: 0, avgPrice: 0, history: [], createdAt: new Date().toISOString() }, data));
+    // Новый товар всегда начинается с нулевым остатком — если включен фильтр
+    // "В наличии", он скрыл бы товар сразу после добавления. Снимаем фильтр,
+    // чтобы добавленный товар было видно.
+    if (hideZero) {
+      hideZero = false;
+      var czero = document.getElementById('chip-zero');
+      if (czero) czero.classList.remove('on');
+    }
     saveDB(); renderItems(); renderCats(); back();
   }
 }
@@ -1656,18 +1675,21 @@ function adjQty(dir) {
     });
     // Сортируем по дате — самая старая первой
     batches.sort(function(a, b) { return new Date(a.rec.date) - new Date(b.rec.date); });
+    var consumed = [];
     batches.forEach(function(b) {
       if (toWrite <= 0) return;
       var take = Math.min(toWrite, b.left);
       b.rec.batchQty = b.left - take;
+      if (!b.rec.id) b.rec.id = uid();
+      consumed.push({ id: b.rec.id, qty: take });
       toWrite -= take;
     });
-    i.history.unshift({ delta: -step, total: nq, date: new Date().toISOString(), note: 'Расход' });
+    i.history.unshift({ id: uid(), delta: -step, total: nq, date: new Date().toISOString(), note: 'Расход', consumed: consumed });
     i.qty = nq;
   } else {
     // Плюс — открываем модальное окно прихода (уже через кнопку +)
     var nq = i.qty + step;
-    i.history.unshift({ delta: step, total: nq, date: new Date().toISOString(), note: 'Приход', batchQty: step });
+    i.history.unshift({ id: uid(), delta: step, total: nq, date: new Date().toISOString(), note: 'Приход', batchQty: step });
     i.qty = nq;
   }
 
@@ -2295,17 +2317,37 @@ function closeAllHistRows() {
 function deleteHistoryRec(idx) {
   var i = getItem(curItem); if (!i) return;
   if (!confirm('Удалить эту запись из истории?')) return;
-  // Пересчитать qty на основе оставшейся истории
   var deleted = i.history[idx];
   i.history.splice(idx, 1);
-  // Пересчитать текущий остаток
-  i.qty = i.qty - deleted.delta;
+  if (deleted.delta < 0) {
+    // Удаляем списание/расход — возвращаем остаток в те партии, откуда он был взят
+    // (иначе общий остаток "починится", а партия так и останется с нулевым
+    // остатком — расхождение между итогом и списком партий)
+    if (deleted.consumed && deleted.consumed.length) {
+      deleted.consumed.forEach(function(c) {
+        var src = i.history.find(function(r) { return r.id === c.id; });
+        if (src) {
+          var maxBl = src.delta;
+          src.batchQty = Math.min(maxBl, (src.batchQty || 0) + c.qty);
+        }
+      });
+    }
+    i.qty = i.qty - deleted.delta; // delta отрицательная — прибавляем обратно
+  } else {
+    // Удаляем приходную запись — вычитаем именно то, что от неё осталось
+    // (а не изначальное количество, часть которого уже могла быть списана)
+    var remaining = deleted.batchQty !== undefined ? deleted.batchQty : deleted.delta;
+    i.qty = i.qty - remaining;
+  }
   if (i.qty < 0) i.qty = 0;
   saveDB();
   document.getElementById('det-qty').textContent = i.qty;
+  renderDetInfo(i);
   renderDetHist(i);
+  renderDetBatches(i);
   renderItems();
   renderCats();
+  updateExpiryBadge();
 }
 window.deleteHistoryRec = deleteHistoryRec;
 window.histTouchStart = histTouchStart;
@@ -2355,7 +2397,7 @@ function confirmIncoming() {
     var curAvg = i.avgPrice || 0;
     i.avgPrice = (i.qty * curAvg + qty * price) / nq;
   }
-  var rec = { delta: qty, total: nq, date: new Date().toISOString(), note: note, batchQty: qty };
+  var rec = { id: uid(), delta: qty, total: nq, date: new Date().toISOString(), note: note, batchQty: qty };
   if (price) rec.price = price;
   if (expiry) rec.expiry = expiry;
   i.history.unshift(rec);
@@ -2731,8 +2773,9 @@ function confirmBatchAction() {
   var bl = rec.batchQty !== undefined ? rec.batchQty : rec.delta;
   if (qty > bl) { alert('Нельзя больше остатка партии (' + bl + ')'); return; }
   rec.batchQty = bl - qty;
+  if (!rec.id) rec.id = uid();
   var nq = Math.max(0, item.qty - qty);
-  item.history.unshift({ delta: -qty, total: nq, date: new Date().toISOString(), note: note });
+  item.history.unshift({ id: uid(), delta: -qty, total: nq, date: new Date().toISOString(), note: note, consumed: [{ id: rec.id, qty: qty }] });
   item.qty = nq;
   saveDB();
   document.getElementById('det-qty').textContent = nq;
@@ -2775,8 +2818,9 @@ function confirmRelease() {
   var bl = rec.batchQty !== undefined ? rec.batchQty : rec.delta;
   if (qty > bl) { alert('Нельзя отпустить больше остатка партии (' + bl + ')'); return; }
   rec.batchQty = bl - qty;
+  if (!rec.id) rec.id = uid();
   var nq = Math.max(0, item.qty - qty);
-  item.history.unshift({ delta: -qty, total: nq, date: new Date().toISOString(), note: note + ' [партия: ' + rec.note + ']' });
+  item.history.unshift({ id: uid(), delta: -qty, total: nq, date: new Date().toISOString(), note: note + ' [партия: ' + rec.note + ']', consumed: [{ id: rec.id, qty: qty }] });
   item.qty = nq;
   saveDB();
   document.getElementById('det-qty').textContent = nq;
@@ -2827,14 +2871,17 @@ function confirmWriteOff() {
 
   // Уменьшаем остаток партии
   rec.batchQty = batchLeft - qty;
+  if (!rec.id) rec.id = uid();
 
   // Уменьшаем общий qty товара
   var nq = Math.max(0, item.qty - qty);
   item.history.unshift({
+    id: uid(),
     delta: -qty,
     total: nq,
     date: new Date().toISOString(),
-    note: note + ' [партия: ' + rec.note + ']'
+    note: note + ' [партия: ' + rec.note + ']',
+    consumed: [{ id: rec.id, qty: qty }]
   });
   item.qty = nq;
   saveDB();
