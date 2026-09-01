@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, interactive-widget=resizes-content">
-<title>Склад v14</title>
+<title>Склад v16</title>
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#0D0D1A">
 <link rel="apple-touch-icon" href="icon-180.png">
@@ -2103,11 +2103,54 @@ function renderStats() {
     + '<div class="row" style="cursor:default"><div class="rico" style="background:#007AFF"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg></div><div class="rmid"><div class="rt">Позиций</div></div><div style="font-size:17px;font-weight:700">' + total + '</div></div>'
     + '<div class="row" style="cursor:default"><div class="rico" style="background:var(--grn)"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div><div class="rmid"><div class="rt">Сумма склада</div></div><div style="font-size:17px;font-weight:700">' + fmt(sum) + '</div></div>';
 }
-function exportDB() {
-  var a = document.createElement('a');
-  a.href = URL.createObjectURL(new Blob([JSON.stringify(db, null, 2)], { type: 'application/json' }));
-  a.download = 'catalog_' + new Date().toISOString().slice(0, 10) + '.json';
-  a.click();
+async function exportDB() {
+  var jsonStr = JSON.stringify(db, null, 2);
+  var name = 'catalog_' + new Date().toISOString().slice(0, 10) + '.json';
+  var savedOk = false;
+
+  // Десктоп (File System Access API): системный диалог "Сохранить как" —
+  // человек сам выбирает папку/диск, а не получает файл вслепую в "Загрузки".
+  if (fsApiSupported()) {
+    try {
+      var handle = await window.showSaveFilePicker({
+        suggestedName: name,
+        types: [{ description: 'База СКЛАД (JSON)', accept: { 'application/json': ['.json'] } }]
+      });
+      var w = await handle.createWritable();
+      await w.write(jsonStr);
+      await w.close();
+      savedOk = true;
+    } catch (e) {
+      if (e && e.name === 'AbortError') return; // человек сам отменил диалог сохранения
+      // иначе — тихо откатываемся на вариант ниже (Поделиться / скачивание)
+    }
+  }
+
+  // Мобильные браузеры без File System Access: системное окно "Поделиться" —
+  // прямо оттуда можно выбрать Google Диск и любое другое приложение,
+  // а не только скачивание файла в системную папку "Загрузки".
+  if (!savedOk && navigator.canShare) {
+    try {
+      var file = new File([jsonStr], name, { type: 'application/json' });
+      if (navigator.canShare({ files: [file] })) {
+        await navigator.share({ files: [file], title: 'Резервная копия СКЛАД' });
+        savedOk = true;
+      }
+    } catch (e) {
+      if (e && e.name === 'AbortError') return; // человек закрыл окно "Поделиться"
+    }
+  }
+
+  // Фолбэк: ни диалог сохранения, ни "Поделиться" файлами не поддерживаются —
+  // обычное скачивание, как и раньше.
+  if (!savedOk) {
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([jsonStr], { type: 'application/json' }));
+    a.download = name;
+    a.click();
+    URL.revokeObjectURL(a.href);
+  }
+
   // Дата бэкапа хранится прямо в самой базе (db.lastBackupAt), а не только локально —
   // так статус виден и после открытия того же файла базы на другом устройстве.
   db.lastBackupAt = Date.now();
@@ -2149,7 +2192,7 @@ function updateBackupBadge() {
   var dot = document.getElementById('backup-tab-dot');
   if (!dot) return;
   var stale = db.lastBackupAt ? (countChangedSinceBackup() > 0) : (totalItemsCount() > 0);
-  dot.style.display = stale ? '' : 'none';
+  dot.style.display = stale ? 'block' : 'none';
 }
 function renderBackupStatus() {
   var el = document.getElementById('export-status');
