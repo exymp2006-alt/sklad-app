@@ -40,7 +40,7 @@ input,select,textarea,button{font-family:inherit;font-size:16px;}
 .cats-section-label{font-size:11px;font-weight:700;color:var(--t2);letter-spacing:1.2px;text-transform:uppercase;}
 .cats-section-add{font-size:14px;font-weight:600;color:var(--ac);background:none;border:none;cursor:pointer;padding:0;}
 .cats-grid{display:flex;flex-direction:column;gap:14px;}
-.catcard{display:flex;align-items:center;gap:12px;padding:14px 12px;border-radius:14px;cursor:pointer;background:#E4E6ED;box-shadow:0 6px 16px rgba(13,13,26,.16);-webkit-tap-highlight-color:transparent;transition:transform .1s;}
+.catcard{display:flex;align-items:center;gap:12px;padding:14px 12px;border-radius:14px;cursor:pointer;background:var(--card);box-shadow:0 6px 16px rgba(13,13,26,.16);-webkit-tap-highlight-color:transparent;transition:transform .1s;}
 .catcard:active{transform:scale(.98);}
 .catcard-icon{width:22px;height:22px;flex-shrink:0;display:flex;align-items:center;justify-content:center;}
 .catcard-icon svg{width:22px;height:22px;stroke:var(--t2);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;}
@@ -286,6 +286,7 @@ body.logged-in .navbar{display:flex;}
     <div class="hdr-top-row" style="padding:20px 20px 0;position:relative;z-index:1;">
       <div class="hdr-sm-title" style="text-align:left;font-size:26px;font-weight:800;letter-spacing:-.5px;" id="items-title">Товары</div>
     </div>
+    <div class="hdr-dark-sub" style="padding:2px 20px 0;" id="items-count"></div>
     <button class="hdr-back" id="btn-itemsback" style="display:none"></button>
     <button class="hdr-icon-btn" id="btn-editcat" style="display:none"></button>
     <div class="hdr-search-row" style="display:flex;align-items:center;gap:8px;">
@@ -1354,13 +1355,19 @@ function renderItems() {
   var c = getCat(curCat);
   var lst = document.getElementById('items-list');
   var emp = document.getElementById('items-empty');
-  if (!c) { lst.innerHTML = ''; emp.style.display = ''; return; }
+  var cnt = document.getElementById('items-count');
+  if (!c) { lst.innerHTML = ''; emp.style.display = ''; if (cnt) cnt.textContent = ''; return; }
   var q = (document.getElementById('items-q').value || '').toLowerCase();
   var items = c.items.filter(function(i) {
     return (!q || i.name.toLowerCase().indexOf(q) >= 0 || (i.sku || '').toLowerCase().indexOf(q) >= 0)
         && (!activeChip || i.category === activeChip)
         && (!hideZero || (i.qty || 0) > 0);
   });
+  if (cnt) {
+    var total = c.items.length;
+    var filtered = q || activeChip || hideZero;
+    cnt.textContent = filtered ? ('Показано ' + items.length + ' из ' + total) : (total + ' позиций');
+  }
   if (!items.length) {
     lst.innerHTML = ''; lst.style.display = 'none'; emp.style.display = '';
     document.getElementById('items-empty-msg').textContent = (q || activeChip) ? 'Ничего не найдено' : 'Нажмите + чтобы добавить товар';
