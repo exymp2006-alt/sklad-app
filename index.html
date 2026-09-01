@@ -3087,22 +3087,25 @@ window.closeWebSearchSheet = closeWebSearchSheet;
 function doWebSearch(type) {
   var name = wsItemName || (getItem(curItem) || {}).name;
   if (!name) return;
+  var noMd = 'Пиши простым текстом без markdown-разметки: не используй символы # (заголовки), ** (жирный шрифт), * или - в начале строки (маркеры списков) — только обычные предложения и цифры с точкой для нумерации.';
   var url;
   if (type === 'desc') {
     var q = 'Опиши товар "' + name + '". Дай только фактическое описание: что это и для чего используется, '
-      + 'ключевые технические характеристики (тип, мощность или объём, материал, размеры, вес — что применимо), '
+      + 'ключевые технические характеристики (тип, мощность или объём, состав, материал, размеры, вес — что применимо именно к этому товару), '
       + 'производитель и комплектация, если это известно. '
-      + 'Без вступлений, комментариев от себя и вопросов в конце. '
-      + 'Оформи строго тремя абзацами без заголовков и без маркдаун-разметки: '
+      + 'Без вступлений, комментариев от себя и вопросов в конце. ' + noMd + ' '
+      + 'Оформи строго тремя абзацами без заголовков-подписей перед ними: '
       + '1-й абзац — что это и для чего; 2-й абзац — технические характеристики; 3-й абзац — производитель и комплектация.';
     url = 'https://www.google.com/search?q=' + encodeURIComponent(q) + '&udm=50';
   } else if (type === 'instr') {
-    var q2 = 'Инструкция по применению/эксплуатации товара "' + name + '". Дай только порядок действий: '
-      + 'подготовка к работе, порядок использования по шагам, основные меры безопасности, '
-      + 'обслуживание и хранение после использования. '
-      + 'Без вступлений, комментариев от себя и вопросов в конце. '
-      + 'Оформи в виде нумерованного списка шагов 1. 2. 3. (сначала подготовка, затем использование, затем завершение работы и хранение), '
-      + 'без подпунктов и без пояснений в скобках.';
+    var q2 = 'Инструкция по применению для товара "' + name + '". '
+      + 'Сам определи, какая структура инструкции уместна именно для этого товара по смыслу '
+      + '(для инструмента и техники — это порядок подготовки, работы, техника безопасности, обслуживание и хранение; '
+      + 'для лекарства, косметики или бытовой химии — это способ применения, дозировка, противопоказания и меры предосторожности; '
+      + 'для прочих товаров — по аналогии, что реально уместно). '
+      + 'Дай только суть, без вступлений, комментариев от себя и вопросов в конце. ' + noMd + ' '
+      + 'Всю инструкцию целиком оформи ОДНИМ сквозным нумерованным списком пунктов 1. 2. 3. — без подпунктов, '
+      + 'без промежуточных заголовков-разделов и без разбивки на отдельные подтемы (например, дозировку для разных групп указывай отдельными пунктами того же общего списка, а не отдельным блоком).';
     url = 'https://www.google.com/search?q=' + encodeURIComponent(q2) + '&udm=50';
   } else if (type === 'buy') {
     url = 'https://www.google.com/search?q=' + encodeURIComponent(name + ' купить');
@@ -3126,19 +3129,32 @@ document.getElementById('if-note').addEventListener('input', function() {
   autoResizeTextarea(this);
 });
 
-// ── Paste cleaner — убираем ссылки, оставляем структуру ──
-document.getElementById('if-note').addEventListener('paste', function(e) {
-  e.preventDefault();
-  var text = (e.clipboardData || window.clipboardData).getData('text');
-  text = text.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+// ── Общая чистка ИИ-мусора: ссылки, сноски, markdown-разметка ──
+// (## заголовки, **жирный**, маркеры списков "* "/"- " -> "— ", как в
+// приложении "Рецепты" — ИИ иногда всё равно добавляет их, несмотря на
+// прямой запрет в промте, особенно если товар не укладывается в заданную
+// структуру одним абзацем/списком)
+function cleanAiTextArtifacts(text) {
   var lines = text.split('\n');
   lines = lines.filter(function(line) {
     return !/^\s*\[\d+\]/.test(line);
   });
-  text = lines.join('\n');
-  text = text.replace(/\s*\[\d+(?:,\s*\d+)*\]/g, '');
-  text = text.replace(/https?:\/\/[^\s\)]+/g, '');
-  text = text.replace(/\n{3,}/g, '\n\n').trim();
+  var t = lines.join('\n');
+  t = t.replace(/\s*\[\d+(?:,\s*\d+)*\]/g, '');
+  t = t.replace(/https?:\/\/[^\s\)]+/g, '');
+  t = t.replace(/\*\*(.+?)\*\*/g, '$1');           // **жирный** -> обычный
+  t = t.replace(/^\s{0,3}#{1,6}\s*/gm, '');          // ## Заголовок -> Заголовок
+  t = t.replace(/^\s*[*-]\s+/gm, '— ');              // "* пункт" / "- пункт" -> "— пункт"
+  t = t.replace(/\n{3,}/g, '\n\n').trim();
+  return t;
+}
+
+// ── Paste cleaner — убираем ссылки и markdown-мусор, оставляем структуру ──
+document.getElementById('if-note').addEventListener('paste', function(e) {
+  e.preventDefault();
+  var text = (e.clipboardData || window.clipboardData).getData('text');
+  text = text.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+  text = cleanAiTextArtifacts(text);
   var start = this.selectionStart, end = this.selectionEnd, val = this.value;
   this.value = val.substring(0, start) + text + val.substring(end);
   this.selectionStart = this.selectionEnd = start + text.length;
@@ -3148,17 +3164,7 @@ document.getElementById('if-note').addEventListener('paste', function(e) {
 // ── Кнопка очистки ссылок ────────────────────────────
 function cleanNoteField() {
   var el = document.getElementById('if-note');
-  var lines = el.value.split('\n');
-  lines = lines.filter(function(line) {
-    var t = line.trim();
-    if (t.indexOf('http') !== -1) return false;
-    if (/^\[\d+\]/.test(t)) return false;
-    return true;
-  });
-  var text = lines.join('\n');
-  text = text.replace(/\s*\[\d+(?:,\s*\d+)*\]/g, '');
-  text = text.replace(/\n{3,}/g, '\n\n').trim();
-  el.value = text;
+  el.value = cleanAiTextArtifacts(el.value);
   autoResizeTextarea(el);
 }
 window.cleanNoteField = cleanNoteField;
