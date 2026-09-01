@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, interactive-widget=resizes-content">
-<title>Склад v13</title>
+<title>Склад v14</title>
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#0D0D1A">
 <link rel="apple-touch-icon" href="icon-180.png">
@@ -15,7 +15,7 @@
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
 :root{
   --bg:#F0F2F8;--card:#fff;--br:#E5E5EA;--t:#0D0D1A;--t2:#8E8E9A;
-  --ac:#5856D6;--red:#FF3B30;--grn:#34C759;--nav:68px;--hdr:#0D0D1A;
+  --ac:#5856D6;--red:#FF3B30;--grn:#34C759;--gold:#FF9F0A;--nav:68px;--hdr:#0D0D1A;
 }
 html,body{height:100%;background:var(--bg);font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display',sans-serif;overflow:hidden;}
 input,select,textarea,button{font-family:inherit;font-size:16px;}
@@ -27,6 +27,10 @@ input,select,textarea,button{font-family:inherit;font-size:16px;}
 .ntab svg{width:26px;height:26px;stroke:var(--t2);fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;}
 .ntab.on svg{stroke:var(--ac);}
 .ntab.on span{color:var(--ac);}
+.ntab-dot{display:none;position:absolute;top:6px;right:16px;width:9px;height:9px;border-radius:50%;background:var(--gold);box-shadow:0 0 0 2px rgba(255,255,255,.97);}
+.toast{position:fixed;left:50%;bottom:calc(var(--nav) + 14px);transform:translate(-50%,8px);background:var(--hdr);color:#fff;font-size:13px;font-weight:600;padding:11px 18px;border-radius:12px;box-shadow:0 6px 20px rgba(0,0,0,.25);z-index:1200;opacity:0;pointer-events:none;transition:opacity .2s ease,transform .2s ease;max-width:86%;text-align:center;}
+.toast.on{opacity:1;transform:translate(-50%,0);}
+.rs.warn{color:var(--gold);font-weight:600;}
 .hdr-dark{background:var(--hdr);padding:20px 20px 0;flex-shrink:0;}
 .hdr-dark-month{font-size:11px;font-weight:700;color:rgba(255,255,255,.4);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px;}
 .hdr-dark-title{font-size:34px;font-weight:800;color:#fff;letter-spacing:-1px;line-height:1;}
@@ -453,9 +457,9 @@ body.logged-in .navbar{display:flex;}
         <div class="rmid"><div class="rt">Сменить файл базы</div><div class="rs" id="save-indicator">Файл: —</div></div>
         <span class="chev">›</span>
       </div>
-      <div class="row">
+      <div class="row" id="row-export">
         <div class="rico" style="background:#FF9F0A"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></div>
-        <div class="rmid"><div class="rt">Экспорт копии</div><div class="rs">Скачать резервную копию db.json</div></div>
+        <div class="rmid"><div class="rt">Экспорт копии</div><div class="rs" id="export-status">Скачать резервную копию db.json</div></div>
         <span class="chev">›</span>
       </div>
       <label class="row" style="cursor:pointer">
@@ -497,7 +501,8 @@ body.logged-in .navbar{display:flex;}
     <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
     <span>Истекает</span>
   </button>
-  <button class="ntab" id="nt-set">
+  <button class="ntab" id="nt-set" style="position:relative;">
+    <span id="backup-tab-dot" class="ntab-dot"></span>
     <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
     <span>Настройки</span>
   </button>
@@ -825,6 +830,7 @@ function uid() { return Math.random().toString(36).slice(2,6).toUpperCase(); }
 
 function migrateDB() {
   if (!db.catalogs) db.catalogs = [];
+  if (db.lastBackupAt === undefined) db.lastBackupAt = null;
   db.catalogs.forEach(function(c) {
     if (!c.id) c.id = uid();
     if (!c.categories) c.categories = [];
@@ -874,6 +880,7 @@ function idbSet(value) {
 }
 
 function saveDB() {
+  updateBackupBadge();
   if (storageMode === 'file') {
     if (!dbFileHandle) return;
     if (saveInFlight) { saveQueued = true; return; }
@@ -936,6 +943,7 @@ function enterApp() {
   renderCats();
   showPage('pg-cats');
   document.getElementById('nt-cats').classList.add('on');
+  updateBackupBadge();
 }
 
 // ----- Десктоп: File System Access API -----
@@ -2084,6 +2092,7 @@ function scanGoToItem(catId, itemId) {
 
 // ===== SETTINGS =====
 function renderStats() {
+  renderBackupStatus();
   var total = 0, sum = 0;
   db.catalogs.forEach(function(c) {
     total += c.items.length;
@@ -2099,6 +2108,72 @@ function exportDB() {
   a.href = URL.createObjectURL(new Blob([JSON.stringify(db, null, 2)], { type: 'application/json' }));
   a.download = 'catalog_' + new Date().toISOString().slice(0, 10) + '.json';
   a.click();
+  // Дата бэкапа хранится прямо в самой базе (db.lastBackupAt), а не только локально —
+  // так статус виден и после открытия того же файла базы на другом устройстве.
+  db.lastBackupAt = Date.now();
+  saveDB();
+  renderBackupStatus();
+  showToast('Резервная копия сохранена · ' + fmtBackupDate(db.lastBackupAt));
+}
+
+// ===== BACKUP REMINDER =====
+// Позиция считается "не забэкаплена", если её создали/изменили/по ней было
+// движение остатка позже даты последней резервной копии.
+function getItemChangeTs(item) {
+  var t = Date.parse(item.updatedAt || item.createdAt || 0) || 0;
+  (item.history || []).forEach(function(rec) {
+    var ht = Date.parse(rec.date || 0) || 0;
+    if (ht > t) t = ht;
+  });
+  return t;
+}
+function countChangedSinceBackup() {
+  if (!db.lastBackupAt) return 0;
+  var count = 0;
+  db.catalogs.forEach(function(c) {
+    (c.items || []).forEach(function(i) { if (getItemChangeTs(i) > db.lastBackupAt) count++; });
+  });
+  return count;
+}
+function totalItemsCount() {
+  var total = 0;
+  db.catalogs.forEach(function(c) { total += c.items.length; });
+  return total;
+}
+function fmtBackupDate(ts) {
+  return new Date(ts).toLocaleString('ru-RU', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+}
+// Точка на вкладке "Настройки": не забэкаплено ни разу (и есть что бэкапить),
+// либо появились изменения после последней копии.
+function updateBackupBadge() {
+  var dot = document.getElementById('backup-tab-dot');
+  if (!dot) return;
+  var stale = db.lastBackupAt ? (countChangedSinceBackup() > 0) : (totalItemsCount() > 0);
+  dot.style.display = stale ? '' : 'none';
+}
+function renderBackupStatus() {
+  var el = document.getElementById('export-status');
+  if (!el) return;
+  if (!db.lastBackupAt) {
+    var has = totalItemsCount() > 0;
+    el.textContent = has ? 'Резервной копии ещё не было' : 'Скачать резервную копию db.json';
+    el.classList.toggle('warn', has);
+  } else {
+    var changed = countChangedSinceBackup();
+    el.textContent = changed > 0
+      ? ('Копия от ' + fmtBackupDate(db.lastBackupAt) + ' · изменений: ' + changed)
+      : ('Копия от ' + fmtBackupDate(db.lastBackupAt) + ' · всё сохранено');
+    el.classList.toggle('warn', changed > 0);
+  }
+  updateBackupBadge();
+}
+function showToast(msg) {
+  var t = document.getElementById('toast');
+  if (!t) return;
+  t.textContent = msg;
+  t.classList.add('on');
+  clearTimeout(showToast._t);
+  showToast._t = setTimeout(function() { t.classList.remove('on'); }, 2400);
 }
 
 // ===== UTILS =====
@@ -2817,7 +2892,7 @@ window.clearSearch = clearSearch;
   document.getElementById('scan-stop-btn').onclick = stopLiveScan;
   initScanFileInput();
   document.getElementById('row-switchdb').onclick = switchDBFile;
-  document.querySelectorAll('#pg-settings .row')[1].onclick = exportDB;
+  document.getElementById('row-export').onclick = exportDB;
   document.getElementById('inp-import').onchange = function(e) {
     var f = e.target.files[0]; if (!f) return;
     var r = new FileReader();
@@ -3007,5 +3082,6 @@ if (window.visualViewport) {
   </div>
 </div>
 
+<div id="toast" class="toast"></div>
 </body>
 </html>
