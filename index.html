@@ -157,6 +157,9 @@ body.logged-in .navbar{display:flex;}
 .sheet.on{transform:none;visibility:visible;}
 .shandle{width:40px;height:4px;background:var(--br);border-radius:2px;margin:14px auto 0;}
 .sbody{padding:16px 16px 36px;}
+.note-h{font-size:13px;font-weight:800;color:var(--ac);text-transform:uppercase;letter-spacing:.4px;margin:18px 0 4px;}
+.note-h:first-child{margin-top:0;}
+.note-p{font-size:17px;font-weight:500;line-height:1.55;color:var(--t);margin-bottom:4px;}
 .stitle{font-size:20px;font-weight:800;margin-bottom:16px;}
 .lrow{display:flex;gap:8px;margin-bottom:12px;}
 .lf{flex:1;display:flex;flex-direction:column;gap:4px;}
@@ -1716,13 +1719,37 @@ function adjQty(dir) {
 // Тап по названию в списке — быстрый просмотр описания крупным шрифтом,
 // без перехода в карточку. Если описания нет — считаем, что смотреть тут
 // нечего, и просто открываем карточку (как раньше вело себя нажатие на строку).
+//
+// Текст из ИИ обычно приходит по правилу "короткое название раздела —
+// затем абзац", но не всегда с пустой строкой между ними, поэтому заголовок
+// определяем эвристикой: короткая строка (≤6 слов, без точки/запятой на
+// конце), после которой идёт непустая строка — считаем заголовком раздела
+// и выделяем его отдельным акцентным стилем, а не сплошным текстом.
+function renderNoteHtml(text) {
+  var lines = text.replace(/\r\n/g, '\n').split('\n');
+  var html = '';
+  for (var idx = 0; idx < lines.length; idx++) {
+    var line = lines[idx].trim();
+    if (!line) continue;
+    var wordCount = line.split(/\s+/).length;
+    var looksLikeHeading = wordCount <= 6 && !/[.,:;!?]$/.test(line);
+    var nextNonEmpty = '';
+    for (var j = idx + 1; j < lines.length; j++) { if (lines[j].trim()) { nextNonEmpty = lines[j].trim(); break; } }
+    if (looksLikeHeading && nextNonEmpty) {
+      html += '<div class="note-h">' + esc(line) + '</div>';
+    } else {
+      html += '<div class="note-p">' + esc(line) + '</div>';
+    }
+  }
+  return html;
+}
 function showDescQuick(iid) {
   var c = getCat(curCat);
   var i = c ? c.items.find(function(x) { return x.id === iid; }) : null;
   if (!i) return;
   if (!i.notes || !i.notes.trim()) { openDetail(iid); return; }
   document.getElementById('desc-quick-name').textContent = i.name;
-  document.getElementById('desc-quick-text').textContent = i.notes;
+  document.getElementById('desc-quick-text').innerHTML = renderNoteHtml(i.notes);
   document.getElementById('desc-overlay').classList.add('on');
   document.getElementById('desc-sheet').classList.add('on');
 }
@@ -3350,7 +3377,7 @@ if (window.visualViewport) {
   <div class="shandle"></div>
   <div class="sbody">
     <div style="font-size:14px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;" id="desc-quick-name"></div>
-    <div style="font-size:19px;font-weight:600;line-height:1.5;color:var(--t);white-space:pre-wrap;max-height:60vh;overflow-y:auto;" id="desc-quick-text"></div>
+    <div style="max-height:60vh;overflow-y:auto;" id="desc-quick-text"></div>
     <button onclick="closeDescQuick()" style="width:100%;margin-top:20px;padding:14px;border-radius:12px;background:var(--bg);border:none;font-size:15px;font-weight:600;color:var(--t2);cursor:pointer;">Закрыть</button>
   </div>
 </div>
