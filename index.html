@@ -179,8 +179,8 @@ body.logged-in .navbar{display:flex;}
 .fullphoto.on{display:flex;}
 .fullphoto-bar{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;padding-top:calc(12px + env(safe-area-inset-top));}
 .fullphoto-bar button{background:none;border:none;font-size:15px;font-weight:500;cursor:pointer;padding:8px;}
-.fullphoto-img{flex:1;display:flex;align-items:center;justify-content:center;overflow:hidden;}
-.fullphoto-img img{max-width:100%;max-height:100%;object-fit:contain;}
+.fullphoto-img{flex:1;display:flex;align-items:center;justify-content:center;overflow:hidden;touch-action:none;}
+.fullphoto-img img{max-width:100%;max-height:100%;object-fit:contain;transform-origin:center center;will-change:transform;}
 
 /* ── Unified dark header ── */
 .hdr-dark{background:linear-gradient(135deg,#1a1a3e 0%,#2d2b6b 60%,#3d2070 100%);flex-shrink:0;position:relative;overflow:hidden;}
@@ -1391,8 +1391,8 @@ function renderItems() {
     var expBadge = expiryBadgeHtml(expSt);
     h += '<div class="irow" onclick="openDetail(\'' + i.id + '\')">'
       + thumb
-      + '<div class="imid"><div class="iname">' + esc(i.name) + expBadge + '</div><div class="isub">' + (sub || '&nbsp;') + '</div></div>'
-      + '<div class="iqty"><div class="qn' + (low ? ' low' : '') + '">' + i.qty + '</div><div class="qu">' + esc(i.unit || 'шт') + '</div></div>'
+      + '<div class="imid" onclick="event.stopPropagation();showDescQuick(\'' + i.id + '\')"><div class="iname">' + esc(i.name) + expBadge + '</div><div class="isub">' + (sub || '&nbsp;') + '</div></div>'
+      + '<div class="iqty" onclick="event.stopPropagation();openDetail(\'' + i.id + '\')"><div class="qn' + (low ? ' low' : '') + '">' + i.qty + '</div><div class="qu">' + esc(i.unit || 'шт') + '</div></div>'
       + '</div>';
   });
   lst.innerHTML = h;
@@ -1713,14 +1713,36 @@ function adjQty(dir) {
 }
 
 // ===== FULLSCREEN PHOTO =====
+// Тап по названию в списке — быстрый просмотр описания крупным шрифтом,
+// без перехода в карточку. Если описания нет — считаем, что смотреть тут
+// нечего, и просто открываем карточку (как раньше вело себя нажатие на строку).
+function showDescQuick(iid) {
+  var c = getCat(curCat);
+  var i = c ? c.items.find(function(x) { return x.id === iid; }) : null;
+  if (!i) return;
+  if (!i.notes || !i.notes.trim()) { openDetail(iid); return; }
+  document.getElementById('desc-quick-name').textContent = i.name;
+  document.getElementById('desc-quick-text').textContent = i.notes;
+  document.getElementById('desc-overlay').classList.add('on');
+  document.getElementById('desc-sheet').classList.add('on');
+}
+window.showDescQuick = showDescQuick;
+function closeDescQuick() {
+  document.getElementById('desc-overlay').classList.remove('on');
+  document.getElementById('desc-sheet').classList.remove('on');
+}
+window.closeDescQuick = closeDescQuick;
+
 function openFullPhoto(src) {
   document.getElementById('fullphoto-img').src = src;
+  resetPhotoZoom();
   document.getElementById('btn-delphoto').style.visibility = '';
   document.querySelector('#fullphoto .fullphoto-bar button[onclick]').style.visibility = '';
   document.getElementById('fullphoto').classList.add('on');
 }
 function closeFullPhoto() {
   document.getElementById('fullphoto').classList.remove('on');
+  resetPhotoZoom();
 }
 function deletePhoto() {
   if (!confirm('Удалить фото?')) return;
@@ -1737,11 +1759,101 @@ function openPhotoFromList(itemId) {
   });
   if (!item || !item.photo) return;
   document.getElementById('fullphoto-img').src = item.photo;
+  resetPhotoZoom();
   document.getElementById('btn-delphoto').style.visibility = 'hidden';
   document.querySelector('#fullphoto .fullphoto-bar button[onclick]').style.visibility = 'hidden';
   document.getElementById('fullphoto').classList.add('on');
 }
 window.openPhotoFromList = openPhotoFromList;
+
+// ── Pinch-to-zoom / пан / двойной тап для полноэкранного фото ──
+// Реализовано на голых touch-событиях (без библиотек): два пальца — зум
+// вокруг средней точки между ними, один палец при увеличенном фото — пан,
+// двойной тап — переключение между 1x и 2.5x.
+(function() {
+  var img = document.getElementById('fullphoto-img');
+  var box = img.parentElement; // .fullphoto-img
+  var scale = 1, tx = 0, ty = 0;
+  var startDist = 0, startScale = 1, startTx = 0, startTy = 0, startMidX = 0, startMidY = 0;
+  var panStartX = 0, panStartY = 0, panning = false;
+  var lastTapTime = 0, lastTapX = 0, lastTapY = 0;
+  var MAX_SCALE = 4;
+
+  window.resetPhotoZoom = function() {
+    scale = 1; tx = 0; ty = 0;
+    apply();
+  };
+
+  function apply() {
+    img.style.transform = 'translate(' + tx + 'px,' + ty + 'px) scale(' + scale + ')';
+  }
+  function dist(t0, t1) {
+    var dx = t1.clientX - t0.clientX, dy = t1.clientY - t0.clientY;
+    return Math.sqrt(dx * dx + dy * dy);
+  }
+  function clampPan() {
+    // Не даём утащить фото далеко за пределы экрана при увеличении
+    var maxX = box.clientWidth * (scale - 1) / 2 + box.clientWidth * 0.3;
+    var maxY = box.clientHeight * (scale - 1) / 2 + box.clientHeight * 0.3;
+    if (tx > maxX) tx = maxX; if (tx < -maxX) tx = -maxX;
+    if (ty > maxY) ty = maxY; if (ty < -maxY) ty = -maxY;
+  }
+
+  box.addEventListener('touchstart', function(e) {
+    if (e.touches.length === 2) {
+      startDist = dist(e.touches[0], e.touches[1]);
+      startScale = scale;
+      startMidX = (e.touches[0].clientX + e.touches[1].clientX) / 2;
+      startMidY = (e.touches[0].clientY + e.touches[1].clientY) / 2;
+      startTx = tx; startTy = ty;
+      panning = false;
+    } else if (e.touches.length === 1) {
+      if (scale > 1) {
+        panning = true;
+        panStartX = e.touches[0].clientX - tx;
+        panStartY = e.touches[0].clientY - ty;
+      }
+    }
+  }, { passive: true });
+
+  box.addEventListener('touchmove', function(e) {
+    if (e.touches.length === 2 && startDist > 0) {
+      e.preventDefault();
+      var d = dist(e.touches[0], e.touches[1]);
+      scale = Math.min(MAX_SCALE, Math.max(1, startScale * (d / startDist)));
+      var midX = (e.touches[0].clientX + e.touches[1].clientX) / 2;
+      var midY = (e.touches[0].clientY + e.touches[1].clientY) / 2;
+      tx = startTx + (midX - startMidX);
+      ty = startTy + (midY - startMidY);
+      clampPan();
+      apply();
+    } else if (e.touches.length === 1 && panning) {
+      e.preventDefault();
+      tx = e.touches[0].clientX - panStartX;
+      ty = e.touches[0].clientY - panStartY;
+      clampPan();
+      apply();
+    }
+  }, { passive: false });
+
+  box.addEventListener('touchend', function(e) {
+    startDist = 0; panning = false;
+    if (scale < 1.02) { scale = 1; tx = 0; ty = 0; apply(); }
+    if (e.changedTouches.length === 1 && e.touches.length === 0) {
+      var t = e.changedTouches[0];
+      var now = Date.now();
+      if (now - lastTapTime < 300 && Math.abs(t.clientX - lastTapX) < 40 && Math.abs(t.clientY - lastTapY) < 40) {
+        // Двойной тап — переключаем зум
+        if (scale > 1) { scale = 1; tx = 0; ty = 0; }
+        else { scale = 2.5; tx = 0; ty = 0; }
+        apply();
+        lastTapTime = 0;
+      } else {
+        lastTapTime = now; lastTapX = t.clientX; lastTapY = t.clientY;
+      }
+    }
+  }, { passive: true });
+})();
 
 // ===== QR =====
 var qrItem = null;
@@ -2995,6 +3107,7 @@ window.clearSearch = clearSearch;
       i.photo = src; saveDB();
       refreshDetPhoto(i);
       document.getElementById('fullphoto-img').src = src;
+      resetPhotoZoom();
     });
     e.target.value = '';
   };
@@ -3229,6 +3342,16 @@ if (window.visualViewport) {
       </button>
     </div>
     <button onclick="closeWebSearchSheet()" style="width:100%;margin-top:16px;padding:14px;border-radius:12px;background:var(--bg);border:none;font-size:15px;font-weight:600;color:var(--t2);cursor:pointer;">Отмена</button>
+  </div>
+</div>
+
+<div class="overlay" id="desc-overlay" onclick="closeDescQuick()"></div>
+<div class="sheet" id="desc-sheet">
+  <div class="shandle"></div>
+  <div class="sbody">
+    <div style="font-size:14px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;" id="desc-quick-name"></div>
+    <div style="font-size:19px;font-weight:600;line-height:1.5;color:var(--t);white-space:pre-wrap;max-height:60vh;overflow-y:auto;" id="desc-quick-text"></div>
+    <button onclick="closeDescQuick()" style="width:100%;margin-top:20px;padding:14px;border-radius:12px;background:var(--bg);border:none;font-size:15px;font-weight:600;color:var(--t2);cursor:pointer;">Закрыть</button>
   </div>
 </div>
 
