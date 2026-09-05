@@ -1128,7 +1128,7 @@ function renderCats() {
   var months = ['ЯНВАРЬ','ФЕВРАЛЬ','МАРТ','АПРЕЛЬ','МАЙ','ИЮНЬ','ИЮЛЬ','АВГУСТ','СЕНТЯБРЬ','ОКТЯБРЬ','НОЯБРЬ','ДЕКАБРЬ'];
   document.getElementById('hdr-month').textContent = months[now.getMonth()] + ' ' + now.getFullYear();
   document.getElementById('hdr-total').textContent = 'СКЛАД';
-  document.getElementById('hdr-sub').textContent = db.catalogs.length + ' кат. · ' + totalItems + ' позиций · ' + fmt(totalSum) + ' ₽';
+  document.getElementById('hdr-sub').textContent = db.catalogs.length + ' кат. · ' + totalItems + ' позиций · ' + fmt(totalSum);
 
   if (!db.catalogs.length) {
     el.innerHTML = '<div class="empty" style="grid-column:1/-1"><svg viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg><p>Нажмите + Добавить</p></div>';
@@ -1384,7 +1384,7 @@ function renderItems() {
     var catSum = 0;
     items.forEach(function(i) { catSum += (i.avgPrice || 0) * (i.qty || 0); });
     var filtered = q || activeChip || hideZero;
-    cnt.textContent = (filtered ? ('Показано ' + items.length + ' из ' + total) : (total + ' позиций')) + ' · ' + fmt(catSum) + ' ₽';
+    cnt.textContent = (filtered ? ('Показано ' + items.length + ' из ' + total) : (total + ' позиций')) + ' · ' + fmt(catSum);
   }
   if (!items.length) {
     lst.innerHTML = ''; lst.style.display = 'none'; emp.style.display = '';
@@ -2556,7 +2556,7 @@ function updateIncAvg() {
     var curQty = i.qty || 0;
     var curAvg = i.avgPrice || 0;
     var newAvg = (curQty * curAvg + qty * price) / (curQty + qty);
-    document.getElementById('inc-avg-val').textContent = fmt(newAvg) + ' ₽';
+    document.getElementById('inc-avg-val').textContent = fmt(newAvg);
     document.getElementById('inc-avg-info').style.display = 'block';
   } else {
     document.getElementById('inc-avg-info').style.display = 'none';
