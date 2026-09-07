@@ -70,7 +70,7 @@ body.logged-in .navbar{display:flex;}
 .topbar{height:54px;background:var(--card);border-bottom:1px solid var(--br);display:flex;align-items:center;padding:0 8px;flex-shrink:0;}
 .topbar h1{flex:1;text-align:center;font-size:17px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .tbtn{min-width:60px;background:none;border:none;color:var(--ac);font-size:15px;font-weight:600;cursor:pointer;padding:8px 4px;white-space:nowrap;}
-.scroll{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:12px 16px;padding-bottom:calc(var(--nav)+20px);}
+.scroll{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:12px 16px;padding-bottom:calc(var(--nav) + 20px + env(safe-area-inset-bottom,0px));}
 .sbar{display:flex;align-items:center;gap:8px;background:var(--card);border-radius:12px;padding:10px 14px;margin-bottom:10px;box-shadow:0 1px 4px rgba(0,0,0,.06);}
 .sbar svg{width:16px;height:16px;stroke:var(--t2);fill:none;stroke-width:2;flex-shrink:0;}
 .sbar input{flex:1;border:none;background:transparent;outline:none;font-size:16px;color:var(--t);}
@@ -205,7 +205,7 @@ body.logged-in .navbar{display:flex;}
 .hdr-chips .chip.on{background:#fff;color:var(--ac);}
 
 /* ── Page scroll area ── */
-.page-scroll{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:16px 16px calc(var(--nav)+28px);}
+.page-scroll{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:16px 16px calc(var(--nav) + 28px + env(safe-area-inset-bottom,0px));}
 
 /* ── Section headers ── */
 .section-hdr{display:flex;align-items:center;justify-content:space-between;padding:16px 4px 10px;}
