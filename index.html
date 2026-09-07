@@ -63,6 +63,7 @@ body.logged-in .navbar{display:flex;}
 .login-sub{font-size:14px;color:rgba(255,255,255,.5);margin-bottom:40px;max-width:280px;line-height:1.4;}
 .login-btn{width:100%;max-width:320px;padding:16px;border-radius:16px;border:none;font-size:16px;font-weight:700;cursor:pointer;margin-bottom:12px;display:flex;align-items:center;justify-content:center;gap:8px;}
 .login-btn.primary{background:#fff;color:#3634C7;}
+.login-btn.accent{background:var(--ac);color:#fff;}
 .login-btn.secondary{background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.2);}
 .login-status{font-size:13px;color:rgba(255,255,255,.55);margin-top:18px;min-height:18px;}
 .login-filename{font-size:12px;color:rgba(255,255,255,.4);margin-top:6px;}
@@ -221,12 +222,12 @@ body.logged-in .navbar{display:flex;}
   </div>
   <div class="login-title">СКЛАД</div>
   <div class="login-sub">Учёт товаров и остатков. Выберите файл базы данных, чтобы продолжить — все изменения будут сохраняться прямо в этот файл.</div>
-  <button class="login-btn primary" id="btn-open-db">
+  <button class="login-btn primary" id="btn-continue-db" style="display:none">↻ Продолжить (сохранённые данные)</button>
+  <button class="login-btn accent" id="btn-open-db">
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
     Открыть файл базы
   </button>
   <button class="login-btn secondary" id="btn-new-db">＋ Создать новую базу</button>
-  <button class="login-btn secondary" id="btn-continue-db" style="display:none">↻ Продолжить (сохранённые данные)</button>
   <input type="file" accept="application/json" id="login-file-input" style="display:none">
   <div class="login-status" id="login-status"></div>
   <div class="login-filename" id="login-filename"></div>
