@@ -260,8 +260,8 @@ body.logged-in .navbar{display:flex;}
   <div class="scroll">
     <div class="fgrp">
       <div class="fhead">Основное</div>
-      <div class="field"><label>Название *</label><input id="cf-name" type="text" placeholder="Например: Склад №1"></div>
-      <div class="field"><label>Описание</label><input id="cf-desc" type="text" placeholder="Необязательно"></div>
+      <div class="field"><label>Название *</label><input id="cf-name" type="text"></div>
+      <div class="field"><label>Описание</label><input id="cf-desc" type="text"></div>
     </div>
     <div class="fgrp">
       <div class="fhead">Категории</div>
@@ -322,8 +322,9 @@ body.logged-in .navbar{display:flex;}
   <div class="scroll">
     <div class="fgrp">
       <div class="fhead">Основное</div>
-      <div class="field"><label>Название *</label><input id="if-name" type="text" placeholder="Название товара"></div>
-      <div class="field"><label>Артикул / SKU</label><input id="if-sku" type="text" placeholder="A-001"></div>
+      <div class="field"><label>Название *</label><input id="if-name" type="text"></div>
+      <div class="field"><label>Артикул / SKU</label><input id="if-sku" type="text"></div>
+      <div class="field"><label>Каталог</label><select id="if-catalog" onchange="onItemCatalogChange()"></select></div>
       <div class="field"><label>Категория</label><select id="if-cat"></select></div>
     </div>
     <div class="fgrp">
@@ -331,18 +332,18 @@ body.logged-in .navbar{display:flex;}
       <div class="field"><label>Единица</label>
         <select id="if-unit"><option>шт</option><option>кг</option><option>г</option><option>т</option><option>м</option><option>см</option><option>мм</option><option>м²</option><option>м³</option><option>л</option><option>мл</option><option>уп</option><option>пара</option><option>рулон</option><option>бухта</option><option>компл</option></select>
       </div>
-      <div class="field"><label>Мин. остаток</label><input id="if-min" type="number" placeholder="0" inputmode="numeric" min="0"></div>
+      <div class="field"><label>Мин. остаток</label><input id="if-min" type="number" inputmode="numeric" min="0"></div>
     </div>
     <div class="fgrp">
       <div class="fhead">Дополнительно</div>
-      <div class="field"><label>Местонахождение</label><input id="if-loc" type="text" placeholder="Полка A-3"></div>
+      <div class="field"><label>Местонахождение</label><input id="if-loc" type="text"></div>
       <div style="padding:10px 16px 4px;">
         <button type="button" id="btn-websearch-form" onclick="openWebSearchSheet(document.getElementById('if-name').value)" style="width:100%;border-radius:12px;padding:11px 8px;font-size:14px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:8px;background:rgba(88,86,214,.1);color:var(--ac);border:1.5px solid rgba(88,86,214,.2);cursor:pointer;">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
           Поиск в сети
         </button>
       </div>
-      <div class="field"><label>Пояснение</label><textarea id="if-note" placeholder="Описание..."></textarea></div>
+      <div class="field"><label>Пояснение</label><textarea id="if-note"></textarea></div>
       <div style="padding:4px 16px 12px;display:flex;justify-content:flex-end;">
         <button type="button" onclick="cleanNoteField()" style="font-size:12px;color:var(--ac);background:none;border:none;cursor:pointer;padding:4px 0;font-weight:600;">✕ Убрать ссылки</button>
       </div>
@@ -662,12 +663,12 @@ body.logged-in .navbar{display:flex;}
   <div style="display:flex;flex-direction:column;gap:10px;">
     <div style="background:var(--bg);border-radius:12px;padding:12px 16px;">
       <div style="font-size:12px;color:var(--t2);margin-bottom:4px;">Название / поставщик</div>
-      <input id="inc-name" type="text" placeholder="Партия №1, ООО Поставщик..."
+      <input id="inc-name" type="text"
         style="border:none;background:transparent;font-size:16px;font-weight:600;color:var(--t);width:100%;outline:none;">
     </div>
     <div style="background:var(--bg);border-radius:12px;padding:12px 16px;">
       <div style="font-size:12px;color:var(--t2);margin-bottom:4px;">Количество *</div>
-      <input id="inc-qty" type="number" placeholder="0" min="1" inputmode="numeric"
+      <input id="inc-qty" type="number" min="1" inputmode="numeric"
         style="border:none;background:transparent;font-size:24px;font-weight:700;color:var(--t);width:100%;outline:none;">
     </div>
     <div style="background:var(--bg);border-radius:12px;padding:12px 16px;">
@@ -680,7 +681,7 @@ body.logged-in .navbar{display:flex;}
             style="font-size:11px;font-weight:700;padding:4px 10px;border-radius:8px;border:none;cursor:pointer;background:var(--card);color:var(--t2);">за всё</button>
         </div>
       </div>
-      <input id="inc-price" type="number" placeholder="0.00" inputmode="decimal" min="0" step="0.01"
+      <input id="inc-price" type="number" inputmode="decimal" min="0" step="0.01"
         style="border:none;background:transparent;font-size:24px;font-weight:700;color:var(--t);width:100%;outline:none;">
     </div>
     <div style="background:var(--bg);border-radius:12px;padding:12px 16px;">
@@ -734,7 +735,7 @@ body.logged-in .navbar{display:flex;}
   <div style="display:flex;flex-direction:column;gap:10px;">
     <div style="background:var(--bg);border-radius:12px;padding:12px 16px;">
       <div style="font-size:12px;color:var(--t2);margin-bottom:4px;">Количество *</div>
-      <input id="ba-qty" type="number" placeholder="0" min="1" inputmode="numeric"
+      <input id="ba-qty" type="number" min="1" inputmode="numeric"
         style="border:none;background:transparent;font-size:24px;font-weight:700;color:var(--t);width:100%;outline:none;">
     </div>
     <div style="background:var(--bg);border-radius:12px;padding:12px 16px;">
@@ -764,12 +765,12 @@ body.logged-in .navbar{display:flex;}
   <div style="display:flex;flex-direction:column;gap:10px;">
     <div style="background:var(--bg);border-radius:12px;padding:12px 16px;">
       <div style="font-size:12px;color:var(--t2);margin-bottom:4px;">Количество *</div>
-      <input id="rel-qty" type="number" placeholder="0" min="1" inputmode="numeric"
+      <input id="rel-qty" type="number" min="1" inputmode="numeric"
         style="border:none;background:transparent;font-size:24px;font-weight:700;color:var(--t);width:100%;outline:none;">
     </div>
     <div style="background:var(--bg);border-radius:12px;padding:12px 16px;">
       <div style="font-size:12px;color:var(--t2);margin-bottom:4px;">Кому / куда (необязательно)</div>
-      <input id="rel-note" type="text" placeholder="Отдел, сотрудник, заказ..."
+      <input id="rel-note" type="text"
         style="border:none;background:transparent;font-size:16px;color:var(--t);width:100%;outline:none;">
     </div>
   </div>
@@ -787,12 +788,12 @@ body.logged-in .navbar{display:flex;}
   <div style="display:flex;flex-direction:column;gap:10px;">
     <div style="background:var(--bg);border-radius:12px;padding:12px 16px;">
       <div style="font-size:12px;color:var(--t2);margin-bottom:4px;">Количество для списания *</div>
-      <input id="wo-qty" type="number" placeholder="0" min="1" inputmode="numeric"
+      <input id="wo-qty" type="number" min="1" inputmode="numeric"
         style="border:none;background:transparent;font-size:24px;font-weight:700;color:var(--t);width:100%;outline:none;">
     </div>
     <div style="background:var(--bg);border-radius:12px;padding:12px 16px;">
       <div style="font-size:12px;color:var(--t2);margin-bottom:4px;">Причина</div>
-      <input id="wo-note" type="text" placeholder="Просрочен, брак, бой..."
+      <input id="wo-note" type="text"
         style="border:none;background:transparent;font-size:16px;color:var(--t);width:100%;outline:none;">
     </div>
   </div>
@@ -936,6 +937,60 @@ function setSaveIndicator(ok, label) {
 
 function fsApiSupported() { return typeof window.showOpenFilePicker === 'function' && typeof window.showSaveFilePicker === 'function'; }
 
+// ----- Запоминание хендла файла (десктоп, File System Access API) -----
+// Храним сам FileSystemFileHandle в отдельной IndexedDB, чтобы при следующем
+// запуске не открывать системный диалог выбора файла заново, а предложить
+// одну кнопку «Продолжить». Chrome всё равно требует жест пользователя для
+// повторной выдачи разрешения на запись, поэтому это не полностью
+// автоматическое открытие, а быстрый доступ в один тап (как в программе «Учёт»).
+var HDB_NAME = 'sklad_handles', HDB_STORE = 'handles', HDB_KEY = 'lastFile';
+function hdbOpen() {
+  return new Promise(function(resolve, reject) {
+    var req = indexedDB.open(HDB_NAME, 1);
+    req.onupgradeneeded = function() { req.result.createObjectStore(HDB_STORE); };
+    req.onsuccess = function() { resolve(req.result); };
+    req.onerror = function() { reject(req.error); };
+  });
+}
+function hdbSaveHandle(handle) {
+  return hdbOpen().then(function(dbi) {
+    return new Promise(function(resolve, reject) {
+      var tx = dbi.transaction(HDB_STORE, 'readwrite');
+      tx.objectStore(HDB_STORE).put(handle, HDB_KEY);
+      tx.oncomplete = function() { resolve(); };
+      tx.onerror = function() { reject(tx.error); };
+    });
+  }).catch(function(){});
+}
+function hdbLoadHandle() {
+  return hdbOpen().then(function(dbi) {
+    return new Promise(function(resolve, reject) {
+      var tx = dbi.transaction(HDB_STORE, 'readonly');
+      var r = tx.objectStore(HDB_STORE).get(HDB_KEY);
+      r.onsuccess = function() { resolve(r.result || null); };
+      r.onerror = function() { reject(r.error); };
+    });
+  });
+}
+async function continueWithLastHandle() {
+  var statusEl = document.getElementById('login-status');
+  try {
+    var handle = await hdbLoadHandle();
+    if (!handle) throw new Error('no-handle');
+    var perm = await handle.queryPermission({ mode: 'readwrite' });
+    if (perm !== 'granted') perm = await handle.requestPermission({ mode: 'readwrite' });
+    if (perm !== 'granted') throw new Error('no-permission');
+    statusEl.textContent = 'Открываю файл…';
+    await readDBFromHandle(handle);
+    dbFileHandle = handle; dbFileName = handle.name; storageMode = 'file';
+    document.getElementById('login-filename').textContent = 'Файл: ' + dbFileName;
+    statusEl.textContent = '';
+    enterApp();
+  } catch (e) {
+    statusEl.textContent = 'Не удалось открыть сохранённый файл — выберите его вручную.';
+  }
+}
+
 async function readDBFromHandle(handle) {
   var file = await handle.getFile();
   var text = await file.text();
@@ -971,6 +1026,7 @@ async function openExistingDBFile() {
     statusEl.textContent = 'Открываю файл…';
     await readDBFromHandle(handle);
     dbFileHandle = handle; dbFileName = handle.name; storageMode = 'file';
+    hdbSaveHandle(handle);
     document.getElementById('login-filename').textContent = 'Файл: ' + dbFileName;
     statusEl.textContent = '';
     enterApp();
@@ -990,6 +1046,7 @@ async function createNewDBFile() {
     statusEl.textContent = 'Создаю файл…';
     await writeDBToHandle(handle, db);
     dbFileHandle = handle; dbFileName = handle.name; storageMode = 'file';
+    hdbSaveHandle(handle);
     document.getElementById('login-filename').textContent = 'Файл: ' + dbFileName;
     statusEl.textContent = '';
     enterApp();
@@ -1412,9 +1469,29 @@ function renderItems() {
 }
 
 // ===== ITEM FORM =====
+function fillItemCatSelect(catalogId) {
+  var c = getCat(catalogId);
+  var sel = document.getElementById('if-cat');
+  sel.innerHTML = '<option value="">— без категории —</option>';
+  (c && c.categories || []).forEach(function(cat) {
+    sel.innerHTML += '<option value="' + esc(cat) + '">' + esc(cat) + '</option>';
+  });
+}
+function onItemCatalogChange() {
+  // При смене каталога подкатегории берутся уже из нового каталога —
+  // старая подкатегория могла не существовать в другом каталоге.
+  fillItemCatSelect(document.getElementById('if-catalog').value);
+}
+window.onItemCatalogChange = onItemCatalogChange;
 function openItemForm(iid) {
   curItem = iid;
   var c = getCat(curCat);
+  var catSel = document.getElementById('if-catalog');
+  catSel.innerHTML = '';
+  db.catalogs.forEach(function(cat) {
+    catSel.innerHTML += '<option value="' + cat.id + '">' + esc(cat.name) + '</option>';
+  });
+  catSel.value = curCat;
   var sel = document.getElementById('if-cat');
   sel.innerHTML = '<option value="">— без категории —</option>';
   (c.categories || []).forEach(function(cat) {
@@ -1469,6 +1546,7 @@ function processPhoto(file, cb) {
 function saveItem() {
   var name = document.getElementById('if-name').value.trim();
   if (!name) { alert('Введите название'); return; }
+  var targetCatId = document.getElementById('if-catalog').value;
   var c = getCat(curCat);
   var data = {
     name: name,
@@ -1484,12 +1562,29 @@ function saveItem() {
   if (curItem) {
     var i = getItem(curItem);
     Object.assign(i, data);
+    if (targetCatId && targetCatId !== curCat) {
+      // Переносим товар в другой каталог: убираем из старого, добавляем в новый.
+      c.items = c.items.filter(function(x) { return x.id !== curItem; });
+      var newCat = getCat(targetCatId);
+      newCat.items.push(i);
+      curCat = targetCatId;
+      document.getElementById('items-title').textContent = newCat.name;
+      hideZero = true;
+      renderChips();
+    }
     saveDB(); renderItems(); renderCats();
     refreshDetPhoto(i);
     renderDetInfo(i);
     back();
   } else {
-    c.items.push(Object.assign({ id: uid(), qty: 0, avgPrice: 0, history: [], createdAt: new Date().toISOString() }, data));
+    var destCat = (targetCatId && getCat(targetCatId)) ? getCat(targetCatId) : c;
+    destCat.items.push(Object.assign({ id: uid(), qty: 0, avgPrice: 0, history: [], createdAt: new Date().toISOString() }, data));
+    if (targetCatId && targetCatId !== curCat) {
+      curCat = targetCatId;
+      document.getElementById('items-title').textContent = destCat.name;
+      hideZero = true;
+      renderChips();
+    }
     // Новый товар всегда начинается с нулевым остатком — если включен фильтр
     // "В наличии", он скрыл бы товар сразу после добавления. Снимаем фильтр,
     // чтобы добавленный товар было видно.
@@ -1585,8 +1680,7 @@ function openDetail(iid) {
   document.getElementById('det-unit').textContent = i.unit || '';
   renderDetInfo(i);
   renderDetHist(i);
-  var hasBatches = (i.history||[]).some(function(r){ return r.delta > 0 && (r.batchQty === undefined ? r.delta : r.batchQty) > 0; });
-  switchDetTab(hasBatches ? 'batches' : 'info');
+  switchDetTab('info');
   go('pg-detail');
 }
 function refreshDetPhoto(i) {
@@ -3087,6 +3181,13 @@ function init() {
   if (fsApiSupported()) {
     document.getElementById('btn-open-db').onclick = openExistingDBFile;
     document.getElementById('btn-new-db').onclick = createNewDBFile;
+    hdbLoadHandle().then(function(handle) {
+      if (!handle) return;
+      var btn = document.getElementById('btn-continue-db');
+      btn.textContent = '↻ Продолжить: ' + handle.name;
+      btn.style.display = '';
+      btn.onclick = continueWithLastHandle;
+    }).catch(function(){});
   } else {
     document.getElementById('btn-open-db').onclick = openExistingDBFile_mobile;
     document.getElementById('btn-new-db').onclick = createNewDBFile_mobile;
@@ -3096,9 +3197,13 @@ function init() {
       if (f) handleMobileFileChosen(f);
     };
     idbGet().then(function(text) {
-      if (text) document.getElementById('btn-continue-db').style.display = '';
+      if (text) {
+        var btn = document.getElementById('btn-continue-db');
+        btn.textContent = '↻ Продолжить (сохранённые данные)';
+        btn.style.display = '';
+        btn.onclick = continueFromIdb;
+      }
     }).catch(function(){});
-    document.getElementById('btn-continue-db').onclick = continueFromIdb;
   }
 
   document.getElementById('inc-overlay').onclick = closeIncomingModal;
