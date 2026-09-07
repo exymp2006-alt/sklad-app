@@ -1263,11 +1263,19 @@ function renderTempCats() {
   el.innerHTML = h;
 }
 function addTempCat() {
-  var v = document.getElementById('cf-newcat').value.trim();
+  var input = document.getElementById('cf-newcat');
+  var v = input.value.trim();
   if (!v || tempCats.indexOf(v) >= 0) return;
   tempCats.push(v);
-  document.getElementById('cf-newcat').value = '';
+  input.value = '';
   renderTempCats();
+  // Прокручиваем к только что добавленной категории: на телефоне поле ввода
+  // остаётся в фокусе (клавиатура открыта) и новая строка иначе оказывается
+  // перекрыта клавиатурой — из-за этого казалось, что категория не добавилась.
+  var list = document.getElementById('cf-catlist');
+  var last = list.lastElementChild;
+  if (last) last.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+  input.focus();
 }
 function rmTempCat(i) { tempCats.splice(i, 1); renderTempCats(); }
 function saveCat() {
