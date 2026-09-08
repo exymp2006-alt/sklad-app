@@ -126,6 +126,7 @@ body.logged-in .navbar{display:flex;}
 .hrow:last-child{border-bottom:none;}
 .hnote{font-size:15px;font-weight:600;}
 .hdate{font-size:12px;color:var(--t2);margin-top:2px;}
+.hdate-lg{font-size:14px;font-weight:700;color:var(--t);margin-top:2px;}
 .hdelta{font-size:19px;font-weight:800;}
 .htotal{font-size:12px;color:var(--t2);text-align:right;}
 .plus{color:var(--grn);}
@@ -1751,17 +1752,16 @@ function renderDetIncomingHist(i) {
   var unit = esc(i.unit || 'шт');
   var h = '';
   recs.slice(0, 30).forEach(function(rec, idx) {
-    var d = new Date(rec.date).toLocaleString('ru-RU',{day:'2-digit',month:'2-digit',year:'2-digit',hour:'2-digit',minute:'2-digit'});
-    var priceSum = rec.price
-      ? (fmt(rec.price) + '/' + unit + ' · ' + fmt(rec.price * rec.delta) + ' · ' + rec.delta + ' ' + unit)
-      : (rec.delta + ' ' + unit);
+    var d = new Date(rec.date).toLocaleDateString('ru-RU',{day:'2-digit',month:'2-digit'});
+    var priceSum = rec.price ? (fmt2(rec.price) + '/' + unit + ' · ' + fmt2(rec.price * rec.delta)) : '';
     h += '<div class="hrow-wrap"><div class="hrow">'
       + '<div style="display:flex;align-items:flex-start;gap:10px;min-width:0;">'
       + '<div style="width:34px;height:34px;border-radius:10px;background:rgba(52,199,89,.12);display:flex;align-items:center;justify-content:center;flex-shrink:0;">'
       + '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#34C759" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>'
-      + '<div style="min-width:0;"><div class="hnote">' + d + ' · ' + esc(rec.note||'Приход') + '</div>'
-      + '<div style="font-size:13px;font-weight:600;color:var(--t);margin-top:2px;">' + priceSum + '</div></div></div>'
-      + '<div style="text-align:right;flex-shrink:0;"><div class="hdelta plus">+' + rec.delta + '</div><div class="htotal">→ ' + rec.total + '</div></div>'
+      + '<div style="min-width:0;"><div class="hnote">' + esc(rec.note||'Приход') + '</div>'
+      + '<div class="hdate-lg">' + d + '</div>'
+      + (priceSum ? '<div style="font-size:13px;color:var(--t2);margin-top:2px;">' + priceSum + '</div>' : '') + '</div></div>'
+      + '<div style="text-align:right;flex-shrink:0;"><div class="hdelta plus">+' + rec.delta + '</div></div>'
       + '</div></div>';
   });
   el.innerHTML = h;
@@ -1774,7 +1774,8 @@ function renderDetHist(i) {
   var unit = esc(i.unit || 'шт');
   var h = '';
   i.history.slice(0, 40).forEach(function(rec, idx) {
-    var d = new Date(rec.date).toLocaleString('ru-RU', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' });
+    // Дата без времени — крупнее и контрастнее (класс hdate-lg)
+    var d = new Date(rec.date).toLocaleDateString('ru-RU', { day: '2-digit', month: '2-digit' });
     var sign = rec.delta > 0;
     var expTag = '';
     if (rec.expiry && sign) {
@@ -1784,30 +1785,28 @@ function renderDetHist(i) {
         + new Date(rec.expiry).toLocaleDateString('ru-RU',{day:'2-digit',month:'2-digit',year:'numeric'})
         + '</span>';
     }
-    // Остаток в партии: batchQty (если не задан — считаем равным delta прихода)
-    var batchLeft = (sign && rec.batchQty !== undefined) ? rec.batchQty : (sign ? rec.delta : null);
 
     // Левый блок с текстом собираем по-разному для прихода и расхода —
-    // каждая деталь (партия / дата / цена / причина / описание) на своей строке,
-    // а не одной строкой через тире и скобки.
+    // каждая деталь на своей строке, а не одной строкой через тире и скобки.
     var infoHtml;
     if (sign) {
-      // Приход: Партия / дата / цена · сумма · количество
+      // Приход: Партия (жирным) / дата (крупно) / цена за ед · сумма (2 нуля после запятой)
       var priceSum = rec.price
-        ? (fmt(rec.price) + '/' + unit + ' · ' + fmt(rec.price * rec.delta) + ' · ' + rec.delta + ' ' + unit)
-        : (rec.delta + ' ' + unit);
+        ? (fmt2(rec.price) + '/' + unit + ' · ' + fmt2(rec.price * rec.delta))
+        : '';
       infoHtml = '<div class="hnote">' + esc(rec.note || 'Приход') + '</div>'
-        + '<div class="hdate">' + d + '</div>'
-        + '<div style="font-size:13px;font-weight:600;color:var(--t);margin-top:2px;">' + priceSum + '</div>';
+        + '<div class="hdate-lg">' + d + '</div>'
+        + (priceSum ? '<div style="font-size:13px;color:var(--t2);margin-top:2px;">' + priceSum + '</div>' : '');
     } else if (rec.reason !== undefined) {
-      // Расход/отпуск (новый формат): причина — дата · количество / партия / описание
-      infoHtml = '<div class="hnote">' + esc(rec.reason || 'Расход') + ' — ' + d + ' · ' + Math.abs(rec.delta) + ' ' + unit + '</div>'
+      // Расход/отпуск (новый формат): причина / дата (крупно) / партия / описание
+      infoHtml = '<div class="hnote">' + esc(rec.reason || 'Расход') + '</div>'
+        + '<div class="hdate-lg">' + d + '</div>'
         + (rec.batchNote ? '<div class="hdate">Партия: ' + esc(rec.batchNote) + '</div>' : '')
         + (rec.extra ? '<div style="font-size:13px;color:var(--t2);margin-top:2px;">' + esc(rec.extra) + '</div>' : '');
     } else {
       // Старые записи — единая строка, как раньше (формат уже сохранён в базе)
       infoHtml = '<div class="hnote">' + esc(rec.note || '') + '</div>'
-        + '<div class="hdate">' + d + '</div>';
+        + '<div class="hdate-lg">' + d + '</div>';
     }
 
     h += '<div class="hrow-wrap" id="hrw-' + idx + '">'
@@ -1822,9 +1821,7 @@ function renderDetHist(i) {
       + '</div>'
       + '<div style="min-width:0;">' + infoHtml + '</div>'
       + '</div>'
-      + '<div style="text-align:right;flex-shrink:0;"><div class="hdelta ' + (sign ? 'plus' : 'minus') + '">' + (sign ? '+' : '') + rec.delta + '</div>'
-      + (sign ? '<div style="font-size:11px;color:var(--t2);">ост: ' + batchLeft + '</div>' : '<div class="htotal">→ ' + rec.total + '</div>')
-      + '</div>'
+      + '<div style="text-align:right;flex-shrink:0;"><div class="hdelta ' + (sign ? 'plus' : 'minus') + '">' + (sign ? '+' : '') + rec.delta + '</div></div>'
       + '</div>'
       + (expTag ? '<div style="padding-left:44px;">' + expTag + '</div>' : '')
       + '</div>'
@@ -2573,6 +2570,11 @@ function showToast(msg) {
 function fmt(p) {
   var n = parseFloat(p) || 0;
   return n % 1 === 0 ? n.toLocaleString('ru-RU') : n.toLocaleString('ru-RU', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+// Всегда с двумя нулями после запятой — для цены и суммы в карточках истории/прихода
+function fmt2(p) {
+  var n = parseFloat(p) || 0;
+  return n.toLocaleString('ru-RU', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }
 function esc(s) {
   return (s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
