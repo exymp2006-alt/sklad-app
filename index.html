@@ -40,7 +40,7 @@ input,select,textarea,button{font-family:inherit;font-size:16px;}
 .cats-section-label{font-size:11px;font-weight:700;color:var(--t2);letter-spacing:1.2px;text-transform:uppercase;}
 .cats-section-add{font-size:14px;font-weight:600;color:var(--ac);background:none;border:none;cursor:pointer;padding:0;}
 .cats-grid{display:flex;flex-direction:column;gap:14px;}
-.catcard{display:flex;align-items:center;gap:12px;padding:14px 12px;border-radius:14px;cursor:pointer;background:var(--card);box-shadow:0 6px 16px rgba(13,13,26,.16);-webkit-tap-highlight-color:transparent;transition:transform .1s;}
+.catcard{display:flex;align-items:center;gap:16px;padding:14px 14px;border-radius:14px;cursor:pointer;background:var(--card);box-shadow:0 6px 16px rgba(13,13,26,.16);-webkit-tap-highlight-color:transparent;transition:transform .1s;}
 .catcard:active{transform:scale(.98);}
 .catcard-icon{width:22px;height:22px;flex-shrink:0;display:flex;align-items:center;justify-content:center;}
 .catcard-icon svg{width:22px;height:22px;stroke:var(--t2);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;}
@@ -1123,6 +1123,24 @@ function getItem(id) {
   var c = getCat(curCat);
   return c ? c.items.find(function(i) { return i.id === id; }) : null;
 }
+// Наличие товара считаем как сумму остатков всех приходных партий —
+// это единственный источник правды. item.qty кэширует это значение,
+// но здесь мы на всякий случай сверяем и чиним кэш, если он разошёлся
+// (например, из-за старого бага или ручной правки базы).
+function computeAvailableQty(item) {
+  if (!item || !item.history) return item ? (item.qty || 0) : 0;
+  var sum = 0;
+  item.history.forEach(function(rec) {
+    if (rec.delta > 0) sum += (rec.batchQty !== undefined ? rec.batchQty : rec.delta);
+  });
+  return sum;
+}
+function syncItemQty(item) {
+  if (!item) return 0;
+  var real = computeAvailableQty(item);
+  if (real !== item.qty) { item.qty = real; saveDB(); }
+  return real;
+}
 
 // ===== NAVIGATION =====
 function showPage(id) {
@@ -1460,6 +1478,7 @@ function renderItems() {
   emp.style.display = 'none'; lst.style.display = '';
   var h = '';
   items.forEach(function(i) {
+    syncItemQty(i);
     var low = i.minQty && i.qty <= i.minQty;
     var photoIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="rgba(150,150,170,0.35)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="26" height="26"><rect x="2" y="6" width="20" height="15" rx="3"/><circle cx="12" cy="13" r="3.5"/><path d="M8 6l1.5-2.5h5L16 6"/><circle cx="18.5" cy="9.5" r=".8" fill="rgba(150,150,170,0.35)" stroke="none"/></svg>';
     var photoActiveIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="var(--ac)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="26" height="26"><rect x="2" y="6" width="20" height="15" rx="3"/><circle cx="12" cy="13" r="3.5"/><path d="M8 6l1.5-2.5h5L16 6"/><circle cx="18.5" cy="9.5" r=".8" fill="var(--ac)" stroke="none"/></svg>';
@@ -1650,18 +1669,24 @@ function renderDetBatches(i) {
     var expSt = rec.expiry ? expiryStatusForDate(rec.expiry) : null;
     var expColor = expSt === 'expired' ? '#FF3B30' : expSt === 'warn' ? '#FF9F0A' : '#34C759';
     var dIn = new Date(rec.date).toLocaleDateString('ru-RU',{day:'2-digit',month:'2-digit',year:'numeric'});
+    var unit = esc(i.unit || 'шт');
+    var priceInfo = rec.price ? (' · ' + fmt(rec.price) + '/' + unit + ' · ' + fmt(rec.price * rec.delta)) : '';
+    // Первая строка — актуальный остаток партии (то же число, что и в шапке
+    // товара и на вкладке «Наличие»). Вторая строка — исходные данные прихода
+    // (когда и сколько пришло, по какой цене) — это уже история, а не текущий факт.
     h += '<div class="batch-card">'
       + '<div class="batch-card-header">'
       + '<div>'
-      + '<div style="font-size:15px;font-weight:700;color:var(--t);">' + esc(rec.note || 'Партия') + '</div>'
-      + '<div style="font-size:12px;color:var(--t2);margin-top:2px;">Приход: ' + dIn + (rec.price ? ' · ' + fmt(rec.price) + '/' + esc(i.unit||'шт') : '') + '</div>'
+      + '<div style="font-size:11px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.5px;">Наличие</div>'
+      + '<div style="font-size:15px;font-weight:700;color:var(--t);margin-top:2px;">' + esc(rec.note || 'Партия') + '</div>'
       + (rec.expiry ? '<div style="margin-top:6px;">' + expiryBadgeHtml(expSt) + '<span style="font-size:12px;color:' + expColor + ';margin-left:6px;font-weight:600;">до ' + new Date(rec.expiry).toLocaleDateString('ru-RU',{day:'2-digit',month:'2-digit',year:'numeric'}) + '</span></div>' : '')
       + '</div>'
       + '<div style="text-align:right;">'
       + '<div class="batch-qty-big">' + b.left + '</div>'
-      + '<div style="font-size:13px;color:var(--t2);">' + esc(i.unit||'шт') + ' / ' + rec.delta + ' пришло</div>'
+      + '<div style="font-size:13px;color:var(--t2);">' + unit + '</div>'
       + '</div>'
       + '</div>'
+      + '<div style="font-size:12px;color:var(--t2);border-top:1px solid var(--br);padding-top:8px;">Приход: ' + dIn + ' · ' + rec.delta + ' ' + unit + priceInfo + '</div>'
       + '<div style="margin-top:8px;">'
       + '<button onclick="openBatchActionModal(' + b.idx + ')" style="width:100%;padding:12px;border-radius:12px;background:rgba(88,86,214,.1);color:var(--ac);border:1px solid rgba(88,86,214,.25);font-size:15px;font-weight:700;cursor:pointer;">− Расход / Списать</button>'
       + '</div>'
@@ -1685,7 +1710,7 @@ function openDetail(iid) {
   if (i.location) skuParts.push(i.location);
   document.getElementById('det-sku-label').textContent = skuParts.join('  ·  ');
   refreshDetPhoto(i);
-  document.getElementById('det-qty').textContent = i.qty;
+  document.getElementById('det-qty').textContent = syncItemQty(i);
   document.getElementById('det-unit').textContent = i.unit || '';
   renderDetInfo(i);
   renderDetHist(i);
