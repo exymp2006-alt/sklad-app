@@ -130,7 +130,7 @@ body.logged-in .navbar{display:flex;}
 .hdelta{font-size:19px;font-weight:800;}
 .htotal{font-size:12px;color:var(--t2);text-align:right;}
 .plus{color:var(--grn);}
-.minus{color:var(--red);}
+.minus{color:var(--ac);}
 .detrow{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid var(--br);}
 .detrow:last-child{border-bottom:none;}
 .detlabel{font-size:14px;color:var(--t2);}
@@ -1752,7 +1752,7 @@ function renderDetIncomingHist(i) {
   var unit = esc(i.unit || 'шт');
   var h = '';
   recs.slice(0, 30).forEach(function(rec, idx) {
-    var d = new Date(rec.date).toLocaleDateString('ru-RU',{day:'2-digit',month:'2-digit'});
+    var d = new Date(rec.date).toLocaleDateString('ru-RU',{day:'2-digit',month:'2-digit',year:'numeric'});
     var priceSum = rec.price ? (fmt2(rec.price) + '/' + unit + ' · ' + fmt2(rec.price * rec.delta)) : '';
     h += '<div class="hrow-wrap"><div class="hrow">'
       + '<div style="display:flex;align-items:flex-start;gap:10px;min-width:0;">'
@@ -1775,7 +1775,7 @@ function renderDetHist(i) {
   var h = '';
   i.history.slice(0, 40).forEach(function(rec, idx) {
     // Дата без времени — крупнее и контрастнее (класс hdate-lg)
-    var d = new Date(rec.date).toLocaleDateString('ru-RU', { day: '2-digit', month: '2-digit' });
+    var d = new Date(rec.date).toLocaleDateString('ru-RU', { day: '2-digit', month: '2-digit', year: 'numeric' });
     var sign = rec.delta > 0;
     var expTag = '';
     if (rec.expiry && sign) {
