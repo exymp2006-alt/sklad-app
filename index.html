@@ -1748,16 +1748,20 @@ function renderDetIncomingHist(i) {
     el.innerHTML = '<div style="padding:14px 16px;font-size:14px;color:var(--t2)">Нет поступлений</div>';
     return;
   }
+  var unit = esc(i.unit || 'шт');
   var h = '';
   recs.slice(0, 30).forEach(function(rec, idx) {
     var d = new Date(rec.date).toLocaleString('ru-RU',{day:'2-digit',month:'2-digit',year:'2-digit',hour:'2-digit',minute:'2-digit'});
+    var priceSum = rec.price
+      ? (fmt(rec.price) + '/' + unit + ' · ' + fmt(rec.price * rec.delta) + ' · ' + rec.delta + ' ' + unit)
+      : (rec.delta + ' ' + unit);
     h += '<div class="hrow-wrap"><div class="hrow">'
-      + '<div style="display:flex;align-items:center;gap:10px;">'
+      + '<div style="display:flex;align-items:flex-start;gap:10px;min-width:0;">'
       + '<div style="width:34px;height:34px;border-radius:10px;background:rgba(52,199,89,.12);display:flex;align-items:center;justify-content:center;flex-shrink:0;">'
       + '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#34C759" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>'
-      + '<div><div class="hnote">' + esc(rec.note||'Приход') + (rec.price ? '<span style="font-size:11px;background:rgba(88,86,214,.1);color:var(--ac);border-radius:6px;padding:1px 6px;margin-left:6px;">' + fmt(rec.price) + '/шт</span>' : '') + '</div>'
-      + '<div class="hdate">' + d + '</div></div></div>'
-      + '<div style="text-align:right"><div class="hdelta plus">+' + rec.delta + '</div><div class="htotal">→ ' + rec.total + '</div></div>'
+      + '<div style="min-width:0;"><div class="hnote">' + d + ' · ' + esc(rec.note||'Приход') + '</div>'
+      + '<div style="font-size:13px;font-weight:600;color:var(--t);margin-top:2px;">' + priceSum + '</div></div></div>'
+      + '<div style="text-align:right;flex-shrink:0;"><div class="hdelta plus">+' + rec.delta + '</div><div class="htotal">→ ' + rec.total + '</div></div>'
       + '</div></div>';
   });
   el.innerHTML = h;
@@ -1767,6 +1771,7 @@ function renderDetHist(i) {
   document.getElementById('det-hist-grp').style.display = '';
   var el = document.getElementById('det-hist');
   if (!i.history || !i.history.length) { el.innerHTML = '<div style="padding:16px;text-align:center;font-size:14px;color:var(--t2)">Нет записей</div>'; return; }
+  var unit = esc(i.unit || 'шт');
   var h = '';
   i.history.slice(0, 40).forEach(function(rec, idx) {
     var d = new Date(rec.date).toLocaleString('ru-RU', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' });
@@ -1782,18 +1787,40 @@ function renderDetHist(i) {
     // Остаток в партии: batchQty (если не задан — считаем равным delta прихода)
     var batchLeft = (sign && rec.batchQty !== undefined) ? rec.batchQty : (sign ? rec.delta : null);
 
+    // Левый блок с текстом собираем по-разному для прихода и расхода —
+    // каждая деталь (партия / дата / цена / причина / описание) на своей строке,
+    // а не одной строкой через тире и скобки.
+    var infoHtml;
+    if (sign) {
+      // Приход: Партия / дата / цена · сумма · количество
+      var priceSum = rec.price
+        ? (fmt(rec.price) + '/' + unit + ' · ' + fmt(rec.price * rec.delta) + ' · ' + rec.delta + ' ' + unit)
+        : (rec.delta + ' ' + unit);
+      infoHtml = '<div class="hnote">' + esc(rec.note || 'Приход') + '</div>'
+        + '<div class="hdate">' + d + '</div>'
+        + '<div style="font-size:13px;font-weight:600;color:var(--t);margin-top:2px;">' + priceSum + '</div>';
+    } else if (rec.reason !== undefined) {
+      // Расход/отпуск (новый формат): причина — дата · количество / партия / описание
+      infoHtml = '<div class="hnote">' + esc(rec.reason || 'Расход') + ' — ' + d + ' · ' + Math.abs(rec.delta) + ' ' + unit + '</div>'
+        + (rec.batchNote ? '<div class="hdate">Партия: ' + esc(rec.batchNote) + '</div>' : '')
+        + (rec.extra ? '<div style="font-size:13px;color:var(--t2);margin-top:2px;">' + esc(rec.extra) + '</div>' : '');
+    } else {
+      // Старые записи — единая строка, как раньше (формат уже сохранён в базе)
+      infoHtml = '<div class="hnote">' + esc(rec.note || '') + '</div>'
+        + '<div class="hdate">' + d + '</div>';
+    }
+
     h += '<div class="hrow-wrap" id="hrw-' + idx + '">'
       + '<div class="hrow-del" onclick="deleteHistoryRec(' + idx + ')">'
       + '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>'
       + 'Удалить</div>'
       + '<div class="hrow" style="flex-direction:column;align-items:flex-start;gap:6px;cursor:default;" ontouchstart="histTouchStart(event,' + idx + ')" ontouchend="histTouchEnd(event,' + idx + ')" onclick="histClick(' + idx + ')">'
-      + '<div style="display:flex;align-items:center;justify-content:space-between;width:100%;">'
-      + '<div style="display:flex;align-items:center;gap:10px;">'
+      + '<div style="display:flex;align-items:flex-start;justify-content:space-between;width:100%;">'
+      + '<div style="display:flex;align-items:flex-start;gap:10px;min-width:0;">'
       + '<div style="width:34px;height:34px;border-radius:10px;background:' + (sign ? 'rgba(52,199,89,.12)' : 'rgba(255,59,48,.1)') + ';display:flex;align-items:center;justify-content:center;flex-shrink:0;">'
-      + '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="' + (sign ? '#34C759' : '#FF3B30') + '" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/>' + (sign ? '<line x1="5" y1="12" x2="19" y2="12"/>' : '') + '</svg>'
+      + '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="' + (sign ? '#34C759' : '#FF3B30') + '" stroke-width="2.5" stroke-linecap="round">' + (sign ? '<line x1="12" y1="5" x2="12" y2="19"/>' : '') + '<line x1="5" y1="12" x2="19" y2="12"/></svg>'
       + '</div>'
-      + '<div><div class="hnote">' + esc(rec.note || '') + (rec.price ? '<span style="font-size:11px;background:rgba(88,86,214,.1);color:var(--ac);border-radius:6px;padding:1px 6px;margin-left:6px;">' + fmt(rec.price) + '/шт</span>' : '') + '</div>'
-      + '<div class="hdate">' + d + '</div></div>'
+      + '<div style="min-width:0;">' + infoHtml + '</div>'
       + '</div>'
       + '<div style="text-align:right;flex-shrink:0;"><div class="hdelta ' + (sign ? 'plus' : 'minus') + '">' + (sign ? '+' : '') + rec.delta + '</div>'
       + (sign ? '<div style="font-size:11px;color:var(--t2);">ост: ' + batchLeft + '</div>' : '<div class="htotal">→ ' + rec.total + '</div>')
@@ -1825,15 +1852,17 @@ function adjQty(dir) {
     // Сортируем по дате — самая старая первой
     batches.sort(function(a, b) { return new Date(a.rec.date) - new Date(b.rec.date); });
     var consumed = [];
+    var batchNotes = [];
     batches.forEach(function(b) {
       if (toWrite <= 0) return;
       var take = Math.min(toWrite, b.left);
       b.rec.batchQty = b.left - take;
       if (!b.rec.id) b.rec.id = uid();
       consumed.push({ id: b.rec.id, qty: take });
+      if (batchNotes.indexOf(b.rec.note) === -1) batchNotes.push(b.rec.note || 'Партия');
       toWrite -= take;
     });
-    i.history.unshift({ id: uid(), delta: -step, total: nq, date: new Date().toISOString(), note: 'Расход', consumed: consumed });
+    i.history.unshift({ id: uid(), delta: -step, total: nq, date: new Date().toISOString(), reason: 'Расход', extra: '', batchNote: batchNotes.join(', '), consumed: consumed });
     i.qty = nq;
   } else {
     // Плюс — открываем модальное окно прихода (уже через кнопку +)
@@ -3071,7 +3100,6 @@ function confirmBatchAction() {
   var reasonBtn = document.querySelector('.reason-btn.on');
   var reason = reasonBtn ? reasonBtn.dataset.val : 'Расход';
   var extra = document.getElementById('ba-note-extra').value.trim();
-  var note = reason + (extra ? ' — ' + extra : '') + ' [партия: ' + (getItem(curItem).history[curBatchActionIdx]||{}).note + ']';
   var item = getItem(curItem); if (!item) return;
   var rec = item.history[curBatchActionIdx]; if (!rec) return;
   var bl = rec.batchQty !== undefined ? rec.batchQty : rec.delta;
@@ -3079,7 +3107,14 @@ function confirmBatchAction() {
   rec.batchQty = bl - qty;
   if (!rec.id) rec.id = uid();
   var nq = Math.max(0, item.qty - qty);
-  item.history.unshift({ id: uid(), delta: -qty, total: nq, date: new Date().toISOString(), note: note, consumed: [{ id: rec.id, qty: qty }] });
+  // Причина, партия и описание хранятся отдельными полями (не одной строкой
+  // через тире и скобки), чтобы в истории их можно было аккуратно вывести
+  // каждое на своей строке.
+  item.history.unshift({
+    id: uid(), delta: -qty, total: nq, date: new Date().toISOString(),
+    reason: reason, extra: extra, batchNote: rec.note || 'Партия',
+    consumed: [{ id: rec.id, qty: qty }]
+  });
   item.qty = nq;
   saveDB();
   document.getElementById('det-qty').textContent = nq;
