@@ -1675,18 +1675,13 @@ function renderDetBatches(i) {
     // товара и на вкладке «Наличие»). Вторая строка — исходные данные прихода
     // (когда и сколько пришло, по какой цене) — это уже история, а не текущий факт.
     h += '<div class="batch-card">'
-      + '<div class="batch-card-header">'
-      + '<div>'
-      + '<div style="font-size:11px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.5px;">Наличие</div>'
-      + '<div style="font-size:15px;font-weight:700;color:var(--t);margin-top:2px;">' + esc(rec.note || 'Партия') + '</div>'
+      + '<div class="batch-card-header" style="align-items:center;">'
+      + '<div style="font-size:16px;font-weight:800;color:var(--t);">Наличие'
       + (rec.expiry ? '<div style="margin-top:6px;">' + expiryBadgeHtml(expSt) + '<span style="font-size:12px;color:' + expColor + ';margin-left:6px;font-weight:600;">до ' + new Date(rec.expiry).toLocaleDateString('ru-RU',{day:'2-digit',month:'2-digit',year:'numeric'}) + '</span></div>' : '')
       + '</div>'
-      + '<div style="text-align:right;">'
-      + '<div class="batch-qty-big">' + b.left + '</div>'
-      + '<div style="font-size:13px;color:var(--t2);">' + unit + '</div>'
+      + '<div style="font-size:24px;font-weight:800;color:var(--t);white-space:nowrap;">' + b.left + ' <span style="font-size:14px;font-weight:600;color:var(--t2);">' + unit + '</span></div>'
       + '</div>'
-      + '</div>'
-      + '<div style="font-size:12px;color:var(--t2);border-top:1px solid var(--br);padding-top:8px;">Приход: ' + dIn + ' · ' + rec.delta + ' ' + unit + priceInfo + '</div>'
+      + '<div style="font-size:14px;font-weight:600;color:var(--t);border-top:1px solid var(--br);padding-top:8px;">Приход: ' + dIn + ' · ' + rec.delta + ' ' + unit + priceInfo + '</div>'
       + '<div style="margin-top:8px;">'
       + '<button onclick="openBatchActionModal(' + b.idx + ')" style="width:100%;padding:12px;border-radius:12px;background:rgba(88,86,214,.1);color:var(--ac);border:1px solid rgba(88,86,214,.25);font-size:15px;font-weight:700;cursor:pointer;">− Расход / Списать</button>'
       + '</div>'
