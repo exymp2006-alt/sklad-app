@@ -290,6 +290,10 @@ body.logged-in .navbar{display:flex;}
   <div class="hdr-dark hdr-sm">
     <div class="hdr-top-row" style="padding:20px 20px 0;position:relative;z-index:1;">
       <div class="hdr-sm-title" style="text-align:left;font-size:26px;font-weight:800;letter-spacing:-.5px;" id="items-title">Товары</div>
+      <button id="btn-itemfilter" onclick="openFilterModal()" style="position:relative;width:38px;height:38px;border-radius:12px;background:rgba(255,255,255,.15);border:none;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="4 4 20 4 14 12.5 14 19 10 21 10 12.5 4 4"/></svg>
+        <span id="itemfilter-dot" style="display:none;position:absolute;top:4px;right:4px;width:9px;height:9px;border-radius:50%;background:#FF9F0A;box-shadow:0 0 0 2px var(--hdr,#0D0D1A);"></span>
+      </button>
     </div>
     <div class="hdr-dark-sub" style="padding:2px 20px 0;" id="items-count"></div>
     <button class="hdr-back" id="btn-itemsback" style="display:none"></button>
@@ -300,10 +304,6 @@ body.logged-in .navbar{display:flex;}
         <input id="items-q" type="text" placeholder="Поиск…" style="flex:1;border:none;background:transparent;outline:none;font-size:14px;color:#fff;min-width:0;">
         <button id="btn-clear-search" onclick="clearSearch()" style="display:none;background:none;border:none;color:rgba(255,255,255,.5);cursor:pointer;padding:0;line-height:1;font-size:16px;">✕</button>
       </div>
-      <button id="btn-itemfilter" onclick="openFilterModal()" style="position:relative;width:38px;height:38px;border-radius:12px;background:rgba(255,255,255,.15);border:none;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="4 4 20 4 14 12.5 14 19 10 21 10 12.5 4 4"/></svg>
-        <span id="itemfilter-dot" style="display:none;position:absolute;top:4px;right:4px;width:9px;height:9px;border-radius:50%;background:#FF9F0A;box-shadow:0 0 0 2px var(--hdr,#0D0D1A);"></span>
-      </button>
       <button id="btn-additem-top" onclick="openItemForm(null)" style="width:38px;height:38px;border-radius:12px;background:#fff;border:none;color:var(--ac);font-size:22px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 2px 8px rgba(0,0,0,.2);">+</button>
     </div>
     <div class="chips hdr-chips" id="items-chips"></div>
@@ -1351,7 +1351,9 @@ var hideZero = true;
 function renderChips() {
   var c = getCat(curCat);
   activeChip = '';
-  chipCategories = (c.categories || []).slice();
+  var usedCats = {};
+  (c.items || []).forEach(function(i) { if (i.category) usedCats[i.category] = true; });
+  chipCategories = (c.categories || []).filter(function(cat) { return usedCats[cat]; });
   renderBaseChips();
   updateFilterDot();
 }
@@ -1360,7 +1362,7 @@ function renderBaseChips() {
   var h = '<div class="chip' + (hideZero ? ' on' : '') + '" id="chip-zero" onclick="toggleHideZero(this)">В наличии</div>';
   h += '<div class="chip' + (!activeChip ? ' on' : '') + '" id="chip-all" onclick="clearAllFilters()">Все</div>';
   if (activeChip) {
-    h += '<div class="chip on" style="display:flex;align-items:center;gap:5px;background:var(--ac);" onclick="clearCategoryFilter()">'
+    h += '<div class="chip on" style="display:flex;align-items:center;gap:5px;background:var(--ac);color:#fff;" onclick="clearCategoryFilter()">'
       + esc(activeChip)
       + '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>'
       + '</div>';
