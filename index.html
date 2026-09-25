@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, interactive-widget=resizes-content">
-<title>Склад v18</title>
+<title>Склад v13</title>
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#0D0D1A">
 <link rel="apple-touch-icon" href="icon-180.png">
@@ -15,7 +15,7 @@
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
 :root{
   --bg:#F0F2F8;--card:#fff;--br:#E5E5EA;--t:#0D0D1A;--t2:#8E8E9A;
-  --ac:#5856D6;--red:#FF3B30;--grn:#34C759;--gold:#FF9F0A;--nav:68px;--hdr:#0D0D1A;
+  --ac:#5856D6;--red:#FF3B30;--grn:#34C759;--nav:68px;--hdr:#0D0D1A;
 }
 html,body{height:100%;background:var(--bg);font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display',sans-serif;overflow:hidden;}
 input,select,textarea,button{font-family:inherit;font-size:16px;}
@@ -27,32 +27,33 @@ input,select,textarea,button{font-family:inherit;font-size:16px;}
 .ntab svg{width:26px;height:26px;stroke:var(--t2);fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;}
 .ntab.on svg{stroke:var(--ac);}
 .ntab.on span{color:var(--ac);}
-.ntab-dot{display:none;position:absolute;top:6px;right:16px;width:9px;height:9px;border-radius:50%;background:var(--gold);box-shadow:0 0 0 2px rgba(255,255,255,.97);}
-.toast{position:fixed;left:50%;bottom:calc(var(--nav) + 14px);transform:translate(-50%,8px);background:var(--hdr);color:#fff;font-size:13px;font-weight:600;padding:11px 18px;border-radius:12px;box-shadow:0 6px 20px rgba(0,0,0,.25);z-index:1200;opacity:0;pointer-events:none;transition:opacity .2s ease,transform .2s ease;max-width:86%;text-align:center;}
-.toast.on{opacity:1;transform:translate(-50%,0);}
-.rs.warn{color:var(--gold);font-weight:600;}
 .hdr-dark{background:var(--hdr);padding:20px 20px 0;flex-shrink:0;}
-.hdr-dark-month{font-size:12px;font-weight:700;color:rgba(255,255,255,.65);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px;}
+.hdr-dark-month{font-size:11px;font-weight:700;color:rgba(255,255,255,.4);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px;}
 .hdr-dark-title{font-size:34px;font-weight:800;color:#fff;letter-spacing:-1px;line-height:1;}
-.hdr-dark-sub{font-size:14px;font-weight:600;color:rgba(255,255,255,.65);margin-top:4px;padding-bottom:20px;}
+.hdr-dark-sub{font-size:13px;color:rgba(255,255,255,.4);margin-top:4px;padding-bottom:20px;}
 .cats-section{padding:0 16px 8px;}
 .cats-section-hdr{display:flex;align-items:center;justify-content:space-between;padding:20px 0 12px;}
 .cats-section-label{font-size:11px;font-weight:700;color:var(--t2);letter-spacing:1.2px;text-transform:uppercase;}
 .cats-section-add{font-size:14px;font-weight:600;color:var(--ac);background:none;border:none;cursor:pointer;padding:0;}
-.cats-grid{display:flex;flex-direction:column;gap:14px;}
-.catcard{display:flex;align-items:center;gap:16px;padding:14px 14px;border-radius:14px;cursor:pointer;background:var(--card);box-shadow:0 6px 16px rgba(13,13,26,.16);-webkit-tap-highlight-color:transparent;transition:transform .1s;}
-.catcard:active{transform:scale(.98);}
-.catcard-icon{width:22px;height:22px;flex-shrink:0;display:flex;align-items:center;justify-content:center;}
-.catcard-icon svg{width:22px;height:22px;stroke:var(--t2);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;}
-.catcard-menu{background:none;border:none;color:var(--t2);font-size:20px;line-height:1;cursor:pointer;padding:6px;flex-shrink:0;}
-.catcard-mid{flex:1;min-width:0;}
-.catcard-name{font-size:17px;font-weight:800;color:var(--t);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.catcard-label{font-size:13px;font-weight:600;color:var(--t2);margin-top:2px;}
-.icon-pick-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;padding:12px 16px 16px;}
-.icon-pick{width:100%;aspect-ratio:1;border-radius:13px;border:2px solid transparent;background:var(--bg);display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0;}
-.icon-pick svg{width:22px;height:22px;stroke:var(--t2);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
-.icon-pick.on{background:var(--ac);border-color:var(--ac);}
-.icon-pick.on svg{stroke:#fff;}
+.cats-grid{display:flex;flex-direction:column;gap:10px;}
+.catcard{width:100%;border-radius:22px;padding:18px 16px 16px;cursor:pointer;position:relative;overflow:hidden;min-height:140px;display:flex;flex-direction:column;transition:transform .15s;-webkit-tap-highlight-color:transparent;}
+.catcard:active{transform:scale(.96);}
+.catcard-glow{position:absolute;right:-24px;bottom:-24px;width:100px;height:100px;border-radius:50%;background:rgba(255,255,255,.1);}
+.catcard-icon{width:42px;height:42px;border-radius:13px;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;}
+.catcard-icon svg{width:22px;height:22px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+.catcard-menu{position:absolute;top:12px;right:12px;background:rgba(0,0,0,.15);border:none;border-radius:8px;width:28px;height:28px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#fff;font-size:18px;line-height:1;padding:0;}
+.catcard-bottom{margin-top:auto;padding-top:12px;}
+.catcard-name{font-size:14px;font-weight:600;color:rgba(255,255,255,.8);margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.catcard-count{font-size:30px;font-weight:800;color:#fff;letter-spacing:-0.5px;line-height:1.1;}
+.catcard-label{font-size:12px;color:rgba(255,255,255,.55);margin-top:1px;}
+.cc0{background:linear-gradient(140deg,#FF9F0A,#FF6B00);}
+.cc1{background:linear-gradient(140deg,#5856D6,#3634C7);}
+.cc2{background:linear-gradient(140deg,#30D158,#248A3D);}
+.cc3{background:linear-gradient(140deg,#FF453A,#C0392B);}
+.cc4{background:linear-gradient(140deg,#0A84FF,#0056CC);}
+.cc5{background:linear-gradient(140deg,#BF5AF2,#8944AB);}
+.cc6{background:linear-gradient(140deg,#FF375F,#C0174D);}
+.cc7{background:linear-gradient(140deg,#5AC8FA,#0071A4);}
 .navbar{display:none;}
 body.logged-in .navbar{display:flex;}
 .login-page{position:fixed;inset:0;background:linear-gradient(160deg,#0D0D1A 0%,#1C1C3A 55%,#3634C7 130%);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:5000;padding:32px 28px;text-align:center;}
@@ -63,14 +64,13 @@ body.logged-in .navbar{display:flex;}
 .login-sub{font-size:14px;color:rgba(255,255,255,.5);margin-bottom:40px;max-width:280px;line-height:1.4;}
 .login-btn{width:100%;max-width:320px;padding:16px;border-radius:16px;border:none;font-size:16px;font-weight:700;cursor:pointer;margin-bottom:12px;display:flex;align-items:center;justify-content:center;gap:8px;}
 .login-btn.primary{background:#fff;color:#3634C7;}
-.login-btn.accent{background:var(--ac);color:#fff;}
 .login-btn.secondary{background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.2);}
 .login-status{font-size:13px;color:rgba(255,255,255,.55);margin-top:18px;min-height:18px;}
 .login-filename{font-size:12px;color:rgba(255,255,255,.4);margin-top:6px;}
 .topbar{height:54px;background:var(--card);border-bottom:1px solid var(--br);display:flex;align-items:center;padding:0 8px;flex-shrink:0;}
 .topbar h1{flex:1;text-align:center;font-size:17px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .tbtn{min-width:60px;background:none;border:none;color:var(--ac);font-size:15px;font-weight:600;cursor:pointer;padding:8px 4px;white-space:nowrap;}
-.scroll{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:12px 16px;padding-bottom:calc(var(--nav) + 20px + env(safe-area-inset-bottom,0px));}
+.scroll{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:12px 16px;padding-bottom:calc(var(--nav)+20px);}
 .sbar{display:flex;align-items:center;gap:8px;background:var(--card);border-radius:12px;padding:10px 14px;margin-bottom:10px;box-shadow:0 1px 4px rgba(0,0,0,.06);}
 .sbar svg{width:16px;height:16px;stroke:var(--t2);fill:none;stroke-width:2;flex-shrink:0;}
 .sbar input{flex:1;border:none;background:transparent;outline:none;font-size:16px;color:var(--t);}
@@ -97,8 +97,8 @@ body.logged-in .navbar{display:flex;}
 .ithumb{width:48px;height:48px;border-radius:12px;background:var(--bg);flex-shrink:0;overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:24px;}
 .ithumb img{width:100%;height:100%;object-fit:cover;}
 .imid{flex:1;min-width:0;}
-.iname{font-size:17px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.isub{font-size:14px;color:var(--t2);margin-top:2px;}
+.iname{font-size:15px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.isub{font-size:13px;color:var(--t2);margin-top:2px;}
 .iqty{text-align:right;flex-shrink:0;}
 .qn{font-size:20px;font-weight:800;}
 .qn.low{color:var(--red);}
@@ -126,11 +126,10 @@ body.logged-in .navbar{display:flex;}
 .hrow:last-child{border-bottom:none;}
 .hnote{font-size:15px;font-weight:600;}
 .hdate{font-size:12px;color:var(--t2);margin-top:2px;}
-.hdate-lg{font-size:14px;font-weight:700;color:var(--t);margin-top:2px;}
 .hdelta{font-size:19px;font-weight:800;}
 .htotal{font-size:12px;color:var(--t2);text-align:right;}
 .plus{color:var(--grn);}
-.minus{color:var(--ac);}
+.minus{color:var(--red);}
 .detrow{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid var(--br);}
 .detrow:last-child{border-bottom:none;}
 .detlabel{font-size:14px;color:var(--t2);}
@@ -159,9 +158,6 @@ body.logged-in .navbar{display:flex;}
 .sheet.on{transform:none;visibility:visible;}
 .shandle{width:40px;height:4px;background:var(--br);border-radius:2px;margin:14px auto 0;}
 .sbody{padding:16px 16px 36px;}
-.note-h{font-size:13px;font-weight:800;color:var(--ac);text-transform:uppercase;letter-spacing:.4px;margin:18px 0 4px;}
-.note-h:first-child{margin-top:0;}
-.note-p{font-size:18px;font-weight:400;line-height:1.6;color:var(--t);margin-bottom:4px;}
 .stitle{font-size:20px;font-weight:800;margin-bottom:16px;}
 .lrow{display:flex;gap:8px;margin-bottom:12px;}
 .lf{flex:1;display:flex;flex-direction:column;gap:4px;}
@@ -184,8 +180,8 @@ body.logged-in .navbar{display:flex;}
 .fullphoto.on{display:flex;}
 .fullphoto-bar{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;padding-top:calc(12px + env(safe-area-inset-top));}
 .fullphoto-bar button{background:none;border:none;font-size:15px;font-weight:500;cursor:pointer;padding:8px;}
-.fullphoto-img{flex:1;display:flex;align-items:center;justify-content:center;overflow:hidden;touch-action:none;}
-.fullphoto-img img{max-width:100%;max-height:100%;object-fit:contain;transform-origin:center center;will-change:transform;}
+.fullphoto-img{flex:1;display:flex;align-items:center;justify-content:center;overflow:hidden;}
+.fullphoto-img img{max-width:100%;max-height:100%;object-fit:contain;}
 
 /* ── Unified dark header ── */
 .hdr-dark{background:linear-gradient(135deg,#1a1a3e 0%,#2d2b6b 60%,#3d2070 100%);flex-shrink:0;position:relative;overflow:hidden;}
@@ -193,20 +189,20 @@ body.logged-in .navbar{display:flex;}
 .hdr-dark::after{content:'';position:absolute;width:140px;height:140px;border-radius:50%;background:rgba(191,90,242,.18);bottom:-50px;left:20px;pointer-events:none;}
 .hdr-dark.hdr-sm{padding-bottom:0;}
 .hdr-top-row{display:flex;align-items:center;justify-content:space-between;padding:16px 16px 0;}
-.hdr-dark-month{font-size:12px;font-weight:700;color:rgba(255,255,255,.65);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:4px;}
+.hdr-dark-month{font-size:11px;font-weight:700;color:rgba(255,255,255,.35);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:4px;}
 .hdr-dark-title{font-size:34px;font-weight:800;color:#fff;letter-spacing:-1px;line-height:1.1;}
-.hdr-dark-sub{font-size:14px;font-weight:600;color:rgba(255,255,255,.65);margin-top:4px;padding:0 16px 18px;}
+.hdr-dark-sub{font-size:13px;color:rgba(255,255,255,.38);margin-top:4px;padding:0 16px 18px;}
 .hdr-sm-title{font-size:18px;font-weight:700;color:#fff;text-align:center;flex:1;}
 .hdr-back,.hdr-icon-btn{background:rgba(255,255,255,.1);border:none;border-radius:10px;width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;}
 .hdr-search-row{padding:10px 16px 0;}
-.hdr-search{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.1);border-radius:12px;padding:8px 12px;}
+.hdr-search{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.1);border-radius:12px;padding:10px 14px;}
 .hdr-search input::placeholder{color:rgba(255,255,255,.4);}
 .hdr-chips{padding:10px 16px 12px;margin-bottom:0;}
 .hdr-chips .chip{background:rgba(255,255,255,.12);color:rgba(255,255,255,.7);border:none;}
 .hdr-chips .chip.on{background:#fff;color:var(--ac);}
 
 /* ── Page scroll area ── */
-.page-scroll{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:16px 16px calc(var(--nav) + 28px + env(safe-area-inset-bottom,0px));}
+.page-scroll{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:16px 16px calc(var(--nav)+16px);}
 
 /* ── Section headers ── */
 .section-hdr{display:flex;align-items:center;justify-content:space-between;padding:16px 4px 10px;}
@@ -223,12 +219,12 @@ body.logged-in .navbar{display:flex;}
   </div>
   <div class="login-title">СКЛАД</div>
   <div class="login-sub">Учёт товаров и остатков. Выберите файл базы данных, чтобы продолжить — все изменения будут сохраняться прямо в этот файл.</div>
-  <button class="login-btn primary" id="btn-continue-db" style="display:none">↻ Продолжить (сохранённые данные)</button>
-  <button class="login-btn accent" id="btn-open-db">
+  <button class="login-btn primary" id="btn-open-db">
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
     Открыть файл базы
   </button>
   <button class="login-btn secondary" id="btn-new-db">＋ Создать новую базу</button>
+  <button class="login-btn secondary" id="btn-continue-db" style="display:none">↻ Продолжить (сохранённые данные)</button>
   <input type="file" accept="application/json" id="login-file-input" style="display:none">
   <div class="login-status" id="login-status"></div>
   <div class="login-filename" id="login-filename"></div>
@@ -240,7 +236,7 @@ body.logged-in .navbar{display:flex;}
     <div style="padding:24px 20px 20px;position:relative;z-index:1;">
       <div class="hdr-dark-month" id="hdr-month">ИЮНЬ 2026</div>
       <div class="hdr-dark-title" id="hdr-total">СКЛАД</div>
-      <div class="hdr-dark-sub" style="padding:4px 0 0;font-size:14px;font-weight:600;color:rgba(255,255,255,.65)" id="hdr-sub">Нет каталогов</div>
+      <div class="hdr-dark-sub" style="padding:4px 0 0;font-size:13px;color:rgba(255,255,255,.45)" id="hdr-sub">Нет каталогов</div>
     </div>
   </div>
   <div class="page-scroll">
@@ -262,8 +258,8 @@ body.logged-in .navbar{display:flex;}
   <div class="scroll">
     <div class="fgrp">
       <div class="fhead">Основное</div>
-      <div class="field"><label>Название *</label><input id="cf-name" type="text"></div>
-      <div class="field"><label>Описание</label><input id="cf-desc" type="text"></div>
+      <div class="field"><label>Название *</label><input id="cf-name" type="text" placeholder="Например: Склад №1"></div>
+      <div class="field"><label>Описание</label><input id="cf-desc" type="text" placeholder="Необязательно"></div>
     </div>
     <div class="fgrp">
       <div class="fhead">Категории</div>
@@ -273,13 +269,11 @@ body.logged-in .navbar{display:flex;}
         <button id="btn-addcat" style="padding:10px 18px;background:var(--ac);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer">+</button>
       </div>
     </div>
-    <div class="fgrp">
-      <div class="fhead">Иконка</div>
-      <div class="icon-pick-grid" id="cf-iconlist"></div>
+    <div id="cf-delbtn" style="display:none;padding-bottom:8px;">
+      <button class="btn red" id="btn-delcat">Удалить каталог</button>
     </div>
-    <div style="display:flex;gap:10px;padding-bottom:16px;">
-      <button class="btn red" id="btn-delcat" style="display:none;flex:1;width:auto;">Удалить</button>
-      <button class="btn" id="btn-catsave" style="flex:1;width:auto;background:var(--ac);color:#fff;font-weight:800;font-size:16px;">✓ Сохранить</button>
+    <div style="padding-bottom:16px;">
+      <button class="btn" id="btn-catsave" style="background:var(--ac);color:#fff;font-weight:800;font-size:16px;">✓ Сохранить</button>
     </div>
     <div style="height:calc(var(--nav) + 16px)"></div>
   </div>
@@ -291,16 +285,18 @@ body.logged-in .navbar{display:flex;}
     <div class="hdr-top-row" style="padding:20px 20px 0;position:relative;z-index:1;">
       <div class="hdr-sm-title" style="text-align:left;font-size:26px;font-weight:800;letter-spacing:-.5px;" id="items-title">Товары</div>
     </div>
-    <div class="hdr-dark-sub" style="padding:2px 20px 0;" id="items-count"></div>
     <button class="hdr-back" id="btn-itemsback" style="display:none"></button>
     <button class="hdr-icon-btn" id="btn-editcat" style="display:none"></button>
     <div class="hdr-search-row" style="display:flex;align-items:center;gap:8px;">
       <div class="hdr-search" style="flex:1;">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-        <input id="items-q" type="text" placeholder="Поиск…" style="flex:1;border:none;background:transparent;outline:none;font-size:14px;color:#fff;min-width:0;">
-        <button id="btn-clear-search" onclick="clearSearch()" style="display:none;background:none;border:none;color:rgba(255,255,255,.5);cursor:pointer;padding:0;line-height:1;font-size:16px;">✕</button>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <input id="items-q" type="text" placeholder="Поиск…" style="flex:1;border:none;background:transparent;outline:none;font-size:15px;color:#fff;">
       </div>
-      <button id="btn-additem-top" onclick="openItemForm(null)" style="width:38px;height:38px;border-radius:12px;background:#fff;border:none;color:var(--ac);font-size:22px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 2px 8px rgba(0,0,0,.2);">+</button>
+      <button id="btn-itemfilter" onclick="openFilterModal()" style="position:relative;width:40px;height:40px;border-radius:12px;background:rgba(255,255,255,.15);border:none;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="4 4 20 4 14 12.5 14 19 10 21 10 12.5 4 4"/></svg>
+        <span id="itemfilter-dot" style="display:none;position:absolute;top:5px;right:5px;width:9px;height:9px;border-radius:50%;background:#FF9F0A;box-shadow:0 0 0 2px #1a1a3e;"></span>
+      </button>
+      <button id="btn-additem-top" onclick="openItemForm(null)" style="width:40px;height:40px;border-radius:12px;background:rgba(255,255,255,.15);border:none;color:#fff;font-size:24px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;">+</button>
     </div>
     <div class="chips hdr-chips" id="items-chips"></div>
   </div>
@@ -324,9 +320,8 @@ body.logged-in .navbar{display:flex;}
   <div class="scroll">
     <div class="fgrp">
       <div class="fhead">Основное</div>
-      <div class="field"><label>Название *</label><input id="if-name" type="text"></div>
-      <div class="field"><label>Артикул / SKU</label><input id="if-sku" type="text"></div>
-      <div class="field"><label>Каталог</label><select id="if-catalog" onchange="onItemCatalogChange()"></select></div>
+      <div class="field"><label>Название *</label><input id="if-name" type="text" placeholder="Название товара"></div>
+      <div class="field"><label>Артикул / SKU</label><input id="if-sku" type="text" placeholder="A-001"></div>
       <div class="field"><label>Категория</label><select id="if-cat"></select></div>
     </div>
     <div class="fgrp">
@@ -334,18 +329,12 @@ body.logged-in .navbar{display:flex;}
       <div class="field"><label>Единица</label>
         <select id="if-unit"><option>шт</option><option>кг</option><option>г</option><option>т</option><option>м</option><option>см</option><option>мм</option><option>м²</option><option>м³</option><option>л</option><option>мл</option><option>уп</option><option>пара</option><option>рулон</option><option>бухта</option><option>компл</option></select>
       </div>
-      <div class="field"><label>Мин. остаток</label><input id="if-min" type="number" inputmode="numeric" min="0"></div>
+      <div class="field"><label>Мин. остаток</label><input id="if-min" type="number" placeholder="0" inputmode="numeric" min="0"></div>
     </div>
     <div class="fgrp">
       <div class="fhead">Дополнительно</div>
-      <div class="field"><label>Местонахождение</label><input id="if-loc" type="text"></div>
-      <div style="padding:10px 16px 4px;">
-        <button type="button" id="btn-websearch-form" onclick="openWebSearchSheet(document.getElementById('if-name').value)" style="width:100%;border-radius:12px;padding:11px 8px;font-size:14px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:8px;background:rgba(88,86,214,.1);color:var(--ac);border:1.5px solid rgba(88,86,214,.2);cursor:pointer;">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-          Поиск в сети
-        </button>
-      </div>
-      <div class="field"><label>Пояснение</label><textarea id="if-note"></textarea></div>
+      <div class="field"><label>Местонахождение</label><input id="if-loc" type="text" placeholder="Полка A-3"></div>
+      <div class="field"><label>Пояснение</label><textarea id="if-note" placeholder="Описание..."></textarea></div>
       <div style="padding:4px 16px 12px;display:flex;justify-content:flex-end;">
         <button type="button" onclick="cleanNoteField()" style="font-size:12px;color:var(--ac);background:none;border:none;cursor:pointer;padding:4px 0;font-weight:600;">✕ Убрать ссылки</button>
       </div>
@@ -357,14 +346,17 @@ body.logged-in .navbar{display:flex;}
         <span style="color:var(--ac);font-weight:600;font-size:15px">Добавить фото</span>
       </div>
     </div>
-    <div style="display:flex;gap:10px;padding-bottom:16px;">
-      <button class="btn red" id="btn-delitem" style="display:none;flex:1;width:auto;">Удалить</button>
-      <button class="btn" id="btn-saveitem" style="flex:1;width:auto;background:var(--ac);color:#fff;font-weight:800;font-size:16px;">✓ Сохранить</button>
+    <div id="if-delbtn" style="display:none;padding-bottom:8px;">
+      <button class="btn red" id="btn-delitem">Удалить товар</button>
+    </div>
+    <div style="padding-bottom:16px;">
+      <button class="btn" id="btn-saveitem" style="background:var(--ac);color:#fff;font-weight:800;font-size:16px;">✓ Сохранить</button>
     </div>
     <div style="height:max(calc(var(--nav) + 16px), 320px)"></div>
   </div>
 </div>
 
+<!-- ITEM DETAIL -->
 <div class="page" id="pg-detail" style="display:flex;flex-direction:column;">
 
   <!-- Цветная шапка -->
@@ -397,14 +389,14 @@ body.logged-in .navbar{display:flex;}
 
   <!-- Таб: Инфо -->
   <div class="scroll" id="det-panel-info" style="flex:1;overflow-y:auto;">
-    <div style="padding:12px 0 0;display:flex;gap:8px;">
-      <button class="btn pri" id="btn-qr" style="flex:1;border-radius:12px;padding:11px 8px;font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:6px;">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="6" width="20" height="12" rx="2"/><line x1="6" y1="10" x2="6" y2="14"/><line x1="9" y1="9" x2="9" y2="15"/><line x1="12" y1="10" x2="12" y2="14"/><line x1="15" y1="9" x2="15" y2="15"/><line x1="18" y1="10" x2="18" y2="14"/></svg>
-        Этикетка
+    <div style="padding:12px 0 0;">
+      <button class="btn pri" id="btn-qr" style="width:100%;border-radius:12px;padding:13px;font-size:15px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:8px;">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="6" width="20" height="12" rx="2"/><line x1="6" y1="10" x2="6" y2="14"/><line x1="9" y1="9" x2="9" y2="15"/><line x1="12" y1="10" x2="12" y2="14"/><line x1="15" y1="9" x2="15" y2="15"/><line x1="18" y1="10" x2="18" y2="14"/></svg>
+        Этикетка / Штрихкод
       </button>
-      <button id="btn-websearch" onclick="openWebSearchSheet()" style="flex:1;border-radius:12px;padding:11px 8px;font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:6px;background:rgba(88,86,214,.1);color:var(--ac);border:1.5px solid rgba(88,86,214,.2);cursor:pointer;">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-        Поиск в сети
+      <button id="btn-websearch" onclick="openWebSearchSheet()" style="width:100%;border-radius:12px;padding:13px;font-size:15px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:8px;margin-top:8px;background:rgba(88,86,214,.1);color:var(--ac);border:1.5px solid rgba(88,86,214,.2);cursor:pointer;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        Найти в интернете
       </button>
     </div>
     <div class="grp" id="det-info" style="margin-top:12px;"></div>
@@ -465,9 +457,9 @@ body.logged-in .navbar{display:flex;}
         <div class="rmid"><div class="rt">Сменить файл базы</div><div class="rs" id="save-indicator">Файл: —</div></div>
         <span class="chev">›</span>
       </div>
-      <div class="row" id="row-export">
+      <div class="row">
         <div class="rico" style="background:#FF9F0A"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></div>
-        <div class="rmid"><div class="rt">Экспорт копии</div><div class="rs" id="export-status">Скачать резервную копию db.json</div></div>
+        <div class="rmid"><div class="rt">Экспорт копии</div><div class="rs">Скачать резервную копию db.json</div></div>
         <span class="chev">›</span>
       </div>
       <label class="row" style="cursor:pointer">
@@ -476,14 +468,6 @@ body.logged-in .navbar{display:flex;}
         <span class="chev">›</span>
         <input type="file" accept="application/json" id="inp-import" style="display:none">
       </label>
-    </div>
-    <div class="section-hdr"><span class="section-label">Фото</span></div>
-    <div class="grp">
-      <div class="row" id="row-compress-photos" onclick="compressAllPhotos()">
-        <div class="rico" style="background:#5856D6"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><rect x="2" y="6" width="20" height="15" rx="3"/><circle cx="12" cy="13" r="3.5"/><path d="M8 6l1.5-2.5h5L16 6"/></svg></div>
-        <div class="rmid"><div class="rt">Пересжать все фото</div><div class="rs" id="compress-status">Уменьшит размер базы данных</div></div>
-        <span class="chev">›</span>
-      </div>
     </div>
     <div class="section-hdr"><span class="section-label">Статистика</span></div>
     <div class="grp" id="stats-grp"></div>
@@ -509,8 +493,7 @@ body.logged-in .navbar{display:flex;}
     <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
     <span>Истекает</span>
   </button>
-  <button class="ntab" id="nt-set" style="position:relative;">
-    <span id="backup-tab-dot" class="ntab-dot"></span>
+  <button class="ntab" id="nt-set">
     <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
     <span>Настройки</span>
   </button>
@@ -648,9 +631,9 @@ body.logged-in .navbar{display:flex;}
 <!-- FULLSCREEN PHOTO -->
 <div class="fullphoto" id="fullphoto">
   <div class="fullphoto-bar">
-    <button id="btn-delphoto" style="color:var(--red)">Удалить</button>
-    <button onclick="pickReplacePhoto()" style="color:var(--ac);font-size:15px;font-weight:500;cursor:pointer;padding:8px;background:none;border:none;">Заменить</button>
     <button id="btn-closephoto" style="color:#fff">✕ Закрыть</button>
+    <button onclick="pickReplacePhoto()" style="color:var(--ac);font-size:15px;font-weight:500;cursor:pointer;padding:8px;background:none;border:none;">Заменить</button>
+    <button id="btn-delphoto" style="color:var(--red)">Удалить</button>
   </div>
   <div class="fullphoto-img"><img id="fullphoto-img" src="" alt=""></div>
 </div>
@@ -665,25 +648,29 @@ body.logged-in .navbar{display:flex;}
   <div style="display:flex;flex-direction:column;gap:10px;">
     <div style="background:var(--bg);border-radius:12px;padding:12px 16px;">
       <div style="font-size:12px;color:var(--t2);margin-bottom:4px;">Название / поставщик</div>
-      <input id="inc-name" type="text"
+      <input id="inc-name" type="text" placeholder="Партия №1, ООО Поставщик..."
         style="border:none;background:transparent;font-size:16px;font-weight:600;color:var(--t);width:100%;outline:none;">
+    </div>
+    <div style="display:flex;gap:10px;">
+      <div style="background:var(--bg);border-radius:12px;padding:12px 16px;flex:1;">
+        <div style="font-size:12px;color:var(--t2);margin-bottom:4px;">Дата прихода</div>
+        <input id="inc-date" type="date"
+          style="border:none;background:transparent;font-size:16px;font-weight:600;color:var(--t);width:100%;outline:none;">
+      </div>
+      <div style="background:var(--bg);border-radius:12px;padding:12px 16px;flex:1;">
+        <div style="font-size:12px;color:var(--t2);margin-bottom:4px;">Хранение</div>
+        <input id="inc-storage" type="text" placeholder="Стеллаж, полка..."
+          style="border:none;background:transparent;font-size:16px;font-weight:600;color:var(--t);width:100%;outline:none;">
+      </div>
     </div>
     <div style="background:var(--bg);border-radius:12px;padding:12px 16px;">
       <div style="font-size:12px;color:var(--t2);margin-bottom:4px;">Количество *</div>
-      <input id="inc-qty" type="number" min="1" inputmode="numeric"
+      <input id="inc-qty" type="number" placeholder="0" min="1" inputmode="numeric"
         style="border:none;background:transparent;font-size:24px;font-weight:700;color:var(--t);width:100%;outline:none;">
     </div>
     <div style="background:var(--bg);border-radius:12px;padding:12px 16px;">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
-        <div style="font-size:12px;color:var(--t2);" id="inc-price-label">Цена за единицу</div>
-        <div style="display:flex;gap:4px;flex-shrink:0;">
-          <button type="button" id="inc-mode-unit" onclick="setIncPriceMode('unit')"
-            style="font-size:11px;font-weight:700;padding:4px 10px;border-radius:8px;border:none;cursor:pointer;background:var(--ac);color:#fff;">за шт</button>
-          <button type="button" id="inc-mode-total" onclick="setIncPriceMode('total')"
-            style="font-size:11px;font-weight:700;padding:4px 10px;border-radius:8px;border:none;cursor:pointer;background:var(--card);color:var(--t2);">за всё</button>
-        </div>
-      </div>
-      <input id="inc-price" type="number" inputmode="decimal" min="0" step="0.01"
+      <div style="font-size:12px;color:var(--t2);margin-bottom:4px;">Цена за единицу (для расчёта средней)</div>
+      <input id="inc-price" type="number" placeholder="0.00" inputmode="decimal" min="0" step="0.01"
         style="border:none;background:transparent;font-size:24px;font-weight:700;color:var(--t);width:100%;outline:none;">
     </div>
     <div style="background:var(--bg);border-radius:12px;padding:12px 16px;">
@@ -702,6 +689,17 @@ body.logged-in .navbar{display:flex;}
     Отмена
   </button>
 </div>
+<!-- FILTER MODAL (категории и прочие критерии) -->
+<div id="fl-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:1000;" onclick="closeFilterModal()"></div>
+<div id="fl-modal" style="display:none;position:fixed;bottom:0;left:0;right:0;background:var(--card);border-radius:20px 20px 0 0;z-index:1001;padding:0 16px 32px;max-height:70vh;overflow-y:auto;">
+  <div style="width:36px;height:4px;background:var(--br);border-radius:2px;margin:12px auto 20px;"></div>
+  <div style="font-size:18px;font-weight:700;margin-bottom:16px;">Фильтр по категории</div>
+  <div id="fl-list" style="display:flex;flex-direction:column;gap:6px;"></div>
+  <button onclick="closeFilterModal()" style="width:100%;margin-top:16px;padding:13px;border-radius:12px;background:none;color:var(--t2);border:1px solid var(--br);font-size:15px;font-weight:600;cursor:pointer;">
+    Закрыть
+  </button>
+</div>
+
 <!-- EDIT BATCH MODAL -->
 <div id="eb-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:1000;"></div>
 <div id="eb-modal" style="display:none;position:fixed;bottom:0;left:0;right:0;background:var(--card);border-radius:20px 20px 0 0;z-index:1001;padding:0 16px 32px;">
@@ -737,7 +735,7 @@ body.logged-in .navbar{display:flex;}
   <div style="display:flex;flex-direction:column;gap:10px;">
     <div style="background:var(--bg);border-radius:12px;padding:12px 16px;">
       <div style="font-size:12px;color:var(--t2);margin-bottom:4px;">Количество *</div>
-      <input id="ba-qty" type="number" min="1" inputmode="numeric"
+      <input id="ba-qty" type="number" placeholder="0" min="1" inputmode="numeric"
         style="border:none;background:transparent;font-size:24px;font-weight:700;color:var(--t);width:100%;outline:none;">
     </div>
     <div style="background:var(--bg);border-radius:12px;padding:12px 16px;">
@@ -767,12 +765,12 @@ body.logged-in .navbar{display:flex;}
   <div style="display:flex;flex-direction:column;gap:10px;">
     <div style="background:var(--bg);border-radius:12px;padding:12px 16px;">
       <div style="font-size:12px;color:var(--t2);margin-bottom:4px;">Количество *</div>
-      <input id="rel-qty" type="number" min="1" inputmode="numeric"
+      <input id="rel-qty" type="number" placeholder="0" min="1" inputmode="numeric"
         style="border:none;background:transparent;font-size:24px;font-weight:700;color:var(--t);width:100%;outline:none;">
     </div>
     <div style="background:var(--bg);border-radius:12px;padding:12px 16px;">
       <div style="font-size:12px;color:var(--t2);margin-bottom:4px;">Кому / куда (необязательно)</div>
-      <input id="rel-note" type="text"
+      <input id="rel-note" type="text" placeholder="Отдел, сотрудник, заказ..."
         style="border:none;background:transparent;font-size:16px;color:var(--t);width:100%;outline:none;">
     </div>
   </div>
@@ -790,12 +788,12 @@ body.logged-in .navbar{display:flex;}
   <div style="display:flex;flex-direction:column;gap:10px;">
     <div style="background:var(--bg);border-radius:12px;padding:12px 16px;">
       <div style="font-size:12px;color:var(--t2);margin-bottom:4px;">Количество для списания *</div>
-      <input id="wo-qty" type="number" min="1" inputmode="numeric"
+      <input id="wo-qty" type="number" placeholder="0" min="1" inputmode="numeric"
         style="border:none;background:transparent;font-size:24px;font-weight:700;color:var(--t);width:100%;outline:none;">
     </div>
     <div style="background:var(--bg);border-radius:12px;padding:12px 16px;">
       <div style="font-size:12px;color:var(--t2);margin-bottom:4px;">Причина</div>
-      <input id="wo-note" type="text"
+      <input id="wo-note" type="text" placeholder="Просрочен, брак, бой..."
         style="border:none;background:transparent;font-size:16px;color:var(--t);width:100%;outline:none;">
     </div>
   </div>
@@ -846,7 +844,6 @@ function uid() { return Math.random().toString(36).slice(2,6).toUpperCase(); }
 
 function migrateDB() {
   if (!db.catalogs) db.catalogs = [];
-  if (db.lastBackupAt === undefined) db.lastBackupAt = null;
   db.catalogs.forEach(function(c) {
     if (!c.id) c.id = uid();
     if (!c.categories) c.categories = [];
@@ -896,7 +893,6 @@ function idbSet(value) {
 }
 
 function saveDB() {
-  updateBackupBadge();
   if (storageMode === 'file') {
     if (!dbFileHandle) return;
     if (saveInFlight) { saveQueued = true; return; }
@@ -939,60 +935,6 @@ function setSaveIndicator(ok, label) {
 
 function fsApiSupported() { return typeof window.showOpenFilePicker === 'function' && typeof window.showSaveFilePicker === 'function'; }
 
-// ----- Запоминание хендла файла (десктоп, File System Access API) -----
-// Храним сам FileSystemFileHandle в отдельной IndexedDB, чтобы при следующем
-// запуске не открывать системный диалог выбора файла заново, а предложить
-// одну кнопку «Продолжить». Chrome всё равно требует жест пользователя для
-// повторной выдачи разрешения на запись, поэтому это не полностью
-// автоматическое открытие, а быстрый доступ в один тап (как в программе «Учёт»).
-var HDB_NAME = 'sklad_handles', HDB_STORE = 'handles', HDB_KEY = 'lastFile';
-function hdbOpen() {
-  return new Promise(function(resolve, reject) {
-    var req = indexedDB.open(HDB_NAME, 1);
-    req.onupgradeneeded = function() { req.result.createObjectStore(HDB_STORE); };
-    req.onsuccess = function() { resolve(req.result); };
-    req.onerror = function() { reject(req.error); };
-  });
-}
-function hdbSaveHandle(handle) {
-  return hdbOpen().then(function(dbi) {
-    return new Promise(function(resolve, reject) {
-      var tx = dbi.transaction(HDB_STORE, 'readwrite');
-      tx.objectStore(HDB_STORE).put(handle, HDB_KEY);
-      tx.oncomplete = function() { resolve(); };
-      tx.onerror = function() { reject(tx.error); };
-    });
-  }).catch(function(){});
-}
-function hdbLoadHandle() {
-  return hdbOpen().then(function(dbi) {
-    return new Promise(function(resolve, reject) {
-      var tx = dbi.transaction(HDB_STORE, 'readonly');
-      var r = tx.objectStore(HDB_STORE).get(HDB_KEY);
-      r.onsuccess = function() { resolve(r.result || null); };
-      r.onerror = function() { reject(r.error); };
-    });
-  });
-}
-async function continueWithLastHandle() {
-  var statusEl = document.getElementById('login-status');
-  try {
-    var handle = await hdbLoadHandle();
-    if (!handle) throw new Error('no-handle');
-    var perm = await handle.queryPermission({ mode: 'readwrite' });
-    if (perm !== 'granted') perm = await handle.requestPermission({ mode: 'readwrite' });
-    if (perm !== 'granted') throw new Error('no-permission');
-    statusEl.textContent = 'Открываю файл…';
-    await readDBFromHandle(handle);
-    dbFileHandle = handle; dbFileName = handle.name; storageMode = 'file';
-    document.getElementById('login-filename').textContent = 'Файл: ' + dbFileName;
-    statusEl.textContent = '';
-    enterApp();
-  } catch (e) {
-    statusEl.textContent = 'Не удалось открыть сохранённый файл — выберите его вручную.';
-  }
-}
-
 async function readDBFromHandle(handle) {
   var file = await handle.getFile();
   var text = await file.text();
@@ -1013,7 +955,6 @@ function enterApp() {
   renderCats();
   showPage('pg-cats');
   document.getElementById('nt-cats').classList.add('on');
-  updateBackupBadge();
 }
 
 // ----- Десктоп: File System Access API -----
@@ -1028,7 +969,6 @@ async function openExistingDBFile() {
     statusEl.textContent = 'Открываю файл…';
     await readDBFromHandle(handle);
     dbFileHandle = handle; dbFileName = handle.name; storageMode = 'file';
-    hdbSaveHandle(handle);
     document.getElementById('login-filename').textContent = 'Файл: ' + dbFileName;
     statusEl.textContent = '';
     enterApp();
@@ -1048,7 +988,6 @@ async function createNewDBFile() {
     statusEl.textContent = 'Создаю файл…';
     await writeDBToHandle(handle, db);
     dbFileHandle = handle; dbFileName = handle.name; storageMode = 'file';
-    hdbSaveHandle(handle);
     document.getElementById('login-filename').textContent = 'Файл: ' + dbFileName;
     statusEl.textContent = '';
     enterApp();
@@ -1124,24 +1063,6 @@ function getItem(id) {
   var c = getCat(curCat);
   return c ? c.items.find(function(i) { return i.id === id; }) : null;
 }
-// Наличие товара считаем как сумму остатков всех приходных партий —
-// это единственный источник правды. item.qty кэширует это значение,
-// но здесь мы на всякий случай сверяем и чиним кэш, если он разошёлся
-// (например, из-за старого бага или ручной правки базы).
-function computeAvailableQty(item) {
-  if (!item || !item.history) return item ? (item.qty || 0) : 0;
-  var sum = 0;
-  item.history.forEach(function(rec) {
-    if (rec.delta > 0) sum += (rec.batchQty !== undefined ? rec.batchQty : rec.delta);
-  });
-  return sum;
-}
-function syncItemQty(item) {
-  if (!item) return 0;
-  var real = computeAvailableQty(item);
-  if (real !== item.qty) { item.qty = real; saveDB(); }
-  return real;
-}
 
 // ===== NAVIGATION =====
 function showPage(id) {
@@ -1165,47 +1086,31 @@ function navGo(pgId, tabId) {
 }
 
 // ===== CATALOGS =====
-var wsItemName = '';
+var CAT_COLORS = ['cc0','cc1','cc2','cc3','cc4','cc5','cc6','cc7'];
 var CAT_ICONS = [
-  // Коробка/товар
-  '<svg viewBox="0 0 24 24"><path d="M3 8l9-5 9 5-9 5-9-5z"/><path d="M3 8v8l9 5 9-5V8"/><path d="M12 13v8"/></svg>',
-  // Склад (здание)
-  '<svg viewBox="0 0 24 24"><path d="M2 10 12 4l10 6"/><path d="M4 10v10h16V10"/><path d="M9 20v-6h6v6"/></svg>',
-  // Стеллаж / полки
-  '<svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="4"/><rect x="3" y="10" width="18" height="4"/><rect x="3" y="16" width="18" height="4"/></svg>',
-  // Ящик / контейнер
-  '<svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="1"/><line x1="3" y1="3" x2="21" y2="21"/><line x1="21" y1="3" x2="3" y2="21"/></svg>',
-  // Грузовик / доставка
-  '<svg viewBox="0 0 24 24"><rect x="1" y="7" width="13" height="9" rx="1"/><path d="M14 10h4l3 3v3h-7z"/><circle cx="6" cy="18" r="2"/><circle cx="17" cy="18" r="2"/></svg>',
-  // Инвентаризация / список
-  '<svg viewBox="0 0 24 24"><rect x="5" y="4" width="14" height="17" rx="2"/><rect x="9" y="2" width="6" height="4" rx="1"/><line x1="8" y1="10" x2="16" y2="10"/><line x1="8" y1="14" x2="16" y2="14"/><line x1="8" y1="18" x2="13" y2="18"/></svg>',
-  // Штрихкод
-  '<svg viewBox="0 0 24 24"><line x1="4" y1="4" x2="4" y2="20"/><line x1="8" y1="4" x2="8" y2="20"/><line x1="11" y1="4" x2="11" y2="20"/><line x1="15" y1="4" x2="15" y2="20"/><line x1="18" y1="4" x2="18" y2="20"/><line x1="21" y1="4" x2="21" y2="20"/></svg>',
-  // Электро
-  '<svg viewBox="0 0 24 24"><polygon points="13 2 3 14 11 14 9 22 21 10 13 10 13 2"/></svg>',
-  // Бензин / топливо
-  '<svg viewBox="0 0 24 24"><path d="M3 22V6a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v16"/><path d="M3 12h8"/><path d="M14 8h2a2 2 0 0 1 2 2v1a2 2 0 0 0 2 2 2 2 0 0 0 2-2V7l-3-3"/><path d="M3 22h12"/></svg>',
-  // Аккумулятор
-  '<svg viewBox="0 0 24 24"><rect x="1" y="7" width="18" height="10" rx="2"/><line x1="22" y1="10" x2="22" y2="14"/><line x1="5" y1="10" x2="5" y2="14"/><line x1="9" y1="10" x2="9" y2="14"/></svg>',
-  // Инструмент / обслуживание
-  '<svg viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94z"/></svg>',
-  // Весы
-  '<svg viewBox="0 0 24 24"><line x1="12" y1="3" x2="12" y2="21"/><line x1="5" y1="7" x2="19" y2="7"/><path d="M5 7l-3 7a3 3 0 0 0 6 0z"/><path d="M19 7l-3 7a3 3 0 0 0 6 0z"/></svg>'
+  '<svg viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>',
+  '<svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>',
+  '<svg viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>',
+  '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>',
+  '<svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>',
+  '<svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>',
+  '<svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>',
+  '<svg viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>'
 ];
 
 function renderCats() {
   var el = document.getElementById('cats-body');
   // Update dark header stats
-  var totalItems = 0, totalQty = 0, totalSum = 0;
+  var totalItems = 0, totalQty = 0;
   db.catalogs.forEach(function(c) {
     totalItems += c.items.length;
-    c.items.forEach(function(i) { totalQty += (i.qty || 0); totalSum += (i.avgPrice || 0) * (i.qty || 0); });
+    c.items.forEach(function(i) { totalQty += (i.qty || 0); });
   });
   var now = new Date();
   var months = ['ЯНВАРЬ','ФЕВРАЛЬ','МАРТ','АПРЕЛЬ','МАЙ','ИЮНЬ','ИЮЛЬ','АВГУСТ','СЕНТЯБРЬ','ОКТЯБРЬ','НОЯБРЬ','ДЕКАБРЬ'];
   document.getElementById('hdr-month').textContent = months[now.getMonth()] + ' ' + now.getFullYear();
   document.getElementById('hdr-total').textContent = 'СКЛАД';
-  document.getElementById('hdr-sub').textContent = db.catalogs.length + ' кат. · ' + totalItems + ' позиций · ' + fmt(totalSum);
+  document.getElementById('hdr-sub').textContent = db.catalogs.length + ' кат. · ' + totalItems + ' позиций';
 
   if (!db.catalogs.length) {
     el.innerHTML = '<div class="empty" style="grid-column:1/-1"><svg viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg><p>Нажмите + Добавить</p></div>';
@@ -1213,12 +1118,17 @@ function renderCats() {
   }
   var h = '';
   db.catalogs.forEach(function(c, i) {
-    var iconIdx = (c.icon !== undefined && c.icon !== null && CAT_ICONS[c.icon]) ? c.icon : (i % CAT_ICONS.length);
-    var ico = CAT_ICONS[iconIdx];
-    h += '<div class="catcard" onclick="openCat(\'' + c.id + '\')">'
-      + '<div class="catcard-icon">' + ico + '</div>'
-      + '<div class="catcard-mid"><div class="catcard-name">' + esc(c.name) + '</div><div class="catcard-label">' + c.items.length + ' позиций</div></div>'
-      + '<button class="catcard-menu" onclick="event.stopPropagation();openCatForm(\'' + c.id + '\')">⋯</button>'
+    var col = CAT_COLORS[i % CAT_COLORS.length];
+    var ico = CAT_ICONS[i % CAT_ICONS.length];
+    var qty = 0; c.items.forEach(function(it) { qty += (it.qty || 0); });
+    h += '<div class="catcard ' + col + '">'
+      + '<div class="catcard-glow"></div>'
+      + '<button class="catcard-menu" onclick="openCatForm(\'' + c.id + '\')">⋯</button>'
+      + '<div class="catcard-bottom" onclick="openCat(\'' + c.id + '\')" style="cursor:pointer;flex:1;">'
+      + '<div style="font-size:19px;font-weight:800;color:#fff;line-height:1.2;margin-bottom:10px;word-break:break-word;">' + esc(c.name) + '</div>'
+      + '<div class="catcard-count">' + c.items.length + '</div>'
+      + '<div class="catcard-label">позиций</div>'
+      + '</div>'
       + '</div>';
   });
   el.innerHTML = h;
@@ -1228,50 +1138,32 @@ function openCat(id) {
   curCat = id;
   var c = getCat(id);
   document.getElementById('items-title').textContent = c.name;
-  hideZero = true; // при входе в каталог всегда показываем только то, что в наличии
   renderChips();
   renderItems();
   go('pg-items');
 }
 
 // ===== CAT FORM =====
-var tempIcon = null;
 function openCatForm(id) {
   editCatId = id;
   if (id) {
     var c = getCat(id);
     tempCats = c.categories.slice();
-    tempIcon = (c.icon !== undefined && c.icon !== null) ? c.icon : null;
     document.getElementById('catform-title').textContent = 'Редактировать';
     document.getElementById('cf-name').value = c.name;
     document.getElementById('cf-desc').value = c.desc || '';
-    document.getElementById('btn-delcat').style.display = '';
+    document.getElementById('cf-delbtn').style.display = '';
   } else {
     tempCats = [];
-    tempIcon = null;
     document.getElementById('catform-title').textContent = 'Новый каталог';
     document.getElementById('cf-name').value = '';
     document.getElementById('cf-desc').value = '';
-    document.getElementById('btn-delcat').style.display = 'none';
+    document.getElementById('cf-delbtn').style.display = 'none';
   }
   renderTempCats();
-  renderIconPicker();
   go('pg-catform');
   if (!id) { setTimeout(function() { document.getElementById('cf-name').focus(); }, 300); }
 }
-function renderIconPicker() {
-  var el = document.getElementById('cf-iconlist');
-  var h = '';
-  CAT_ICONS.forEach(function(svg, i) {
-    h += '<button type="button" class="icon-pick' + (tempIcon === i ? ' on' : '') + '" onclick="pickTempIcon(' + i + ')">' + svg + '</button>';
-  });
-  el.innerHTML = h;
-}
-function pickTempIcon(i) {
-  tempIcon = (tempIcon === i) ? null : i; // повторный тап по той же иконке снимает выбор — вернётся автоназначение
-  renderIconPicker();
-}
-window.pickTempIcon = pickTempIcon;
 function renderTempCats() {
   var el = document.getElementById('cf-catlist');
   if (!tempCats.length) { el.innerHTML = '<div style="padding:10px 16px;font-size:14px;color:var(--t2)">Нет категорий</div>'; return; }
@@ -1282,19 +1174,11 @@ function renderTempCats() {
   el.innerHTML = h;
 }
 function addTempCat() {
-  var input = document.getElementById('cf-newcat');
-  var v = input.value.trim();
+  var v = document.getElementById('cf-newcat').value.trim();
   if (!v || tempCats.indexOf(v) >= 0) return;
   tempCats.push(v);
-  input.value = '';
+  document.getElementById('cf-newcat').value = '';
   renderTempCats();
-  // Прокручиваем к только что добавленной категории: на телефоне поле ввода
-  // остаётся в фокусе (клавиатура открыта) и новая строка иначе оказывается
-  // перекрыта клавиатурой — из-за этого казалось, что категория не добавилась.
-  var list = document.getElementById('cf-catlist');
-  var last = list.lastElementChild;
-  if (last) last.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
-  input.focus();
 }
 function rmTempCat(i) { tempCats.splice(i, 1); renderTempCats(); }
 function saveCat() {
@@ -1303,10 +1187,10 @@ function saveCat() {
   var desc = document.getElementById('cf-desc').value.trim();
   if (editCatId) {
     var c = getCat(editCatId);
-    c.name = name; c.desc = desc; c.categories = tempCats.slice(); c.icon = tempIcon;
+    c.name = name; c.desc = desc; c.categories = tempCats.slice();
     if (editCatId === curCat) { document.getElementById('items-title').textContent = name; renderChips(); }
   } else {
-    db.catalogs.push({ id: uid(), name: name, desc: desc, categories: tempCats.slice(), items: [], icon: tempIcon });
+    db.catalogs.push({ id: uid(), name: name, desc: desc, categories: tempCats.slice(), items: [] });
   }
   saveDB(); renderCats(); back();
 }
@@ -1318,82 +1202,80 @@ function delCat() {
 }
 
 // ===== ITEMS =====
-var activeChip = '';
+var activeChip = ''; // критерий из модалки фильтра (категория)
+var stockOnly = false; // база: false = "Все", true = "Наличие"
 var chipCategories = [];
-var hideZero = true;
 function renderChips() {
   var c = getCat(curCat);
   activeChip = '';
+  stockOnly = false;
   chipCategories = (c.categories || []).slice();
+  renderBaseChips();
+  updateFilterDot();
+}
+function renderBaseChips() {
   var el = document.getElementById('items-chips');
-  var h = '<div class="chip' + (hideZero ? ' on' : '') + '" id="chip-zero" onclick="toggleHideZero(this)">В наличии</div>';
-  h += '<div class="chip on" id="chip-all" onclick="setChip(-1,this)">Все</div>';
-  chipCategories.forEach(function(cat, i) {
-    h += '<div class="chip" onclick="setChip(' + i + ',this)">' + esc(cat) + '</div>';
+  var h = '<div class="chip' + (!stockOnly ? ' on' : '') + '" onclick="setStockFilter(false)">Все</div>'
+        + '<div class="chip' + (stockOnly ? ' on' : '') + '" onclick="setStockFilter(true)">Наличие</div>';
+  if (activeChip) {
+    h += '<div class="chip on" style="display:flex;align-items:center;gap:5px;background:var(--ac);" onclick="clearCategoryFilter()">'
+      + esc(activeChip)
+      + '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>'
+      + '</div>';
+  }
+  el.innerHTML = h;
+}
+function setStockFilter(val) {
+  stockOnly = val;
+  renderBaseChips();
+  renderItems();
+}
+function openFilterModal() {
+  renderFilterList();
+  document.getElementById('fl-overlay').style.display = 'block';
+  document.getElementById('fl-modal').style.display = 'block';
+}
+function closeFilterModal() {
+  document.getElementById('fl-overlay').style.display = 'none';
+  document.getElementById('fl-modal').style.display = 'none';
+}
+function renderFilterList() {
+  var el = document.getElementById('fl-list');
+  if (!chipCategories.length) {
+    el.innerHTML = '<div style="padding:10px 4px;font-size:14px;color:var(--t2);">Нет категорий</div>';
+    return;
+  }
+  var h = '';
+  chipCategories.forEach(function(cat) {
+    var on = cat === activeChip;
+    h += '<div onclick="pickCategoryFilter(\'' + esc(cat).replace(/'/g, "\\'") + '\')" style="display:flex;align-items:center;justify-content:space-between;padding:13px 14px;border-radius:12px;background:' + (on ? 'rgba(88,86,214,.1)' : 'var(--bg)') + ';cursor:pointer;">'
+      + '<span style="font-size:15px;font-weight:600;color:' + (on ? 'var(--ac)' : 'var(--t)') + ';">' + esc(cat) + '</span>'
+      + (on ? '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--ac)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>' : '')
+      + '</div>';
   });
   el.innerHTML = h;
 }
-function setChip(idx, el) {
-  activeChip = idx < 0 ? '' : chipCategories[idx];
-  document.querySelectorAll('#items-chips .chip:not(#chip-zero)').forEach(function(c) { c.classList.remove('on'); });
-  el.classList.add('on');
-  // Кнопка "Все" сбрасывает фильтр "В наличии"
-  if (idx < 0) {
-    hideZero = false;
-    var czero = document.getElementById('chip-zero');
-    if (czero) czero.classList.remove('on');
-  }
+function pickCategoryFilter(cat) {
+  activeChip = (cat === activeChip) ? '' : cat;
+  closeFilterModal();
+  renderBaseChips();
+  updateFilterDot();
   renderItems();
 }
-
-function toggleHideZero(el) {
-  hideZero = !hideZero;
-  el.classList.toggle('on', hideZero);
+function clearCategoryFilter() {
+  activeChip = '';
+  renderBaseChips();
+  updateFilterDot();
   renderItems();
 }
-window.toggleHideZero = toggleHideZero;
-function compressAllPhotos() {
-  var total = 0, done = 0;
-  db.catalogs.forEach(function(c) {
-    c.items.forEach(function(i) { if (i.photo) total++; });
-  });
-  if (total === 0) {
-    document.getElementById('compress-status').textContent = 'Фото не найдены';
-    return;
-  }
-  document.getElementById('compress-status').textContent = 'Сжимаем... 0/' + total;
-  function compressOne(src, cb) {
-    var img = new Image();
-    img.onload = function() {
-      var cv = document.createElement('canvas');
-      var M = 600, w = img.width, h = img.height;
-      if (w > h && w > M) { h = h * M / w; w = M; } else if (h >= w && h > M) { w = w * M / h; h = M; } else if (w > M) { h = h * M / w; w = M; }
-      cv.width = Math.round(w); cv.height = Math.round(h);
-      cv.getContext('2d').drawImage(img, 0, 0, cv.width, cv.height);
-      cb(cv.toDataURL('image/jpeg', .60));
-    };
-    img.src = src;
-  }
-  var items = [];
-  db.catalogs.forEach(function(c) {
-    c.items.forEach(function(i) { if (i.photo) items.push(i); });
-  });
-  function next(idx) {
-    if (idx >= items.length) {
-      saveDB();
-      document.getElementById('compress-status').textContent = 'Готово! Сжато ' + total + ' фото';
-      return;
-    }
-    compressOne(items[idx].photo, function(src) {
-      items[idx].photo = src;
-      done++;
-      document.getElementById('compress-status').textContent = 'Сжимаем... ' + done + '/' + total;
-      setTimeout(function() { next(idx + 1); }, 50);
-    });
-  }
-  next(0);
+function updateFilterDot() {
+  document.getElementById('itemfilter-dot').style.display = activeChip ? 'block' : 'none';
 }
-window.compressAllPhotos = compressAllPhotos;
+window.openFilterModal = openFilterModal;
+window.closeFilterModal = closeFilterModal;
+window.pickCategoryFilter = pickCategoryFilter;
+window.clearCategoryFilter = clearCategoryFilter;
+window.setStockFilter = setStockFilter;
 // ===== EXPIRY HELPERS =====
 var EXPIRY_WARN_DAYS = 7;
 
@@ -1456,71 +1338,41 @@ function renderItems() {
   var c = getCat(curCat);
   var lst = document.getElementById('items-list');
   var emp = document.getElementById('items-empty');
-  var cnt = document.getElementById('items-count');
-  if (!c) { lst.innerHTML = ''; emp.style.display = ''; if (cnt) cnt.textContent = ''; return; }
+  if (!c) { lst.innerHTML = ''; emp.style.display = ''; return; }
   var q = (document.getElementById('items-q').value || '').toLowerCase();
   var items = c.items.filter(function(i) {
     return (!q || i.name.toLowerCase().indexOf(q) >= 0 || (i.sku || '').toLowerCase().indexOf(q) >= 0)
         && (!activeChip || i.category === activeChip)
-        && (!hideZero || (i.qty || 0) > 0);
+        && (!stockOnly || i.qty > 0);
   });
-  if (cnt) {
-    var total = c.items.length;
-    var catSum = 0;
-    items.forEach(function(i) { catSum += (i.avgPrice || 0) * (i.qty || 0); });
-    var filtered = q || activeChip || hideZero;
-    cnt.textContent = (filtered ? ('Показано ' + items.length + ' из ' + total) : (total + ' позиций')) + ' · ' + fmt(catSum);
-  }
   if (!items.length) {
     lst.innerHTML = ''; lst.style.display = 'none'; emp.style.display = '';
-    document.getElementById('items-empty-msg').textContent = (q || activeChip) ? 'Ничего не найдено' : 'Нажмите + чтобы добавить товар';
+    document.getElementById('items-empty-msg').textContent = (q || activeChip || stockOnly) ? 'Ничего не найдено' : 'Нажмите + чтобы добавить товар';
     return;
   }
   emp.style.display = 'none'; lst.style.display = '';
   var h = '';
   items.forEach(function(i) {
-    syncItemQty(i);
     var low = i.minQty && i.qty <= i.minQty;
-    var photoIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="rgba(150,150,170,0.35)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="26" height="26"><rect x="2" y="6" width="20" height="15" rx="3"/><circle cx="12" cy="13" r="3.5"/><path d="M8 6l1.5-2.5h5L16 6"/><circle cx="18.5" cy="9.5" r=".8" fill="rgba(150,150,170,0.35)" stroke="none"/></svg>';
-    var photoActiveIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="var(--ac)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="26" height="26"><rect x="2" y="6" width="20" height="15" rx="3"/><circle cx="12" cy="13" r="3.5"/><path d="M8 6l1.5-2.5h5L16 6"/><circle cx="18.5" cy="9.5" r=".8" fill="var(--ac)" stroke="none"/></svg>';
-    var thumbClick = i.photo ? ' onclick="event.stopPropagation();openPhotoFromList(\'' + i.id + '\')"' : '';
-    var thumb = '<div class="ithumb"' + thumbClick + ' style="' + (i.photo ? 'cursor:pointer;' : '') + '">' + (i.photo ? photoActiveIcon : photoIcon) + '</div>';
+    var thumb = i.photo
+      ? '<img src="' + i.photo + '" loading="lazy">'
+      : '<svg viewBox="0 0 24 24" fill="none" stroke="#b0b0c0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="26" height="26"><rect x="2" y="6" width="20" height="15" rx="3"/><circle cx="12" cy="13" r="3.5"/><path d="M8 6l1.5-2.5h5L16 6"/><circle cx="18.5" cy="9.5" r=".8" fill="#b0b0c0" stroke="none"/></svg>';
     var sub = [i.sku ? 'Арт: ' + esc(i.sku) : '', i.category ? esc(i.category) : ''].filter(Boolean).join(' · ');
     var expSt = getItemExpiryStatus(i);
     var expBadge = expiryBadgeHtml(expSt);
     h += '<div class="irow" onclick="openDetail(\'' + i.id + '\')">'
-      + thumb
-      + '<div class="imid" onclick="event.stopPropagation();showDescQuick(\'' + i.id + '\')"><div class="iname">' + esc(i.name) + expBadge + '</div><div class="isub">' + (sub || '&nbsp;') + '</div></div>'
-      + '<div class="iqty" onclick="event.stopPropagation();openDetail(\'' + i.id + '\')"><div class="qn' + (low ? ' low' : '') + '">' + i.qty + '</div><div class="qu">' + esc(i.unit || 'шт') + '</div></div>'
+      + '<div class="ithumb">' + thumb + '</div>'
+      + '<div class="imid"><div class="iname">' + esc(i.name) + expBadge + '</div><div class="isub">' + (sub || '&nbsp;') + '</div></div>'
+      + '<div class="iqty"><div class="qn' + (low ? ' low' : '') + '">' + i.qty + '</div><div class="qu">' + esc(i.unit || 'шт') + '</div></div>'
       + '</div>';
   });
   lst.innerHTML = h;
 }
 
 // ===== ITEM FORM =====
-function fillItemCatSelect(catalogId) {
-  var c = getCat(catalogId);
-  var sel = document.getElementById('if-cat');
-  sel.innerHTML = '<option value="">— без категории —</option>';
-  (c && c.categories || []).forEach(function(cat) {
-    sel.innerHTML += '<option value="' + esc(cat) + '">' + esc(cat) + '</option>';
-  });
-}
-function onItemCatalogChange() {
-  // При смене каталога подкатегории берутся уже из нового каталога —
-  // старая подкатегория могла не существовать в другом каталоге.
-  fillItemCatSelect(document.getElementById('if-catalog').value);
-}
-window.onItemCatalogChange = onItemCatalogChange;
 function openItemForm(iid) {
   curItem = iid;
   var c = getCat(curCat);
-  var catSel = document.getElementById('if-catalog');
-  catSel.innerHTML = '';
-  db.catalogs.forEach(function(cat) {
-    catSel.innerHTML += '<option value="' + cat.id + '">' + esc(cat.name) + '</option>';
-  });
-  catSel.value = curCat;
   var sel = document.getElementById('if-cat');
   sel.innerHTML = '<option value="">— без категории —</option>';
   (c.categories || []).forEach(function(cat) {
@@ -1538,14 +1390,14 @@ function openItemForm(iid) {
     document.getElementById('if-note').value = i.notes || '';
     autoResizeTextarea(document.getElementById('if-note'));
     curPhoto = i.photo || '';
-    document.getElementById('btn-delitem').style.display = '';
+    document.getElementById('if-delbtn').style.display = '';
   } else {
     document.getElementById('itemform-title').textContent = 'Новый товар';
     ['if-name','if-sku','if-min','if-loc','if-note'].forEach(function(x) { document.getElementById(x).value = ''; });
     autoResizeTextarea(document.getElementById('if-note'));
     document.getElementById('if-unit').value = 'шт';
     sel.value = ''; curPhoto = '';
-    document.getElementById('btn-delitem').style.display = 'none';
+    document.getElementById('if-delbtn').style.display = 'none';
   }
   setPhotoBox(curPhoto);
   go('pg-itemform');
@@ -1562,11 +1414,11 @@ function processPhoto(file, cb) {
     var img = new Image();
     img.onload = function() {
       var cv = document.createElement('canvas');
-      var M = 600, w = img.width, h = img.height;
-      if (w > h && w > M) { h = h * M / w; w = M; } else if (h >= w && h > M) { w = w * M / h; h = M; } else if (w > M) { h = h * M / w; w = M; }
-      cv.width = Math.round(w); cv.height = Math.round(h);
-      cv.getContext('2d').drawImage(img, 0, 0, cv.width, cv.height);
-      cb(cv.toDataURL('image/jpeg', .60));
+      var M = 800, w = img.width, h = img.height;
+      if (w > h && w > M) { h = h * M / w; w = M; } else if (h > w && h > M) { w = w * M / h; h = M; }
+      cv.width = w; cv.height = h;
+      cv.getContext('2d').drawImage(img, 0, 0, w, h);
+      cb(cv.toDataURL('image/jpeg', .75));
     };
     img.src = ev.target.result;
   };
@@ -1575,7 +1427,6 @@ function processPhoto(file, cb) {
 function saveItem() {
   var name = document.getElementById('if-name').value.trim();
   if (!name) { alert('Введите название'); return; }
-  var targetCatId = document.getElementById('if-catalog').value;
   var c = getCat(curCat);
   var data = {
     name: name,
@@ -1591,37 +1442,12 @@ function saveItem() {
   if (curItem) {
     var i = getItem(curItem);
     Object.assign(i, data);
-    if (targetCatId && targetCatId !== curCat) {
-      // Переносим товар в другой каталог: убираем из старого, добавляем в новый.
-      c.items = c.items.filter(function(x) { return x.id !== curItem; });
-      var newCat = getCat(targetCatId);
-      newCat.items.push(i);
-      curCat = targetCatId;
-      document.getElementById('items-title').textContent = newCat.name;
-      hideZero = true;
-      renderChips();
-    }
     saveDB(); renderItems(); renderCats();
     refreshDetPhoto(i);
     renderDetInfo(i);
     back();
   } else {
-    var destCat = (targetCatId && getCat(targetCatId)) ? getCat(targetCatId) : c;
-    destCat.items.push(Object.assign({ id: uid(), qty: 0, avgPrice: 0, history: [], createdAt: new Date().toISOString() }, data));
-    if (targetCatId && targetCatId !== curCat) {
-      curCat = targetCatId;
-      document.getElementById('items-title').textContent = destCat.name;
-      hideZero = true;
-      renderChips();
-    }
-    // Новый товар всегда начинается с нулевым остатком — если включен фильтр
-    // "В наличии", он скрыл бы товар сразу после добавления. Снимаем фильтр,
-    // чтобы добавленный товар было видно.
-    if (hideZero) {
-      hideZero = false;
-      var czero = document.getElementById('chip-zero');
-      if (czero) czero.classList.remove('on');
-    }
+    c.items.push(Object.assign({ id: uid(), qty: 0, avgPrice: 0, history: [], createdAt: new Date().toISOString() }, data));
     saveDB(); renderItems(); renderCats(); back();
   }
 }
@@ -1670,19 +1496,19 @@ function renderDetBatches(i) {
     var expSt = rec.expiry ? expiryStatusForDate(rec.expiry) : null;
     var expColor = expSt === 'expired' ? '#FF3B30' : expSt === 'warn' ? '#FF9F0A' : '#34C759';
     var dIn = new Date(rec.date).toLocaleDateString('ru-RU',{day:'2-digit',month:'2-digit',year:'numeric'});
-    var unit = esc(i.unit || 'шт');
-    var priceInfo = rec.price ? (' · ' + fmt(rec.price) + '/' + unit + ' · ' + fmt(rec.price * rec.delta)) : '';
-    // Первая строка — актуальный остаток партии (то же число, что и в шапке
-    // товара и на вкладке «Наличие»). Вторая строка — исходные данные прихода
-    // (когда и сколько пришло, по какой цене) — это уже история, а не текущий факт.
     h += '<div class="batch-card">'
-      + '<div class="batch-card-header" style="align-items:center;">'
-      + '<div style="font-size:16px;font-weight:800;color:var(--t);">Наличие'
+      + '<div class="batch-card-header">'
+      + '<div>'
+      + '<div style="font-size:15px;font-weight:700;color:var(--t);">' + esc(rec.note || 'Партия') + '</div>'
+      + '<div style="font-size:12px;color:var(--t2);margin-top:2px;">Приход: ' + dIn + (rec.price ? ' · ' + fmt(rec.price) + '/' + esc(i.unit||'шт') : '') + '</div>'
+      + (rec.storage ? '<div style="font-size:12px;color:var(--t2);margin-top:2px;">Хранение: ' + esc(rec.storage) + '</div>' : '')
       + (rec.expiry ? '<div style="margin-top:6px;">' + expiryBadgeHtml(expSt) + '<span style="font-size:12px;color:' + expColor + ';margin-left:6px;font-weight:600;">до ' + new Date(rec.expiry).toLocaleDateString('ru-RU',{day:'2-digit',month:'2-digit',year:'numeric'}) + '</span></div>' : '')
       + '</div>'
-      + '<div style="font-size:24px;font-weight:800;color:var(--t);white-space:nowrap;">' + b.left + ' <span style="font-size:14px;font-weight:600;color:var(--t2);">' + unit + '</span></div>'
+      + '<div style="text-align:right;">'
+      + '<div class="batch-qty-big">' + b.left + '</div>'
+      + '<div style="font-size:13px;color:var(--t2);">' + esc(i.unit||'шт') + ' / ' + rec.delta + ' пришло</div>'
       + '</div>'
-      + '<div style="font-size:14px;font-weight:600;color:var(--t);border-top:1px solid var(--br);padding-top:8px;">Приход: ' + dIn + ' · ' + rec.delta + ' ' + unit + priceInfo + '</div>'
+      + '</div>'
       + '<div style="margin-top:8px;">'
       + '<button onclick="openBatchActionModal(' + b.idx + ')" style="width:100%;padding:12px;border-radius:12px;background:rgba(88,86,214,.1);color:var(--ac);border:1px solid rgba(88,86,214,.25);font-size:15px;font-weight:700;cursor:pointer;">− Расход / Списать</button>'
       + '</div>'
@@ -1706,11 +1532,12 @@ function openDetail(iid) {
   if (i.location) skuParts.push(i.location);
   document.getElementById('det-sku-label').textContent = skuParts.join('  ·  ');
   refreshDetPhoto(i);
-  document.getElementById('det-qty').textContent = syncItemQty(i);
+  document.getElementById('det-qty').textContent = i.qty;
   document.getElementById('det-unit').textContent = i.unit || '';
   renderDetInfo(i);
   renderDetHist(i);
-  switchDetTab('info');
+  var hasBatches = (i.history||[]).some(function(r){ return r.delta > 0 && (r.batchQty === undefined ? r.delta : r.batchQty) > 0; });
+  switchDetTab(hasBatches ? 'batches' : 'info');
   go('pg-detail');
 }
 function refreshDetPhoto(i) {
@@ -1749,19 +1576,16 @@ function renderDetIncomingHist(i) {
     el.innerHTML = '<div style="padding:14px 16px;font-size:14px;color:var(--t2)">Нет поступлений</div>';
     return;
   }
-  var unit = esc(i.unit || 'шт');
   var h = '';
   recs.slice(0, 30).forEach(function(rec, idx) {
-    var d = new Date(rec.date).toLocaleDateString('ru-RU',{day:'2-digit',month:'2-digit',year:'numeric'});
-    var priceSum = rec.price ? (fmt2(rec.price) + '/' + unit + ' · ' + fmt2(rec.price * rec.delta)) : '';
+    var d = new Date(rec.date).toLocaleString('ru-RU',{day:'2-digit',month:'2-digit',year:'2-digit',hour:'2-digit',minute:'2-digit'});
     h += '<div class="hrow-wrap"><div class="hrow">'
-      + '<div style="display:flex;align-items:flex-start;gap:10px;min-width:0;">'
+      + '<div style="display:flex;align-items:center;gap:10px;">'
       + '<div style="width:34px;height:34px;border-radius:10px;background:rgba(52,199,89,.12);display:flex;align-items:center;justify-content:center;flex-shrink:0;">'
       + '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#34C759" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>'
-      + '<div style="min-width:0;"><div class="hnote">' + esc(rec.note||'Приход') + '</div>'
-      + '<div class="hdate-lg">' + d + '</div>'
-      + (priceSum ? '<div style="font-size:13px;color:var(--t2);margin-top:2px;">' + priceSum + '</div>' : '') + '</div></div>'
-      + '<div style="text-align:right;flex-shrink:0;"><div class="hdelta plus">+' + rec.delta + '</div></div>'
+      + '<div><div class="hnote">' + esc(rec.note||'Приход') + (rec.price ? '<span style="font-size:11px;background:rgba(88,86,214,.1);color:var(--ac);border-radius:6px;padding:1px 6px;margin-left:6px;">' + fmt(rec.price) + '/шт</span>' : '') + '</div>'
+      + '<div class="hdate">' + d + (rec.storage ? ' · ' + esc(rec.storage) : '') + '</div></div></div>'
+      + '<div style="text-align:right"><div class="hdelta plus">+' + rec.delta + '</div><div class="htotal">→ ' + rec.total + '</div></div>'
       + '</div></div>';
   });
   el.innerHTML = h;
@@ -1771,11 +1595,9 @@ function renderDetHist(i) {
   document.getElementById('det-hist-grp').style.display = '';
   var el = document.getElementById('det-hist');
   if (!i.history || !i.history.length) { el.innerHTML = '<div style="padding:16px;text-align:center;font-size:14px;color:var(--t2)">Нет записей</div>'; return; }
-  var unit = esc(i.unit || 'шт');
   var h = '';
   i.history.slice(0, 40).forEach(function(rec, idx) {
-    // Дата без времени — крупнее и контрастнее (класс hdate-lg)
-    var d = new Date(rec.date).toLocaleDateString('ru-RU', { day: '2-digit', month: '2-digit', year: 'numeric' });
+    var d = new Date(rec.date).toLocaleString('ru-RU', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' });
     var sign = rec.delta > 0;
     var expTag = '';
     if (rec.expiry && sign) {
@@ -1785,43 +1607,25 @@ function renderDetHist(i) {
         + new Date(rec.expiry).toLocaleDateString('ru-RU',{day:'2-digit',month:'2-digit',year:'numeric'})
         + '</span>';
     }
-
-    // Левый блок с текстом собираем по-разному для прихода и расхода —
-    // каждая деталь на своей строке, а не одной строкой через тире и скобки.
-    var infoHtml;
-    if (sign) {
-      // Приход: Партия (жирным) / дата (крупно) / цена за ед · сумма (2 нуля после запятой)
-      var priceSum = rec.price
-        ? (fmt2(rec.price) + '/' + unit + ' · ' + fmt2(rec.price * rec.delta))
-        : '';
-      infoHtml = '<div class="hnote">' + esc(rec.note || 'Приход') + '</div>'
-        + '<div class="hdate-lg">' + d + '</div>'
-        + (priceSum ? '<div style="font-size:13px;color:var(--t2);margin-top:2px;">' + priceSum + '</div>' : '');
-    } else if (rec.reason !== undefined) {
-      // Расход/отпуск (новый формат): причина / дата (крупно) / партия / описание
-      infoHtml = '<div class="hnote">' + esc(rec.reason || 'Расход') + '</div>'
-        + '<div class="hdate-lg">' + d + '</div>'
-        + (rec.batchNote ? '<div class="hdate">Партия: ' + esc(rec.batchNote) + '</div>' : '')
-        + (rec.extra ? '<div style="font-size:13px;color:var(--t2);margin-top:2px;">' + esc(rec.extra) + '</div>' : '');
-    } else {
-      // Старые записи — единая строка, как раньше (формат уже сохранён в базе)
-      infoHtml = '<div class="hnote">' + esc(rec.note || '') + '</div>'
-        + '<div class="hdate-lg">' + d + '</div>';
-    }
+    // Остаток в партии: batchQty (если не задан — считаем равным delta прихода)
+    var batchLeft = (sign && rec.batchQty !== undefined) ? rec.batchQty : (sign ? rec.delta : null);
 
     h += '<div class="hrow-wrap" id="hrw-' + idx + '">'
       + '<div class="hrow-del" onclick="deleteHistoryRec(' + idx + ')">'
       + '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>'
       + 'Удалить</div>'
       + '<div class="hrow" style="flex-direction:column;align-items:flex-start;gap:6px;cursor:default;" ontouchstart="histTouchStart(event,' + idx + ')" ontouchend="histTouchEnd(event,' + idx + ')" onclick="histClick(' + idx + ')">'
-      + '<div style="display:flex;align-items:flex-start;justify-content:space-between;width:100%;">'
-      + '<div style="display:flex;align-items:flex-start;gap:10px;min-width:0;">'
+      + '<div style="display:flex;align-items:center;justify-content:space-between;width:100%;">'
+      + '<div style="display:flex;align-items:center;gap:10px;">'
       + '<div style="width:34px;height:34px;border-radius:10px;background:' + (sign ? 'rgba(52,199,89,.12)' : 'rgba(255,59,48,.1)') + ';display:flex;align-items:center;justify-content:center;flex-shrink:0;">'
-      + '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="' + (sign ? '#34C759' : '#FF3B30') + '" stroke-width="2.5" stroke-linecap="round">' + (sign ? '<line x1="12" y1="5" x2="12" y2="19"/>' : '') + '<line x1="5" y1="12" x2="19" y2="12"/></svg>'
+      + '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="' + (sign ? '#34C759' : '#FF3B30') + '" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/>' + (sign ? '<line x1="5" y1="12" x2="19" y2="12"/>' : '') + '</svg>'
       + '</div>'
-      + '<div style="min-width:0;">' + infoHtml + '</div>'
+      + '<div><div class="hnote">' + esc(rec.note || '') + (rec.price ? '<span style="font-size:11px;background:rgba(88,86,214,.1);color:var(--ac);border-radius:6px;padding:1px 6px;margin-left:6px;">' + fmt(rec.price) + '/шт</span>' : '') + '</div>'
+      + '<div class="hdate">' + d + '</div></div>'
       + '</div>'
-      + '<div style="text-align:right;flex-shrink:0;"><div class="hdelta ' + (sign ? 'plus' : 'minus') + '">' + (sign ? '+' : '') + rec.delta + '</div></div>'
+      + '<div style="text-align:right;flex-shrink:0;"><div class="hdelta ' + (sign ? 'plus' : 'minus') + '">' + (sign ? '+' : '') + rec.delta + '</div>'
+      + (sign ? '<div style="font-size:11px;color:var(--t2);">ост: ' + batchLeft + '</div>' : '<div class="htotal">→ ' + rec.total + '</div>')
+      + '</div>'
       + '</div>'
       + (expTag ? '<div style="padding-left:44px;">' + expTag + '</div>' : '')
       + '</div>'
@@ -1848,23 +1652,18 @@ function adjQty(dir) {
     });
     // Сортируем по дате — самая старая первой
     batches.sort(function(a, b) { return new Date(a.rec.date) - new Date(b.rec.date); });
-    var consumed = [];
-    var batchNotes = [];
     batches.forEach(function(b) {
       if (toWrite <= 0) return;
       var take = Math.min(toWrite, b.left);
       b.rec.batchQty = b.left - take;
-      if (!b.rec.id) b.rec.id = uid();
-      consumed.push({ id: b.rec.id, qty: take });
-      if (batchNotes.indexOf(b.rec.note) === -1) batchNotes.push(b.rec.note || 'Партия');
       toWrite -= take;
     });
-    i.history.unshift({ id: uid(), delta: -step, total: nq, date: new Date().toISOString(), reason: 'Расход', extra: '', batchNote: batchNotes.join(', '), consumed: consumed });
+    i.history.unshift({ delta: -step, total: nq, date: new Date().toISOString(), note: 'Расход' });
     i.qty = nq;
   } else {
     // Плюс — открываем модальное окно прихода (уже через кнопку +)
     var nq = i.qty + step;
-    i.history.unshift({ id: uid(), delta: step, total: nq, date: new Date().toISOString(), note: 'Приход', batchQty: step });
+    i.history.unshift({ delta: step, total: nq, date: new Date().toISOString(), note: 'Приход', batchQty: step });
     i.qty = nq;
   }
 
@@ -1875,60 +1674,12 @@ function adjQty(dir) {
 }
 
 // ===== FULLSCREEN PHOTO =====
-// Тап по названию в списке — быстрый просмотр описания крупным шрифтом,
-// без перехода в карточку. Если описания нет — считаем, что смотреть тут
-// нечего, и просто открываем карточку (как раньше вело себя нажатие на строку).
-//
-// Текст из ИИ обычно приходит по правилу "короткое название раздела —
-// затем абзац", но не всегда с пустой строкой между ними, поэтому заголовок
-// определяем эвристикой: короткая строка (≤6 слов, без точки/запятой на
-// конце), после которой идёт непустая строка — считаем заголовком раздела
-// и выделяем его отдельным акцентным стилем, а не сплошным текстом.
-function renderNoteHtml(text) {
-  var lines = text.replace(/\r\n/g, '\n').split('\n');
-  var html = '';
-  for (var idx = 0; idx < lines.length; idx++) {
-    var line = lines[idx].trim();
-    if (!line) continue;
-    var wordCount = line.split(/\s+/).length;
-    var looksLikeHeading = wordCount <= 6 && !/[.,:;!?]$/.test(line);
-    var nextNonEmpty = '';
-    for (var j = idx + 1; j < lines.length; j++) { if (lines[j].trim()) { nextNonEmpty = lines[j].trim(); break; } }
-    if (looksLikeHeading && nextNonEmpty) {
-      html += '<div class="note-h">' + esc(line) + '</div>';
-    } else {
-      html += '<div class="note-p">' + esc(line) + '</div>';
-    }
-  }
-  return html;
-}
-function showDescQuick(iid) {
-  var c = getCat(curCat);
-  var i = c ? c.items.find(function(x) { return x.id === iid; }) : null;
-  if (!i) return;
-  if (!i.notes || !i.notes.trim()) { openDetail(iid); return; }
-  document.getElementById('desc-quick-name').textContent = i.name;
-  document.getElementById('desc-quick-text').innerHTML = renderNoteHtml(i.notes);
-  document.getElementById('desc-overlay').classList.add('on');
-  document.getElementById('desc-sheet').classList.add('on');
-}
-window.showDescQuick = showDescQuick;
-function closeDescQuick() {
-  document.getElementById('desc-overlay').classList.remove('on');
-  document.getElementById('desc-sheet').classList.remove('on');
-}
-window.closeDescQuick = closeDescQuick;
-
 function openFullPhoto(src) {
   document.getElementById('fullphoto-img').src = src;
-  resetPhotoZoom();
-  document.getElementById('btn-delphoto').style.visibility = '';
-  document.querySelector('#fullphoto .fullphoto-bar button[onclick]').style.visibility = '';
   document.getElementById('fullphoto').classList.add('on');
 }
 function closeFullPhoto() {
   document.getElementById('fullphoto').classList.remove('on');
-  resetPhotoZoom();
 }
 function deletePhoto() {
   if (!confirm('Удалить фото?')) return;
@@ -1937,109 +1688,6 @@ function deletePhoto() {
   refreshDetPhoto(i);
   closeFullPhoto();
 }
-
-function openPhotoFromList(itemId) {
-  var item = null;
-  db.catalogs.forEach(function(c) {
-    c.items.forEach(function(it) { if (it.id === itemId) item = it; });
-  });
-  if (!item || !item.photo) return;
-  document.getElementById('fullphoto-img').src = item.photo;
-  resetPhotoZoom();
-  document.getElementById('btn-delphoto').style.visibility = 'hidden';
-  document.querySelector('#fullphoto .fullphoto-bar button[onclick]').style.visibility = 'hidden';
-  document.getElementById('fullphoto').classList.add('on');
-}
-window.openPhotoFromList = openPhotoFromList;
-
-// ── Pinch-to-zoom / пан / двойной тап для полноэкранного фото ──
-// Реализовано на голых touch-событиях (без библиотек): два пальца — зум
-// вокруг средней точки между ними, один палец при увеличенном фото — пан,
-// двойной тап — переключение между 1x и 2.5x.
-(function() {
-  var img = document.getElementById('fullphoto-img');
-  var box = img.parentElement; // .fullphoto-img
-  var scale = 1, tx = 0, ty = 0;
-  var startDist = 0, startScale = 1, startTx = 0, startTy = 0, startMidX = 0, startMidY = 0;
-  var panStartX = 0, panStartY = 0, panning = false;
-  var lastTapTime = 0, lastTapX = 0, lastTapY = 0;
-  var MAX_SCALE = 4;
-
-  window.resetPhotoZoom = function() {
-    scale = 1; tx = 0; ty = 0;
-    apply();
-  };
-
-  function apply() {
-    img.style.transform = 'translate(' + tx + 'px,' + ty + 'px) scale(' + scale + ')';
-  }
-  function dist(t0, t1) {
-    var dx = t1.clientX - t0.clientX, dy = t1.clientY - t0.clientY;
-    return Math.sqrt(dx * dx + dy * dy);
-  }
-  function clampPan() {
-    // Не даём утащить фото далеко за пределы экрана при увеличении
-    var maxX = box.clientWidth * (scale - 1) / 2 + box.clientWidth * 0.3;
-    var maxY = box.clientHeight * (scale - 1) / 2 + box.clientHeight * 0.3;
-    if (tx > maxX) tx = maxX; if (tx < -maxX) tx = -maxX;
-    if (ty > maxY) ty = maxY; if (ty < -maxY) ty = -maxY;
-  }
-
-  box.addEventListener('touchstart', function(e) {
-    if (e.touches.length === 2) {
-      startDist = dist(e.touches[0], e.touches[1]);
-      startScale = scale;
-      startMidX = (e.touches[0].clientX + e.touches[1].clientX) / 2;
-      startMidY = (e.touches[0].clientY + e.touches[1].clientY) / 2;
-      startTx = tx; startTy = ty;
-      panning = false;
-    } else if (e.touches.length === 1) {
-      if (scale > 1) {
-        panning = true;
-        panStartX = e.touches[0].clientX - tx;
-        panStartY = e.touches[0].clientY - ty;
-      }
-    }
-  }, { passive: true });
-
-  box.addEventListener('touchmove', function(e) {
-    if (e.touches.length === 2 && startDist > 0) {
-      e.preventDefault();
-      var d = dist(e.touches[0], e.touches[1]);
-      scale = Math.min(MAX_SCALE, Math.max(1, startScale * (d / startDist)));
-      var midX = (e.touches[0].clientX + e.touches[1].clientX) / 2;
-      var midY = (e.touches[0].clientY + e.touches[1].clientY) / 2;
-      tx = startTx + (midX - startMidX);
-      ty = startTy + (midY - startMidY);
-      clampPan();
-      apply();
-    } else if (e.touches.length === 1 && panning) {
-      e.preventDefault();
-      tx = e.touches[0].clientX - panStartX;
-      ty = e.touches[0].clientY - panStartY;
-      clampPan();
-      apply();
-    }
-  }, { passive: false });
-
-  box.addEventListener('touchend', function(e) {
-    startDist = 0; panning = false;
-    if (scale < 1.02) { scale = 1; tx = 0; ty = 0; apply(); }
-    if (e.changedTouches.length === 1 && e.touches.length === 0) {
-      var t = e.changedTouches[0];
-      var now = Date.now();
-      if (now - lastTapTime < 300 && Math.abs(t.clientX - lastTapX) < 40 && Math.abs(t.clientY - lastTapY) < 40) {
-        // Двойной тап — переключаем зум
-        if (scale > 1) { scale = 1; tx = 0; ty = 0; }
-        else { scale = 2.5; tx = 0; ty = 0; }
-        apply();
-        lastTapTime = 0;
-      } else {
-        lastTapTime = now; lastTapX = t.clientX; lastTapY = t.clientY;
-      }
-    }
-  }, { passive: true });
-})();
 
 // ===== QR =====
 var qrItem = null;
@@ -2439,7 +2087,6 @@ function scanGoToItem(catId, itemId) {
 
 // ===== SETTINGS =====
 function renderStats() {
-  renderBackupStatus();
   var total = 0, sum = 0;
   db.catalogs.forEach(function(c) {
     total += c.items.length;
@@ -2450,131 +2097,17 @@ function renderStats() {
     + '<div class="row" style="cursor:default"><div class="rico" style="background:#007AFF"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg></div><div class="rmid"><div class="rt">Позиций</div></div><div style="font-size:17px;font-weight:700">' + total + '</div></div>'
     + '<div class="row" style="cursor:default"><div class="rico" style="background:var(--grn)"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div><div class="rmid"><div class="rt">Сумма склада</div></div><div style="font-size:17px;font-weight:700">' + fmt(sum) + '</div></div>';
 }
-async function exportDB() {
-  var jsonStr = JSON.stringify(db, null, 2);
-  var name = 'catalog_' + new Date().toISOString().slice(0, 10) + '.json';
-  var savedOk = false;
-
-  // Десктоп (File System Access API): системный диалог "Сохранить как" —
-  // человек сам выбирает папку/диск, а не получает файл вслепую в "Загрузки".
-  if (fsApiSupported()) {
-    try {
-      var handle = await window.showSaveFilePicker({
-        suggestedName: name,
-        types: [{ description: 'База СКЛАД (JSON)', accept: { 'application/json': ['.json'] } }]
-      });
-      var w = await handle.createWritable();
-      await w.write(jsonStr);
-      await w.close();
-      savedOk = true;
-    } catch (e) {
-      if (e && e.name === 'AbortError') return; // человек сам отменил диалог сохранения
-      // иначе — тихо откатываемся на вариант ниже (Поделиться / скачивание)
-    }
-  }
-
-  // Мобильные браузеры без File System Access: системное окно "Поделиться" —
-  // прямо оттуда можно выбрать Google Диск и любое другое приложение,
-  // а не только скачивание файла в системную папку "Загрузки".
-  if (!savedOk && navigator.canShare) {
-    try {
-      var file = new File([jsonStr], name, { type: 'application/json' });
-      if (navigator.canShare({ files: [file] })) {
-        await navigator.share({ files: [file], title: 'Резервная копия СКЛАД' });
-        savedOk = true;
-      }
-    } catch (e) {
-      if (e && e.name === 'AbortError') return; // человек закрыл окно "Поделиться"
-    }
-  }
-
-  // Фолбэк: ни диалог сохранения, ни "Поделиться" файлами не поддерживаются —
-  // обычное скачивание, как и раньше.
-  if (!savedOk) {
-    var a = document.createElement('a');
-    a.href = URL.createObjectURL(new Blob([jsonStr], { type: 'application/json' }));
-    a.download = name;
-    a.click();
-    URL.revokeObjectURL(a.href);
-  }
-
-  // Дата бэкапа хранится прямо в самой базе (db.lastBackupAt), а не только локально —
-  // так статус виден и после открытия того же файла базы на другом устройстве.
-  db.lastBackupAt = Date.now();
-  saveDB();
-  renderBackupStatus();
-  showToast('Резервная копия сохранена · ' + fmtBackupDate(db.lastBackupAt));
-}
-
-// ===== BACKUP REMINDER =====
-// Позиция считается "не забэкаплена", если её создали/изменили/по ней было
-// движение остатка позже даты последней резервной копии.
-function getItemChangeTs(item) {
-  var t = Date.parse(item.updatedAt || item.createdAt || 0) || 0;
-  (item.history || []).forEach(function(rec) {
-    var ht = Date.parse(rec.date || 0) || 0;
-    if (ht > t) t = ht;
-  });
-  return t;
-}
-function countChangedSinceBackup() {
-  if (!db.lastBackupAt) return 0;
-  var count = 0;
-  db.catalogs.forEach(function(c) {
-    (c.items || []).forEach(function(i) { if (getItemChangeTs(i) > db.lastBackupAt) count++; });
-  });
-  return count;
-}
-function totalItemsCount() {
-  var total = 0;
-  db.catalogs.forEach(function(c) { total += c.items.length; });
-  return total;
-}
-function fmtBackupDate(ts) {
-  return new Date(ts).toLocaleString('ru-RU', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
-}
-// Точка на вкладке "Настройки": не забэкаплено ни разу (и есть что бэкапить),
-// либо появились изменения после последней копии.
-function updateBackupBadge() {
-  var dot = document.getElementById('backup-tab-dot');
-  if (!dot) return;
-  var stale = db.lastBackupAt ? (countChangedSinceBackup() > 0) : (totalItemsCount() > 0);
-  dot.style.display = stale ? 'block' : 'none';
-}
-function renderBackupStatus() {
-  var el = document.getElementById('export-status');
-  if (!el) return;
-  if (!db.lastBackupAt) {
-    var has = totalItemsCount() > 0;
-    el.textContent = has ? 'Резервной копии ещё не было' : 'Скачать резервную копию db.json';
-    el.classList.toggle('warn', has);
-  } else {
-    var changed = countChangedSinceBackup();
-    el.textContent = changed > 0
-      ? ('Копия от ' + fmtBackupDate(db.lastBackupAt) + ' · изменений: ' + changed)
-      : ('Копия от ' + fmtBackupDate(db.lastBackupAt) + ' · всё сохранено');
-    el.classList.toggle('warn', changed > 0);
-  }
-  updateBackupBadge();
-}
-function showToast(msg) {
-  var t = document.getElementById('toast');
-  if (!t) return;
-  t.textContent = msg;
-  t.classList.add('on');
-  clearTimeout(showToast._t);
-  showToast._t = setTimeout(function() { t.classList.remove('on'); }, 2400);
+function exportDB() {
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([JSON.stringify(db, null, 2)], { type: 'application/json' }));
+  a.download = 'catalog_' + new Date().toISOString().slice(0, 10) + '.json';
+  a.click();
 }
 
 // ===== UTILS =====
 function fmt(p) {
   var n = parseFloat(p) || 0;
   return n % 1 === 0 ? n.toLocaleString('ru-RU') : n.toLocaleString('ru-RU', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-}
-// Всегда с двумя нулями после запятой — для цены и суммы в карточках истории/прихода
-function fmt2(p) {
-  var n = parseFloat(p) || 0;
-  return n.toLocaleString('ru-RU', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }
 function esc(s) {
   return (s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
@@ -2633,84 +2166,47 @@ function closeAllHistRows() {
 function deleteHistoryRec(idx) {
   var i = getItem(curItem); if (!i) return;
   if (!confirm('Удалить эту запись из истории?')) return;
+  // Пересчитать qty на основе оставшейся истории
   var deleted = i.history[idx];
   i.history.splice(idx, 1);
-  if (deleted.delta < 0) {
-    // Удаляем списание/расход — возвращаем остаток в те партии, откуда он был взят
-    // (иначе общий остаток "починится", а партия так и останется с нулевым
-    // остатком — расхождение между итогом и списком партий)
-    if (deleted.consumed && deleted.consumed.length) {
-      deleted.consumed.forEach(function(c) {
-        var src = i.history.find(function(r) { return r.id === c.id; });
-        if (src) {
-          var maxBl = src.delta;
-          src.batchQty = Math.min(maxBl, (src.batchQty || 0) + c.qty);
-        }
-      });
-    }
-    i.qty = i.qty - deleted.delta; // delta отрицательная — прибавляем обратно
-  } else {
-    // Удаляем приходную запись — вычитаем именно то, что от неё осталось
-    // (а не изначальное количество, часть которого уже могла быть списана)
-    var remaining = deleted.batchQty !== undefined ? deleted.batchQty : deleted.delta;
-    i.qty = i.qty - remaining;
-  }
+  // Пересчитать текущий остаток
+  i.qty = i.qty - deleted.delta;
   if (i.qty < 0) i.qty = 0;
   saveDB();
   document.getElementById('det-qty').textContent = i.qty;
-  renderDetInfo(i);
   renderDetHist(i);
-  renderDetBatches(i);
   renderItems();
   renderCats();
-  updateExpiryBadge();
 }
 window.deleteHistoryRec = deleteHistoryRec;
 window.histTouchStart = histTouchStart;
 window.histTouchEnd = histTouchEnd;
 window.histClick = histClick;
 
-var incPriceMode = 'unit'; // 'unit' = цена за 1 шт, 'total' = сумма за всю партию
-function setIncPriceMode(mode) {
-  incPriceMode = mode;
-  document.getElementById('inc-mode-unit').style.background = mode === 'unit' ? 'var(--ac)' : 'var(--card)';
-  document.getElementById('inc-mode-unit').style.color = mode === 'unit' ? '#fff' : 'var(--t2)';
-  document.getElementById('inc-mode-total').style.background = mode === 'total' ? 'var(--ac)' : 'var(--card)';
-  document.getElementById('inc-mode-total').style.color = mode === 'total' ? '#fff' : 'var(--t2)';
-  document.getElementById('inc-price-label').textContent = mode === 'total' ? 'Сумма за всю партию' : 'Цена за единицу';
-  updateIncAvg();
-}
-window.setIncPriceMode = setIncPriceMode;
-// Возвращает цену ЗА ЕДИНИЦУ независимо от выбранного режима ввода
-function incUnitPrice() {
-  var qty = parseInt(document.getElementById('inc-qty').value) || 0;
-  var entered = parseFloat(document.getElementById('inc-price').value) || 0;
-  if (incPriceMode === 'total') return qty > 0 ? entered / qty : 0;
-  return entered;
-}
 function openIncomingModal() {
   var i = getItem(curItem); if (!i) return;
   document.getElementById('inc-qty').value = '';
   document.getElementById('inc-price').value = '';
   document.getElementById('inc-name').value = '';
   document.getElementById('inc-expiry').value = '';
+  document.getElementById('inc-date').value = new Date().toISOString().slice(0, 10);
+  document.getElementById('inc-storage').value = '';
   document.getElementById('inc-avg-info').style.display = 'none';
   document.getElementById('inc-overlay').style.display = 'block';
   document.getElementById('inc-modal').style.display = 'block';
   document.getElementById('inc-qty').oninput = updateIncAvg;
   document.getElementById('inc-price').oninput = updateIncAvg;
-  setIncPriceMode('unit');
   setTimeout(function(){ document.getElementById('inc-qty').focus(); }, 150);
 }
 function updateIncAvg() {
   var i = getItem(curItem); if (!i) return;
   var qty = parseInt(document.getElementById('inc-qty').value) || 0;
-  var price = incUnitPrice();
+  var price = parseFloat(document.getElementById('inc-price').value) || 0;
   if (qty > 0 && price > 0) {
     var curQty = i.qty || 0;
     var curAvg = i.avgPrice || 0;
     var newAvg = (curQty * curAvg + qty * price) / (curQty + qty);
-    document.getElementById('inc-avg-val').textContent = fmt(newAvg);
+    document.getElementById('inc-avg-val').textContent = fmt(newAvg) + ' ₽';
     document.getElementById('inc-avg-info').style.display = 'block';
   } else {
     document.getElementById('inc-avg-info').style.display = 'none';
@@ -2723,18 +2219,22 @@ function closeIncomingModal() {
 function confirmIncoming() {
   var qty = parseInt(document.getElementById('inc-qty').value) || 0;
   if (qty <= 0) { alert('Введите количество'); return; }
-  var price = incUnitPrice();
+  var price = parseFloat(document.getElementById('inc-price').value) || 0;
   var note = document.getElementById('inc-name').value.trim() || 'Приход';
   var expiry = document.getElementById('inc-expiry').value || '';
+  var incDate = document.getElementById('inc-date').value || '';
+  var storage = document.getElementById('inc-storage').value.trim() || '';
   var i = getItem(curItem); if (!i) return;
   var nq = i.qty + qty;
   if (price > 0) {
     var curAvg = i.avgPrice || 0;
     i.avgPrice = (i.qty * curAvg + qty * price) / nq;
   }
-  var rec = { id: uid(), delta: qty, total: nq, date: new Date().toISOString(), note: note, batchQty: qty };
+  var recDate = incDate ? new Date(incDate + 'T12:00:00').toISOString() : new Date().toISOString();
+  var rec = { delta: qty, total: nq, date: recDate, note: note, batchQty: qty };
   if (price) rec.price = price;
   if (expiry) rec.expiry = expiry;
+  if (storage) rec.storage = storage;
   i.history.unshift(rec);
   i.qty = nq;
   saveDB();
@@ -3102,21 +2602,14 @@ function confirmBatchAction() {
   var reasonBtn = document.querySelector('.reason-btn.on');
   var reason = reasonBtn ? reasonBtn.dataset.val : 'Расход';
   var extra = document.getElementById('ba-note-extra').value.trim();
+  var note = reason + (extra ? ' — ' + extra : '') + ' [партия: ' + (getItem(curItem).history[curBatchActionIdx]||{}).note + ']';
   var item = getItem(curItem); if (!item) return;
   var rec = item.history[curBatchActionIdx]; if (!rec) return;
   var bl = rec.batchQty !== undefined ? rec.batchQty : rec.delta;
   if (qty > bl) { alert('Нельзя больше остатка партии (' + bl + ')'); return; }
   rec.batchQty = bl - qty;
-  if (!rec.id) rec.id = uid();
   var nq = Math.max(0, item.qty - qty);
-  // Причина, партия и описание хранятся отдельными полями (не одной строкой
-  // через тире и скобки), чтобы в истории их можно было аккуратно вывести
-  // каждое на своей строке.
-  item.history.unshift({
-    id: uid(), delta: -qty, total: nq, date: new Date().toISOString(),
-    reason: reason, extra: extra, batchNote: rec.note || 'Партия',
-    consumed: [{ id: rec.id, qty: qty }]
-  });
+  item.history.unshift({ delta: -qty, total: nq, date: new Date().toISOString(), note: note });
   item.qty = nq;
   saveDB();
   document.getElementById('det-qty').textContent = nq;
@@ -3159,9 +2652,8 @@ function confirmRelease() {
   var bl = rec.batchQty !== undefined ? rec.batchQty : rec.delta;
   if (qty > bl) { alert('Нельзя отпустить больше остатка партии (' + bl + ')'); return; }
   rec.batchQty = bl - qty;
-  if (!rec.id) rec.id = uid();
   var nq = Math.max(0, item.qty - qty);
-  item.history.unshift({ id: uid(), delta: -qty, total: nq, date: new Date().toISOString(), note: note + ' [партия: ' + rec.note + ']', consumed: [{ id: rec.id, qty: qty }] });
+  item.history.unshift({ delta: -qty, total: nq, date: new Date().toISOString(), note: note + ' [партия: ' + rec.note + ']' });
   item.qty = nq;
   saveDB();
   document.getElementById('det-qty').textContent = nq;
@@ -3212,17 +2704,14 @@ function confirmWriteOff() {
 
   // Уменьшаем остаток партии
   rec.batchQty = batchLeft - qty;
-  if (!rec.id) rec.id = uid();
 
   // Уменьшаем общий qty товара
   var nq = Math.max(0, item.qty - qty);
   item.history.unshift({
-    id: uid(),
     delta: -qty,
     total: nq,
     date: new Date().toISOString(),
-    note: note + ' [партия: ' + rec.note + ']',
-    consumed: [{ id: rec.id, qty: qty }]
+    note: note + ' [партия: ' + rec.note + ']'
   });
   item.qty = nq;
   saveDB();
@@ -3247,13 +2736,6 @@ function init() {
   if (fsApiSupported()) {
     document.getElementById('btn-open-db').onclick = openExistingDBFile;
     document.getElementById('btn-new-db').onclick = createNewDBFile;
-    hdbLoadHandle().then(function(handle) {
-      if (!handle) return;
-      var btn = document.getElementById('btn-continue-db');
-      btn.textContent = '↻ Продолжить: ' + handle.name;
-      btn.style.display = '';
-      btn.onclick = continueWithLastHandle;
-    }).catch(function(){});
   } else {
     document.getElementById('btn-open-db').onclick = openExistingDBFile_mobile;
     document.getElementById('btn-new-db').onclick = createNewDBFile_mobile;
@@ -3263,13 +2745,9 @@ function init() {
       if (f) handleMobileFileChosen(f);
     };
     idbGet().then(function(text) {
-      if (text) {
-        var btn = document.getElementById('btn-continue-db');
-        btn.textContent = '↻ Продолжить (сохранённые данные)';
-        btn.style.display = '';
-        btn.onclick = continueFromIdb;
-      }
+      if (text) document.getElementById('btn-continue-db').style.display = '';
     }).catch(function(){});
+    document.getElementById('btn-continue-db').onclick = continueFromIdb;
   }
 
   document.getElementById('inc-overlay').onclick = closeIncomingModal;
@@ -3292,19 +2770,7 @@ function init() {
   document.getElementById('btn-itemsback').onclick = back;
   document.getElementById('btn-editcat').onclick = function() { openCatForm(curCat); };
   // btn-additem (top search bar button) wired via onclick attr
-  document.getElementById('items-q').oninput = function() {
-    document.getElementById('btn-clear-search').style.display = this.value ? 'block' : 'none';
-    renderItems();
-  };
-
-function clearSearch() {
-  var q = document.getElementById('items-q');
-  q.value = '';
-  document.getElementById('btn-clear-search').style.display = 'none';
-  q.focus();
-  renderItems();
-}
-window.clearSearch = clearSearch;
+  document.getElementById('items-q').oninput = renderItems;
 
   // btn-itemformback удалён
   document.getElementById('btn-saveitem').onclick = saveItem;
@@ -3334,7 +2800,6 @@ window.clearSearch = clearSearch;
       i.photo = src; saveDB();
       refreshDetPhoto(i);
       document.getElementById('fullphoto-img').src = src;
-      resetPhotoZoom();
     });
     e.target.value = '';
   };
@@ -3349,7 +2814,7 @@ window.clearSearch = clearSearch;
   document.getElementById('scan-stop-btn').onclick = stopLiveScan;
   initScanFileInput();
   document.getElementById('row-switchdb').onclick = switchDBFile;
-  document.getElementById('row-export').onclick = exportDB;
+  document.querySelectorAll('#pg-settings .row')[1].onclick = exportDB;
   document.getElementById('inp-import').onchange = function(e) {
     var f = e.target.files[0]; if (!f) return;
     var r = new FileReader();
@@ -3371,7 +2836,6 @@ window.back = back;
   window.openCat = openCat;
 window.openCatForm = openCatForm;
 window.rmTempCat = rmTempCat;
-window.setChip = setChip;
 window.openDetail = openDetail;
 window.openItemForm = openItemForm;
 window.closeQr = closeQr;
@@ -3395,17 +2859,10 @@ window.closeWriteOffModal = closeWriteOffModal;
 window.confirmWriteOff = confirmWriteOff;
 
 // ── Web Search Sheet ──────────────────────────────────
-function openWebSearchSheet(nameOverride) {
-  var name = (nameOverride !== undefined) ? nameOverride : null;
-  if (name === null) {
-    var item = getItem(curItem);
-    if (!item) return;
-    name = item.name;
-  }
-  name = (name || '').trim();
-  if (!name) { alert('Сначала введите название товара'); return; }
-  wsItemName = name;
-  document.getElementById('websearch-itemname').textContent = name;
+function openWebSearchSheet() {
+  var item = getItem(curItem);
+  if (!item) return;
+  document.getElementById('websearch-itemname').textContent = item.name;
   document.getElementById('ws-overlay').classList.add('on');
   document.getElementById('ws-sheet').classList.add('on');
 }
@@ -3417,45 +2874,41 @@ function closeWebSearchSheet() {
 }
 window.closeWebSearchSheet = closeWebSearchSheet;
 
-// Промты для 'desc' и 'instr' сформулированы по тому же принципу, что и
-// поиск рецепта в приложении "Рецепты": режим ИИ Google (udm=50) + жёсткое
-// требование к формату ответа (конкретное разбиение на абзацы/шаги, без
-// вступлений и вопросов в конце), чтобы ответ можно было сразу скопировать
-// в поле "Пояснение" почти без ручной правки.
 function doWebSearch(type) {
-  var name = wsItemName || (getItem(curItem) || {}).name;
-  if (!name) return;
-  var noMd = 'Пиши простым текстом без markdown-разметки: не используй символы # (заголовки-решётки) и ** (жирный текст).';
-  var url;
-  if (type === 'desc') {
-    var q = 'Опиши товар "' + name + '". Дай только фактическое описание: что это и для чего используется, '
-      + 'ключевые технические характеристики (тип, мощность или объём, состав, материал, размеры, вес — что применимо именно к этому товару), '
-      + 'производитель и комплектация, если это известно. '
-      + 'Без вступлений, комментариев от себя и вопросов в конце. ' + noMd + ' '
-      + 'Оформи строго тремя абзацами без заголовков-подписей перед ними: '
-      + '1-й абзац — что это и для чего; 2-й абзац — технические характеристики; 3-й абзац — производитель и комплектация.';
-    url = 'https://www.google.com/search?q=' + encodeURIComponent(q) + '&udm=50';
-  } else if (type === 'instr') {
-    var q2 = 'Инструкция по применению для товара "' + name + '" — в формате настоящей официальной инструкции-вкладыша, с названиями разделов, как в инструкции к лекарству или в руководстве к инструменту. '
-      + 'Сам подбери набор разделов и их порядок, ориентируясь на то, как это оформлено в реальной официальной инструкции для товаров такого типа '
-      + '(для лекарства, БАД, косметики или бытовой химии — например: «Показания к применению», «Способ применения и дозировка», «Противопоказания», «Меры предосторожности» и другие уместные разделы, в порядке, естественном для такой инструкции; '
-      + 'для инструмента и техники — например: «Подготовка к работе», «Порядок использования», «Техника безопасности», «Обслуживание и хранение»; '
-      + 'для прочих товаров — аналогично, как в стандартной инструкции для такого типа товара). '
-      + 'Каждый раздел оформляй так: короткое название раздела на отдельной строке, а на следующей строке — текст этого раздела обычным связным абзацем; между разделами оставляй пустую строку. '
-      + 'Не нумеруй разделы (без 1. 2. 3.), названия разделов пиши без markdown-символов (без #, без **) — просто как обычную строку текста. '
-      + 'Без вступлений, комментариев от себя и вопросов в конце.';
-    url = 'https://www.google.com/search?q=' + encodeURIComponent(q2) + '&udm=50';
-  } else if (type === 'buy') {
-    url = 'https://www.google.com/search?q=' + encodeURIComponent(name + ' купить');
-  } else {
-    url = 'https://www.google.com/search?q=' + encodeURIComponent(name);
-  }
+  var item = getItem(curItem);
+  if (!item) return;
+  var name = item.name;
+  var query = '';
+  if (type === 'desc') query = name + ' описание характеристики';
+  else if (type === 'instr') query = name + ' инструкция по применению';
+  else if (type === 'buy') query = name + ' купить';
+  else query = name;
+  var url = 'https://www.google.com/search?q=' + encodeURIComponent(query);
   window.open(url, '_blank');
   closeWebSearchSheet();
 }
 window.doWebSearch = doWebSearch;
 
-// ── Auto-resize textarea ──────────────────────────────
+// ── Очистка поля пояснения от ссылок ────────────────
+function cleanNoteField() {
+  var el = document.getElementById('if-note');
+  var lines = el.value.split('\n');
+  lines = lines.filter(function(line) {
+    var t = line.trim();
+    // убираем строки где есть http
+    if (t.indexOf('http') !== -1) return false;
+    // убираем строки-сноски [1] ...
+    if (/^\[\d+\]/.test(t)) return false;
+    return true;
+  });
+  // убираем инлайн-сноски [1] [1, 2, 3]
+  var text = lines.join('\n');
+  text = text.replace(/\s*\[\d+(?:,\s*\d+)*\]/g, '');
+  text = text.replace(/\n{3,}/g, '\n\n').trim();
+  el.value = text;
+  autoResizeTextarea(el);
+}
+window.cleanNoteField = cleanNoteField;
 function autoResizeTextarea(el) {
   if (!el) return;
   el.style.height = 'auto';
@@ -3467,61 +2920,64 @@ document.getElementById('if-note').addEventListener('input', function() {
   autoResizeTextarea(this);
 });
 
-// ── Общая чистка ИИ-мусора: ссылки, сноски, markdown-разметка ──
-// (## заголовки, **жирный**, маркеры списков "* "/"- " -> "— ", как в
-// приложении "Рецепты" — ИИ иногда всё равно добавляет их, несмотря на
-// прямой запрет в промте, особенно если товар не укладывается в заданную
-// структуру одним абзацем/списком)
-function cleanAiTextArtifacts(text) {
+// ── Очистка текста при вставке — убираем ссылки, сохраняем структуру ────
+document.getElementById('if-note').addEventListener('paste', function(e) {
+  e.preventDefault();
+  var text = (e.clipboardData || window.clipboardData).getData('text');
+
+  // Нормализуем переносы строк
+  text = text.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+  // Убираем строки-сноски целиком (любые строки начинающиеся с [цифра])
   var lines = text.split('\n');
   lines = lines.filter(function(line) {
     return !/^\s*\[\d+\]/.test(line);
   });
-  var t = lines.join('\n');
-  t = t.replace(/\s*\[\d+(?:,\s*\d+)*\]/g, '');
-  t = t.replace(/https?:\/\/[^\s\)]+/g, '');
-  t = t.replace(/\*\*(.+?)\*\*/g, '$1');           // **жирный** -> обычный
-  t = t.replace(/^\s{0,3}#{1,6}\s*/gm, '');          // ## Заголовок -> Заголовок
-  t = t.replace(/^\s*[*-]\s+/gm, '— ');              // "* пункт" / "- пункт" -> "— пункт"
-  t = t.replace(/\n{3,}/g, '\n\n').trim();
-  return t;
-}
+  text = lines.join('\n');
+  // Убираем инлайн-сноски [1] или [1, 2, 3] внутри текста
+  text = text.replace(/\s*\[\d+(?:,\s*\d+)*\]\s*/g, ' ');
+  // Схлопываем 3+ пустых строки в две
+  text = text.replace(/\n{3,}/g, '\n\n');
+  text = text.trim();
 
-// ── Paste cleaner — убираем ссылки и markdown-мусор, оставляем структуру ──
-document.getElementById('if-note').addEventListener('paste', function(e) {
-  e.preventDefault();
-  var text = (e.clipboardData || window.clipboardData).getData('text');
-  text = text.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
-  text = cleanAiTextArtifacts(text);
-  var start = this.selectionStart, end = this.selectionEnd, val = this.value;
+  var start = this.selectionStart;
+  var end = this.selectionEnd;
+  var val = this.value;
   this.value = val.substring(0, start) + text + val.substring(end);
   this.selectionStart = this.selectionEnd = start + text.length;
   autoResizeTextarea(this);
 });
 
-// ── Кнопка очистки ссылок ────────────────────────────
-function cleanNoteField() {
-  var el = document.getElementById('if-note');
-  el.value = cleanAiTextArtifacts(el.value);
-  autoResizeTextarea(el);
-}
-window.cleanNoteField = cleanNoteField;
-
-// ── Скролл поля над клавиатурой ──────────────────────
+// ── Fix keyboard covering textarea on mobile ──────────
 var noteEl = document.getElementById('if-note');
 var formScroll = noteEl.closest('.scroll');
+
 noteEl.addEventListener('focus', function() {
+  // Разрешаем скролл внутри формы
   if (formScroll) formScroll.style.paddingBottom = '50vh';
   var el = this;
-  setTimeout(function() { el.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 400);
+  setTimeout(function() {
+    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, 400);
 });
+
 noteEl.addEventListener('blur', function() {
   if (formScroll) formScroll.style.paddingBottom = '';
 });
+
+// visualViewport — двигаем скролл когда клавиатура меняет размер
 if (window.visualViewport) {
   window.visualViewport.addEventListener('resize', function() {
     if (document.activeElement === noteEl) {
-      setTimeout(function() { noteEl.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 100);
+      setTimeout(function() {
+        noteEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 100);
+    }
+  });
+  window.visualViewport.addEventListener('scroll', function() {
+    if (document.activeElement === noteEl) {
+      setTimeout(function() {
+        noteEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 100);
     }
   });
 }
@@ -3572,16 +3028,5 @@ if (window.visualViewport) {
   </div>
 </div>
 
-<div class="overlay" id="desc-overlay" onclick="closeDescQuick()"></div>
-<div class="sheet" id="desc-sheet">
-  <div class="shandle"></div>
-  <div class="sbody">
-    <div style="font-size:14px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;" id="desc-quick-name"></div>
-    <div style="max-height:60vh;overflow-y:auto;" id="desc-quick-text"></div>
-    <button onclick="closeDescQuick()" style="width:100%;margin-top:20px;padding:14px;border-radius:12px;background:var(--bg);border:none;font-size:15px;font-weight:600;color:var(--t2);cursor:pointer;">Закрыть</button>
-  </div>
-</div>
-
-<div id="toast" class="toast"></div>
 </body>
 </html>
